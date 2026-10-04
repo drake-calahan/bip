@@ -14,6 +14,10 @@
   --move: #6CABEF; --move-edge: #4787D0;
   --jump: #A993EE; --jump-edge: #8670D6;
   --loop: #FFC94F; --loop-edge: #E3A526; --loop-soft: #FFF4D6; --loop-ink: #6E4A00;
+  --rel: #35B3A1; --rel-edge: #23917F;
+  --whl: #FF9E86; --whl-edge: #E07B62; --whl-soft: #FFE9E3; --whl-ink: #7A2E1C;
+  --iff: #F39AC4; --iff-edge: #D677A4; --iff-soft: #FDEAF3; --iff-ink: #6E2148;
+  --fnc: #FFB570; --fnc-edge: #E8924A; --fnc-soft: #FFF0E0;
   --go: #44BC7D; --go-edge: #2E9A60; --stop: #FF9A66; --stop-edge: #E1784A;
   --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F;
   --display: 'Grandstander', 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
@@ -64,6 +68,13 @@ svg { display: block; }
 .chap[data-tone="water"] { --tone: #5DB6DE; --tone-edge: #3F96BF; }
 .chap[data-tone="lilac"] { --tone: var(--jump); --tone-edge: var(--jump-edge); }
 .chap[data-tone="sun"] { --tone: #F5B83A; --tone-edge: #D3951D; }
+.chap[data-tone="teal"] { --tone: var(--rel); --tone-edge: var(--rel-edge); }
+.chap[data-tone="coral"] { --tone: #F58A70; --tone-edge: #D66A50; }
+.chap[data-tone="pink"] { --tone: #E585B4; --tone-edge: #C76594; }
+.chap[data-tone="peach"] { --tone: #F7A55E; --tone-edge: #D9873F; }
+.chap[data-tone="slate"] { --tone: #7286A6; --tone-edge: #566A88; }
+.chap-sep { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-family: var(--display); font-weight: 800; font-size: 15px; margin: 4px 4px -4px; }
+.chap-sep::after { content: ''; flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
 .lvls { display: flex; flex-wrap: wrap; gap: 12px 14px; }
 .lvl { position: relative; width: 58px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .lvl .n { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 22px; color: #fff; background: var(--tone); box-shadow: 0 4px 0 var(--tone-edge); }
@@ -100,7 +111,13 @@ svg { display: block; }
 .bubble .spk { flex: none; width: 24px; height: 24px; color: var(--ink-soft); }
 .bubble.new { animation: nudge .4s ease-out; }
 
-.board-wrap { grid-area: board; position: relative; min-height: 0; display: grid; place-items: center; }
+.board-wrap { grid-area: board; position: relative; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.vars { display: flex; align-items: center; gap: 6px; font-size: 15px; color: var(--ink-soft); }
+.vars button { min-width: 40px; height: 32px; padding: 0 10px; border-radius: 999px; background: var(--card); font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--ink-soft); box-shadow: 0 2px 0 var(--line); }
+.vars button.on { background: var(--ink); color: #fff; box-shadow: none; }
+.vars button.pass { background: #DDF4E7; color: var(--go-edge); }
+.vars button.pass.on { background: var(--go); color: #fff; }
+.vars button.fail { background: #FFE3DC; color: #C4553E; }
 .board { position: relative; width: calc(var(--cell) * var(--cols)); height: calc(var(--cell) * var(--rows)); box-sizing: content-box;
   border: 7px solid var(--grass-edge); border-radius: 24px; transition: --cell .25s ease;
   background-color: var(--grass-a);
@@ -164,7 +181,7 @@ svg { display: block; }
 .trash { margin-left: auto; width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; color: var(--ink-soft); background: var(--paper); }
 .trash svg { width: 22px; height: 22px; }
 .trash.arm { background: var(--warn); color: #fff; animation: wiggle .5s ease-in-out infinite; }
-.seq-scroll { min-width: 0; max-height: calc(var(--blk) * 3 + 56px); overflow-y: auto; padding: 4px 2px 8px; }
+.seq-scroll { min-width: 0; display: flex; flex-direction: column; gap: 8px; max-height: calc(var(--blk) * 4 + 40px); overflow-y: auto; padding: 4px 2px 8px; }
 .seq { display: flex; flex-wrap: wrap; align-items: center; align-content: flex-start; gap: 8px; min-height: var(--blk); }
 .run-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; padding-top: 2px; }
 .play { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--go); box-shadow: 0 5px 0 var(--go-edge); }
@@ -184,27 +201,59 @@ svg { display: block; }
 .blk[data-t="u"] > svg { transform: rotate(-90deg); }
 .blk[data-t="d"] > svg { transform: rotate(90deg); }
 .blk[data-t="j"] { background: var(--jump); box-shadow: 0 4px 0 var(--jump-edge); }
+.blk[data-t="f"], .blk[data-t="tl"], .blk[data-t="tr"] { background: var(--rel); box-shadow: 0 4px 0 var(--rel-edge); }
+.blk[data-t="star"] { background: var(--fnc); box-shadow: 0 4px 0 var(--fnc-edge); }
+.blk[data-t="while"] { background: var(--whl); box-shadow: 0 4px 0 var(--whl-edge); color: var(--whl-ink); }
+.blk[data-t="if"] { background: var(--iff); box-shadow: 0 4px 0 var(--iff-edge); color: var(--iff-ink); }
 .blk[data-t="loop"] { background: var(--loop); box-shadow: 0 4px 0 var(--loop-edge); color: var(--loop-ink); }
 .blk b { position: absolute; bottom: 3px; left: 0; right: 0; text-align: center; font-family: var(--display); font-weight: 800; font-size: 11px; letter-spacing: .02em; pointer-events: none; }
 .blk:has(b) > svg { width: 50%; height: 50%; margin-top: -10px; }
 .seq .blk b { display: none; }
 .seq .blk:has(b) > svg { width: 60%; height: 60%; margin-top: 0; }
-.blk.in, .loop.in { animation: pop .35s cubic-bezier(.3, 1.6, .5, 1); }
-.blk.now, .loop.now { transform: scale(1.1); box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--go); }
+.blk.in, .ctr.in { animation: pop .35s cubic-bezier(.3, 1.6, .5, 1); }
+.blk.now, .ctr.now { transform: scale(1.1); box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--go); }
+.ctr.now { transform: none; box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--go); }
+.fn-row.target { border-style: solid; }
 .blk.bad { box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--warn); animation: shake .5s; }
 .blk.done { opacity: .55; }
 .slot { flex: none; width: var(--blk); height: var(--blk); border-radius: 16px; border: 3px dashed var(--line); display: grid; place-items: center; color: var(--line); font-family: var(--display); font-weight: 800; font-size: 26px; }
 .slot.on { border-color: var(--move); color: var(--move); animation: breathe 1.8s ease-in-out infinite; }
 .ph { flex: none; width: var(--blk); height: var(--blk); border-radius: 16px; background: rgba(108, 171, 239, .18); border: 3px dashed var(--move); }
-.loop { position: relative; display: flex; align-items: stretch; gap: 6px; padding: 6px; border-radius: 20px; background: var(--loop); box-shadow: 0 4px 0 var(--loop-edge); max-width: 100%; transition: transform .15s, box-shadow .15s; }
-.loop-head { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 46px; }
-.loop-x { width: 40px; height: 34px; display: grid; place-items: center; color: var(--loop-ink); touch-action: none; }
-.loop-x svg { width: 28px; height: 28px; }
-.loop-n { min-width: 44px; height: 32px; padding: 0 6px; border-radius: 999px; background: #fff; color: var(--loop-ink); font-family: var(--display); font-weight: 800; font-size: 19px; font-variant-numeric: tabular-nums; }
-.loop-body { flex: 1; min-width: calc(var(--blk) + 12px); padding: 6px; border-radius: 14px; background: var(--loop-soft); }
-.loop.target .loop-body { box-shadow: inset 0 0 0 3px rgba(227, 165, 38, .55); }
+.ctr { --c: var(--loop); --ce: var(--loop-edge); --cs: var(--loop-soft); --ci: var(--loop-ink);
+  position: relative; display: flex; align-items: stretch; gap: 5px; padding: 5px; border-radius: 18px; background: var(--c); box-shadow: 0 4px 0 var(--ce); max-width: 100%; transition: transform .15s, box-shadow .15s; }
+.ctr.while { --c: var(--whl); --ce: var(--whl-edge); --cs: var(--whl-soft); --ci: var(--whl-ink); }
+.ctr.if { --c: var(--iff); --ce: var(--iff-edge); --cs: var(--iff-soft); --ci: var(--iff-ink); }
+.ctr-head { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 42px; }
+.ctr-x { width: 40px; height: 32px; display: grid; place-items: center; color: var(--ci); touch-action: none; font-family: var(--display); font-weight: 800; font-size: 18px; }
+.ctr-x svg { width: 26px; height: 26px; }
+.ctr-p { min-width: 40px; height: 32px; padding: 0 5px; border-radius: 999px; background: #fff; color: var(--ci); font-family: var(--display); font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; display: grid; place-items: center; transition: background .2s; }
+.ctr-p svg { width: 24px; height: 24px; }
+.ctr.yes > .ctr-head .ctr-p { background: #C9F0D9; box-shadow: 0 0 0 3px var(--go); }
+.ctr.no > .ctr-head .ctr-p { background: #E6ECEC; box-shadow: 0 0 0 3px var(--ink-soft); }
+.ctr-body { flex: 1; min-width: calc(var(--blk) * .84 + 12px); padding: 5px; border-radius: 13px; background: var(--cs); gap: 6px; min-height: calc(var(--blk) * .84 + 10px); }
+.ctr.target > .ctr-body, .ctr.target > .if-rows > .if-row > .ctr-body.target { box-shadow: inset 0 0 0 3px var(--ce); }
+.if-rows { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.if-row { display: flex; align-items: stretch; gap: 4px; }
+.if-lab { flex: none; width: 22px; display: grid; place-items: center; border-radius: 9px; }
+.if-lab svg { width: 18px; height: 18px; }
+.if-lab.yes { background: #D8F3E3; color: var(--go-edge); }
+.if-lab.no { background: #ECEFF1; color: var(--ink-soft); }
+.ctr.br-then > .if-rows > .if-row:first-child .if-lab, .ctr.br-else > .if-rows > .if-row:last-child .if-lab { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--go); }
+.ctr-body .blk, .ctr-body .slot, .ctr-body .ph { width: calc(var(--blk) * .84); height: calc(var(--blk) * .84); border-radius: 14px; }
+.ctr-body .slot { font-size: 22px; }
+.fn-row { display: flex; align-items: stretch; gap: 6px; padding: 5px; border-radius: 18px; background: var(--fnc-soft); border: 2px dashed var(--fnc); }
+.fn-lab { flex: none; display: flex; align-items: center; gap: 2px; padding: 0 4px; color: var(--fnc-edge); font-family: var(--display); font-weight: 800; font-size: 20px; }
+.fn-lab svg { width: 30px; height: 30px; }
+.fn-row .seq { flex: 1; min-width: 0; min-height: calc(var(--blk) * .84); }
+.fn-row .blk, .fn-row .slot, .fn-row .ph { width: calc(var(--blk) * .84); height: calc(var(--blk) * .84); border-radius: 14px; }
+.fn-row.now { box-shadow: 0 0 0 3px var(--go); }
+.sense { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
+.sense i { width: 70%; height: 70%; border-radius: 50%; border: 4px dashed var(--ink-soft); animation: sense .45s ease-out forwards; }
+.sense.yes i { border-color: var(--go); }
+@keyframes sense { 0% { transform: scale(.4); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1); opacity: .9; } }
 .pal { grid-area: pal; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 4px; }
-.running .pal .blk, .running .seq { opacity: .55; }
+.running .pal .blk { opacity: .55; }
+.running #progCard .slot { opacity: .4; }
 
 .ghost { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; margin: 0; opacity: .95; box-shadow: 0 10px 24px rgba(44, 58, 76, .25) !important; }
 .lifting { position: absolute !important; opacity: 0 !important; pointer-events: none; }
@@ -378,14 +427,14 @@ svg { display: block; }
     <button class="bubble" id="bubble" aria-label="Réécouter la consigne">
       <span class="mini" id="miniBip"></span><span class="msg" id="msg" aria-live="polite"></span><span class="spk" id="icoSpk"></span>
     </button>
-    <div class="board-wrap" id="boardWrap"><div class="board" id="board"></div></div>
+    <div class="board-wrap" id="boardWrap"><div class="vars" id="vars" hidden></div><div class="board" id="board"></div></div>
     <section class="prog" id="progCard" aria-label="Programme de Bip">
       <div class="prog-head">
         <span class="lab"><span id="icoProg"></span>Programme</span>
         <span class="batts" id="batts" hidden></span>
         <button class="trash" id="btnTrash" aria-label="Tout effacer"></button>
       </div>
-      <div class="seq-scroll" id="seqScroll"><div class="seq" id="main" data-cid="main"></div></div>
+      <div class="seq-scroll" id="seqScroll"><div class="fn-row" id="fnRow" hidden><span class="fn-lab" id="fnLab"></span><div class="seq" id="fnSeq" data-cid="fn"></div></div><div class="seq" id="main" data-cid="main"></div></div>
       <div class="run-col">
         <button class="play" id="btnRun" aria-label="Lancer le programme"></button>
         <button class="stepb" id="btnStep" aria-label="Un bloc à la fois"></button>
@@ -424,6 +473,15 @@ svg { display: block; }
       <li>Trouver son erreur et la corriger. Le bloc qui pose problème devient orange.</li>
       <li>Découvrir la boucle avec le bloc Répéter, au chapitre 5.</li>
     </ul>
+    <h3>Chapitres 6 à 10 : pour aller plus loin</h3>
+    <p>Ces chapitres visent plutôt la fin du CP et le CE1. Accompagnez davantage l'enfant au début de chacun.</p>
+    <ul>
+      <li><b>Tourner</b> : Bip avance là où il regarde et pivote à gauche ou à droite. L'enfant doit se mettre à la place du robot (repère relatif).</li>
+      <li><b>Répéter jusqu'à</b> : une boucle qui s'arrête toute seule, devant un obstacle ou quand tous les jouets sont ramassés.</li>
+      <li><b>Si… sinon</b> : Bip regarde devant lui et choisit la ligne verte ou la ligne grise. Ces niveaux ont trois jardins : le même programme doit réussir partout. C'est tout l'intérêt d'une condition.</li>
+      <li><b>Le bloc magique</b> : on range une suite de blocs dans la ligne étoile pour la réutiliser. C'est une fonction.</li>
+      <li><b>Détective</b> : le programme est déjà écrit mais contient une erreur à trouver et corriger (débogage).</li>
+    </ul>
     <h3>Comment l'accompagner</h3>
     <ul>
       <li>Avant de programmer, demandez-lui de tracer le chemin avec le doigt sur l'écran.</li>
@@ -436,7 +494,7 @@ svg { display: block; }
     <ul>
       <li>Toucher un bloc l'ajoute à la fin du programme. On peut aussi le glisser à l'endroit voulu.</li>
       <li>Toucher un bloc du programme l'enlève. Le glisser hors du programme aussi.</li>
-      <li>Toucher le nombre du bloc Répéter le change. Toucher la case pointillée choisit où vont les nouveaux blocs.</li>
+      <li>Toucher le rond blanc d'un bloc Répéter, Jusqu'à ou Si change son réglage (nombre de fois, condition). Toucher la case pointillée choisit où vont les nouveaux blocs.</li>
       <li>Trois étoiles récompensent le programme le plus court. Réussir compte davantage.</li>
     </ul>
     <h3>Installer sur Android</h3>

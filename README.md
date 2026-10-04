@@ -2,7 +2,12 @@
 
 Jeu d'initiation à la programmation pour le CP : on programme Bip avec des blocs
 (flèches, saut, répéter) pour ramasser les jouets du jardin en évitant buissons et flaques.
-20 niveaux en 5 chapitres, voix qui lit les consignes, fonctionne hors connexion.
+40 niveaux en 10 chapitres, voix qui lit les consignes, fonctionne hors connexion.
+
+- Chapitres 1 à 5 (CP) : flèches, buissons, flaques, saut, bloc Répéter.
+- Chapitres 6 à 10 (fin de CP, CE1) : tourner (repère relatif), répéter jusqu'à,
+  si… sinon (le même programme doit marcher dans trois jardins), bloc magique (fonction),
+  détective (corriger un programme qui contient une erreur).
 
 ## Contenu
 

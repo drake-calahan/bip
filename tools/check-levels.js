@@ -1,30 +1,36 @@
+/* Vérifie chaque niveau : solution de référence gagnante dans tous les jardins,
+   programme de départ (niveaux détective) qui échoue, contrainte de piles qui oblige la notion. */
 const E = require('../src/engine.js');
-const { LEVELS, parseSol } = require('../src/levels.js');
+const { LEVELS } = require('../src/levels.js');
 let ok = true;
-const out = {};
 for (const lv of LEVELS) {
-  const bfs = E.solve(lv, lv.pal);
-  let line = `L${lv.id} ch${lv.ch + 1} ${lv.map[0].length}x${lv.map.length} `;
-  if (!bfs) { line += 'UNSOLVABLE'; ok = false; console.log(line); continue; }
-  line += `bfs=${bfs.length} [${bfs.join('')}]`;
-  let ref;
-  if (lv.sol) {
-    ref = parseSol(lv.sol);
-    const r = E.simulate(lv, ref);
-    const n = E.countBlocks(ref);
-    line += ` | loopSol=${lv.sol} blocks=${n} -> ${r.result}`;
+  const nv = lv.variants ? lv.variants.length : 1;
+  let line = `L${lv.id} ch${lv.ch + 1} `;
+  const fn = lv.fn ? E.parseProg(lv.fn) : [];
+  let ref, par;
+  if (lv.sol) { ref = E.parseProg(lv.sol); par = E.countBlocks(ref) + E.countBlocks(fn); }
+  for (let v = 0; v < nv; v++) {
+    const bfs = E.solve(lv, lv.pal, v);
+    if (!lv.sol && nv === 1) {
+      if (!bfs) { line += 'UNSOLVABLE'; ok = false; continue; }
+      ref = E.parseProg(bfs.join(' ')); par = bfs.length;
+    }
+    const r = E.simulate(lv, ref, fn, v);
+    line += `[v${v + 1} ref:${r.result}${bfs ? ' bfs=' + bfs.length : ' bfs=∅'}] `;
     if (r.result !== 'win') ok = false;
-    if (lv.max && n > lv.max) { line += ' OVER MAX'; ok = false; }
-    if (lv.max && bfs.length <= lv.max) line += ' (WARN: loop not needed)';
-    out[lv.id] = { par: n, sol: lv.sol };
-  } else {
-    ref = bfs.map((t, i) => ({ t, id: 'x' + i }));
-    const r = E.simulate(lv, ref);
-    if (r.result !== 'win') { ok = false; line += ' SIMFAIL ' + r.result; }
-    out[lv.id] = { par: bfs.length, sol: bfs.join(' ') };
+    if (lv.max && bfs && bfs.length <= lv.max && !lv.start) line += '(WARN plain fits) ';
+    if (lv.start) {
+      const s = E.simulate(lv, E.parseProg(lv.start), [], v);
+      line += `start:${s.result} `;
+    }
   }
-  // vérifier que la ligne droite naïve échoue (le niveau a un intérêt)
+  if (lv.start) {
+    const fails = Array.from({ length: nv }, (_, v) => E.simulate(lv, E.parseProg(lv.start), [], v).result).some(r => r !== 'win');
+    if (!fails) { line += 'START WINS!'; ok = false; }
+  }
+  line += `par=${par}${lv.max ? ' max=' + lv.max : ''}`;
+  if (lv.max && par > lv.max) { line += ' OVER MAX'; ok = false; }
   console.log(line);
 }
 console.log(ok ? 'ALL OK' : 'PROBLEMS');
-require('fs').writeFileSync(__dirname + '/par.json', JSON.stringify(out));
+process.exitCode = ok ? 0 : 1;

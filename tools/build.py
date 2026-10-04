@@ -6,6 +6,8 @@ eng=rd('src/engine.js').replace("if (typeof module !== 'undefined') module.expor
 lev=rd('src/levels.js').split("if (typeof module !== 'undefined')")[0]
 app=rd('src/app.js')
 page=body.replace('/*@ENGINE@*/',eng).replace('/*@LEVELS@*/',lev).replace('/*@APP@*/',app)
+os.makedirs(os.path.join(root,'.artifact'),exist_ok=True)
+open(os.path.join(root,'.artifact/bip.html'),'w',encoding='utf-8').write(page)
 
 
 # ---------- Version installable (PWA) ----------
