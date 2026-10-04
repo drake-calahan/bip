@@ -1,0 +1,459 @@
+<title>Bip le robot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Grandstander:wght@600;800&display=swap">
+<style>
+/* Mise en page : jeu plein écran. Portrait : plateau en haut, programme et blocs en dessous.
+   Paysage large : plateau à gauche, programme à droite. Un seul thème clair et doux, choisi exprès. */
+@property --cell { syntax: '<length>'; inherits: true; initial-value: 64px; }
+:root {
+  --paper: #EAF3F3; --paper-2: #DCEAEA; --card: #FFFFFF; --line: #CCDEDD;
+  --ink: #2C3A4C; --ink-soft: #5F7086;
+  --grass-a: #D9EFCF; --grass-b: #CDE8C2; --grass-edge: #B3D8A3;
+  --bip: #77AFEA; --bip-dark: #4E86C7; --screen: #F5FAFF; --blush: #FFB6B2; --apricot: #FF9E6B;
+  --move: #6CABEF; --move-edge: #4787D0;
+  --jump: #A993EE; --jump-edge: #8670D6;
+  --loop: #FFC94F; --loop-edge: #E3A526; --loop-soft: #FFF4D6; --loop-ink: #6E4A00;
+  --go: #44BC7D; --go-edge: #2E9A60; --stop: #FF9A66; --stop-edge: #E1784A;
+  --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F;
+  --display: 'Grandstander', 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
+  --text: 'Andika', 'Verdana', system-ui, sans-serif;
+  --blk: clamp(44px, calc((100vw - 32px - 40px) / 6), 60px);
+  color-scheme: light;
+}
+html { box-sizing: border-box; height: 100%; background: var(--paper); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  height: 100%; margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--text); font-size: 17px; line-height: 1.35;
+  overscroll-behavior: none; overflow: hidden;
+  -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+#app { height: 100%; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; touch-action: manipulation; }
+button:focus-visible, .blk:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+svg { display: block; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ---------- Accueil ---------- */
+#home { height: 100%; overflow-y: auto; padding-inline: 16px; padding-block: 8px 28px; }
+.home-in { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+.hero { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4px 18px; padding: 20px 20px 22px; border-radius: 28px;
+  background: radial-gradient(120% 90% at 20% 110%, var(--grass-b) 0 38%, transparent 38.5%), radial-gradient(90% 70% at 95% 120%, var(--grass-a) 0 45%, transparent 45.5%), var(--card); overflow: hidden; }
+.hero-art { position: relative; width: clamp(108px, 30vw, 170px); aspect-ratio: 1; grid-row: span 3; max-width: 100%; }
+.hero-art .bipsvg { width: 100%; height: 100%; animation: bob 3.2s ease-in-out infinite; }
+.hero-art .float { position: absolute; width: 34%; }
+.hero-art .f1 { right: -14%; top: 2%; animation: bob 2.8s ease-in-out .4s infinite; }
+.hero-art .f2 { left: -12%; bottom: 0; width: 30%; animation: bob 3.4s ease-in-out .9s infinite; }
+.hero h1 { font-family: var(--display); font-weight: 800; font-size: clamp(48px, 13vw, 76px); line-height: .9; margin: 0; letter-spacing: -.01em; }
+.hero p { margin: 0; color: var(--ink-soft); font-size: clamp(16px, 4vw, 19px); text-wrap: balance; }
+.big-go { justify-self: start; margin-top: 8px; display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 24px;
+  color: #fff; background: var(--go); padding: 12px 26px 12px 20px; border-radius: 999px; box-shadow: 0 5px 0 var(--go-edge); }
+.big-go svg { width: 26px; height: 26px; }
+.big-go:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--go-edge); }
+.chap { background: var(--card); border-radius: 24px; padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.chap-head { display: flex; align-items: center; gap: 12px; }
+.chap-num { flex: none; width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 19px; color: #fff; background: var(--tone); }
+.chap-head h2 { margin: 0; font-family: var(--display); font-weight: 800; font-size: 21px; line-height: 1.1; }
+.chap-head p { margin: 2px 0 0; font-size: 15px; color: var(--ink-soft); }
+.chap-head > div { min-width: 0; flex: 1; }
+.chap-ico { flex: none; width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; color: #fff; background: var(--tone); opacity: .9; }
+.chap-ico svg { width: 60%; height: 60%; }
+.chap[data-tone="sky"] { --tone: var(--move); --tone-edge: var(--move-edge); }
+.chap[data-tone="leaf"] { --tone: var(--leaf); --tone-edge: #4E9E61; }
+.chap[data-tone="water"] { --tone: #5DB6DE; --tone-edge: #3F96BF; }
+.chap[data-tone="lilac"] { --tone: var(--jump); --tone-edge: var(--jump-edge); }
+.chap[data-tone="sun"] { --tone: #F5B83A; --tone-edge: #D3951D; }
+.lvls { display: flex; flex-wrap: wrap; gap: 12px 14px; }
+.lvl { position: relative; width: 58px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lvl .n { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 22px; color: #fff; background: var(--tone); box-shadow: 0 4px 0 var(--tone-edge); }
+.lvl .st { display: flex; gap: 1px; }
+.lvl .st svg { width: 15px; height: 15px; }
+.lvl:disabled { cursor: default; }
+.lvl:disabled .n { background: var(--paper-2); box-shadow: 0 4px 0 var(--line); color: var(--ink-soft); }
+.lvl:disabled .n svg { width: 22px; height: 22px; }
+.lvl.next .n { animation: ring 1.8s ease-out infinite; }
+.lvl:not(:disabled):active .n { transform: translateY(3px); box-shadow: 0 1px 0 var(--tone-edge); }
+.adults-row { display: flex; justify-content: center; }
+.adults { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 16px; padding: 10px 16px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); }
+.adults svg { width: 20px; height: 20px; }
+
+/* ---------- Jeu ---------- */
+#game { height: 100%; display: grid; gap: 10px; padding-inline: 16px; padding-block: 8px 12px;
+  grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "top" "bub" "board" "prog" "pal"; max-width: 1100px; margin: 0 auto; }
+.top { grid-area: top; display: flex; align-items: center; gap: 10px; min-height: 46px; }
+.ibtn { flex: none; width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; background: var(--card); color: var(--ink); box-shadow: 0 3px 0 var(--line); }
+.ibtn svg { width: 26px; height: 26px; }
+.ibtn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
+.ibtn.glow { background: #FFF1C2; box-shadow: 0 3px 0 var(--loop-edge); animation: wiggle 1.4s ease-in-out infinite; }
+.lvl-pill { flex: none; font-family: var(--display); font-weight: 800; font-size: 18px; padding: 6px 12px; border-radius: 999px; background: var(--card); white-space: nowrap; }
+.lvl-pill i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--tone, var(--move)); margin-right: 6px; vertical-align: 1px; }
+.tray { flex: 1; min-width: 0; display: flex; justify-content: center; align-items: center; gap: 6px; }
+.tray .tt { width: 36px; height: 36px; filter: grayscale(1) opacity(.38); transition: filter .3s; }
+.tray .tt.got { filter: none; animation: pop .5s cubic-bezier(.3, 1.6, .5, 1); }
+.tray .to { width: 18px; height: 18px; color: var(--ink-soft); opacity: .6; }
+
+.bubble { grid-area: bub; display: flex; align-items: center; gap: 10px; text-align: left; background: var(--card); border-radius: 20px; padding: 8px 12px 8px 8px; min-height: 56px; }
+.bubble .mini { flex: none; width: 40px; height: 40px; }
+.bubble .msg { flex: 1; min-width: 0; font-size: clamp(16px, 4.3vw, 19px); line-height: 1.3; text-wrap: pretty; }
+.bubble .spk { flex: none; width: 24px; height: 24px; color: var(--ink-soft); }
+.bubble.new { animation: nudge .4s ease-out; }
+
+.board-wrap { grid-area: board; position: relative; min-height: 0; display: grid; place-items: center; }
+.board { position: relative; width: calc(var(--cell) * var(--cols)); height: calc(var(--cell) * var(--rows)); box-sizing: content-box;
+  border: 7px solid var(--grass-edge); border-radius: 24px; transition: --cell .25s ease;
+  background-color: var(--grass-a);
+  background-image: conic-gradient(var(--grass-b) 25%, transparent 0 50%, var(--grass-b) 0 75%, transparent 0);
+  background-size: calc(var(--cell) * 2) calc(var(--cell) * 2); }
+.board::after { content: ''; position: absolute; inset: 0; border-radius: 17px; box-shadow: inset 0 3px 0 rgba(255,255,255,.5); pointer-events: none; }
+.it { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
+.it > svg { width: 86%; height: 86%; }
+.it.puddle > svg { width: 100%; height: 100%; }
+.it.toy > svg { width: 74%; height: 74%; animation: idle 3s ease-in-out infinite; animation-delay: calc(var(--x) * -.4s); }
+.it.toy.got > svg { animation: collect .55s ease-in forwards; }
+.it.box > svg { width: 90%; height: 90%; }
+.robot { z-index: 5; transition: transform .38s cubic-bezier(.45, .05, .35, 1); }
+.robot.jumping { transition-duration: .52s; transition-timing-function: cubic-bezier(.4, .2, .4, 1); }
+.robot.instant { transition: none; }
+.robot .sprite { width: 96%; height: 96%; }
+.robot .bipsvg { width: 100%; height: 100%; overflow: visible; }
+.facing { position: absolute; left: 50%; top: 50%; width: 0; height: 0; border-left: 11px solid var(--bip-dark); border-top: 9px solid transparent; border-bottom: 9px solid transparent; opacity: .75;
+  transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) translateX(calc(var(--cell) * .5)); transition: transform .2s; pointer-events: none; }
+.robot[data-face="r"] { --rot: 0deg; } .robot[data-face="d"] { --rot: 90deg; } .robot[data-face="l"] { --rot: 180deg; } .robot[data-face="u"] { --rot: -90deg; }
+.fx { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
+.dot { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell) + var(--ox, 0px)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
+.dot.corner { place-items: start start; padding: 3%; }
+.dot.corner b { width: 34%; height: 34%; }
+.dot b { width: 40%; height: 40%; border-radius: 50%; background: rgba(255,255,255,.9); border: 3px dashed var(--bip-dark); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: calc(var(--cell) * .2); color: var(--bip-dark); opacity: 0; animation: dotin .3s ease-out forwards; animation-delay: inherit; }
+.dot.jumpdot b { border-color: var(--jump-edge); color: var(--jump-edge); }
+.splash { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); }
+.splash i { position: absolute; inset: 18%; border-radius: 50%; border: 4px solid #fff; opacity: 0; animation: ripple .9s ease-out forwards; }
+.splash i:nth-child(2) { animation-delay: .18s; }
+.bonk { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
+.bonk svg { width: 50%; height: 50%; animation: bonk .6s ease-out forwards; }
+
+/* Visages de Bip */
+.bipsvg .shadow { fill: rgba(44, 58, 76, .14); }
+.bipsvg .eyes ellipse { fill: var(--ink); }
+.bipsvg .eyes { transition: transform .2s; }
+.bipsvg .eyes-happy path, .bipsvg .eyes-oops path { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; }
+.bipsvg .eyes-happy, .bipsvg .eyes-oops, .bipsvg .drops, .bipsvg .qm { display: none; }
+.happy .bipsvg .eyes, .oops .bipsvg .eyes, .wet .bipsvg .eyes { display: none; }
+.happy .bipsvg .eyes-happy { display: inline; }
+.oops .bipsvg .eyes-oops, .wet .bipsvg .eyes-oops { display: inline; }
+.wet .bipsvg .drops { display: inline; }
+.puzzled .bipsvg .qm { display: inline; }
+.robot[data-face="r"] .eyes { transform: translate(4px, 0); }
+.robot[data-face="l"] .eyes { transform: translate(-4px, 0); }
+.robot[data-face="u"] .eyes { transform: translate(0, -3px); }
+.robot[data-face="d"] .eyes { transform: translate(0, 3px); }
+.robot.happy .sprite { animation: cheer .7s ease-in-out 2; }
+
+/* Programme */
+.prog { grid-area: prog; background: var(--card); border-radius: 22px; padding: 8px 10px 10px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; }
+.prog-head { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; min-height: 30px; }
+.prog-head .lab { display: inline-flex; align-items: center; gap: 6px; font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--ink-soft); }
+.prog-head .lab svg { width: 22px; height: 22px; }
+.batts { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; background: var(--paper); }
+.batts.shake { animation: shake .45s; }
+.batt { position: relative; width: 12px; height: 20px; border-radius: 3px; border: 2px solid var(--ink-soft); }
+.batt::before { content: ''; position: absolute; left: 2px; top: -5px; width: 4px; height: 3px; border-radius: 1px; background: var(--ink-soft); }
+.batt.full { background: var(--go); border-color: var(--go-edge); }
+.batts .bl { font-size: 13px; color: var(--ink-soft); margin-left: 2px; }
+.trash { margin-left: auto; width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; color: var(--ink-soft); background: var(--paper); }
+.trash svg { width: 22px; height: 22px; }
+.trash.arm { background: var(--warn); color: #fff; animation: wiggle .5s ease-in-out infinite; }
+.seq-scroll { min-width: 0; max-height: calc(var(--blk) * 3 + 56px); overflow-y: auto; padding: 4px 2px 8px; }
+.seq { display: flex; flex-wrap: wrap; align-items: center; align-content: flex-start; gap: 8px; min-height: var(--blk); }
+.run-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 10px; padding-top: 2px; }
+.play { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--go); box-shadow: 0 5px 0 var(--go-edge); }
+.play svg { width: 30px; height: 30px; }
+.play:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--go-edge); }
+.running .play { background: var(--stop); box-shadow: 0 5px 0 var(--stop-edge); }
+.stepb { width: 50px; height: 42px; border-radius: 14px; display: grid; place-items: center; color: var(--go-edge); background: #E2F5EA; }
+.stepb svg { width: 24px; height: 24px; }
+.stepb.glow { animation: wiggle 1.4s ease-in-out infinite; background: #C9EED8; }
+.running .stepb { opacity: .35; }
+
+/* Blocs */
+.blk { position: relative; flex: none; width: var(--blk); height: var(--blk); border-radius: 16px; display: grid; place-items: center; color: #fff;
+  background: var(--move); box-shadow: 0 4px 0 var(--move-edge); touch-action: none; cursor: grab; transition: transform .15s, box-shadow .15s; }
+.blk > svg { width: 60%; height: 60%; pointer-events: none; }
+.blk[data-t="l"] > svg { transform: rotate(180deg); }
+.blk[data-t="u"] > svg { transform: rotate(-90deg); }
+.blk[data-t="d"] > svg { transform: rotate(90deg); }
+.blk[data-t="j"] { background: var(--jump); box-shadow: 0 4px 0 var(--jump-edge); }
+.blk[data-t="loop"] { background: var(--loop); box-shadow: 0 4px 0 var(--loop-edge); color: var(--loop-ink); }
+.blk b { position: absolute; bottom: 3px; left: 0; right: 0; text-align: center; font-family: var(--display); font-weight: 800; font-size: 11px; letter-spacing: .02em; pointer-events: none; }
+.blk:has(b) > svg { width: 50%; height: 50%; margin-top: -10px; }
+.seq .blk b { display: none; }
+.seq .blk:has(b) > svg { width: 60%; height: 60%; margin-top: 0; }
+.blk.in, .loop.in { animation: pop .35s cubic-bezier(.3, 1.6, .5, 1); }
+.blk.now, .loop.now { transform: scale(1.1); box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--go); }
+.blk.bad { box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--warn); animation: shake .5s; }
+.blk.done { opacity: .55; }
+.slot { flex: none; width: var(--blk); height: var(--blk); border-radius: 16px; border: 3px dashed var(--line); display: grid; place-items: center; color: var(--line); font-family: var(--display); font-weight: 800; font-size: 26px; }
+.slot.on { border-color: var(--move); color: var(--move); animation: breathe 1.8s ease-in-out infinite; }
+.ph { flex: none; width: var(--blk); height: var(--blk); border-radius: 16px; background: rgba(108, 171, 239, .18); border: 3px dashed var(--move); }
+.loop { position: relative; display: flex; align-items: stretch; gap: 6px; padding: 6px; border-radius: 20px; background: var(--loop); box-shadow: 0 4px 0 var(--loop-edge); max-width: 100%; transition: transform .15s, box-shadow .15s; }
+.loop-head { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 46px; }
+.loop-x { width: 40px; height: 34px; display: grid; place-items: center; color: var(--loop-ink); touch-action: none; }
+.loop-x svg { width: 28px; height: 28px; }
+.loop-n { min-width: 44px; height: 32px; padding: 0 6px; border-radius: 999px; background: #fff; color: var(--loop-ink); font-family: var(--display); font-weight: 800; font-size: 19px; font-variant-numeric: tabular-nums; }
+.loop-body { flex: 1; min-width: calc(var(--blk) + 12px); padding: 6px; border-radius: 14px; background: var(--loop-soft); }
+.loop.target .loop-body { box-shadow: inset 0 0 0 3px rgba(227, 165, 38, .55); }
+.pal { grid-area: pal; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 4px; }
+.running .pal .blk, .running .seq { opacity: .55; }
+
+.ghost { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; margin: 0; opacity: .95; box-shadow: 0 10px 24px rgba(44, 58, 76, .25) !important; }
+.lifting { position: absolute !important; opacity: 0 !important; pointer-events: none; }
+.poof { position: fixed; z-index: 60; width: 64px; height: 64px; margin: -32px 0 0 -32px; pointer-events: none; }
+.poof i { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: var(--line); animation: poof .45s ease-out forwards; }
+
+.hand { position: fixed; z-index: 40; width: 54px; height: 54px; margin: -6px 0 0 -14px; pointer-events: none; animation: tap 1.3s ease-in-out infinite; filter: drop-shadow(0 4px 6px rgba(44, 58, 76, .25)); }
+.hand::before { content: ''; position: absolute; left: 4px; top: -2px; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 3px solid var(--go); animation: tapring 1.3s ease-out infinite; }
+
+/* Bravo + feuille adultes */
+.overlay { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 16px; background: rgba(44, 58, 76, .35); animation: fade .25s ease-out; }
+.win-card { width: min(420px, 100%); background: var(--card); border-radius: 30px; padding: 20px 20px 22px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; animation: rise .45s cubic-bezier(.3, 1.4, .5, 1); }
+.win-card .bipwrap { width: 108px; height: 108px; }
+.win-card .bipwrap .bipsvg { width: 100%; height: 100%; animation: cheer .8s ease-in-out infinite; }
+.win-card h2 { margin: 0; font-family: var(--display); font-weight: 800; font-size: 34px; }
+.win-card p { margin: 0; color: var(--ink-soft); font-size: 18px; text-wrap: balance; }
+.stars { display: flex; gap: 6px; margin: 2px 0 4px; }
+.stars svg { width: 50px; height: 50px; }
+.stars .on { animation: pop .5s cubic-bezier(.3, 1.6, .5, 1) backwards; }
+.btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 800; font-size: 20px; padding: 12px 20px; border-radius: 999px; }
+.btn svg { width: 22px; height: 22px; }
+.btn.go { color: #fff; background: var(--go); box-shadow: 0 5px 0 var(--go-edge); }
+.btn.soft { background: var(--paper); box-shadow: 0 5px 0 var(--line); }
+.btn:active { transform: translateY(3px); }
+.sheet { align-items: end; }
+@media (min-width: 640px) { .sheet { align-items: center; } }
+.sheet-card { position: relative; width: min(640px, 100%); max-height: 88%; overflow-y: auto; background: var(--card); border-radius: 28px; padding: 22px 20px 26px; animation: rise .35s ease-out; -webkit-user-select: text; user-select: text; }
+.sheet-card h2 { margin: 0 44px 6px 0; font-family: var(--display); font-weight: 800; font-size: 26px; text-wrap: balance; }
+.sheet-card h3 { margin: 18px 0 6px; font-family: var(--display); font-weight: 800; font-size: 18px; }
+.sheet-card p, .sheet-card li { font-size: 16px; color: var(--ink); max-width: 62ch; }
+.sheet-card p { margin: 0 0 8px; }
+.sheet-card ul { margin: 0; padding-left: 20px; display: grid; gap: 5px; }
+.sheet-card .close { position: absolute; right: 14px; top: 14px; }
+.toggles { display: grid; gap: 8px; margin-top: 8px; }
+.tg { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-radius: 16px; background: var(--paper); font-size: 16px; text-align: left; }
+.tg .sw { flex: none; width: 48px; height: 28px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s; }
+.tg .sw::after { content: ''; position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.tg[aria-checked="true"] .sw { background: var(--go); }
+.tg[aria-checked="true"] .sw::after { transform: translateX(20px); }
+.tg.danger.arm { background: #FFE1DA; }
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 80; pointer-events: none; }
+
+@media (orientation: landscape) and (min-width: 700px) {
+  #game { grid-template-columns: minmax(0, 1.15fr) minmax(320px, 1fr); grid-template-rows: auto auto auto auto minmax(0, 1fr);
+    grid-template-areas: "top top" "board bub" "board prog" "board pal" "board ."; }
+  .board-wrap { align-self: stretch; }
+  .prog { align-self: start; }
+  .pal { justify-content: flex-start; }
+  :root { --blk: clamp(44px, 5.4vw, 60px); }
+}
+@media (max-height: 560px) and (orientation: landscape) { .bubble { min-height: 46px; } .bubble .mini { width: 32px; height: 32px; } }
+
+@keyframes bob { 50% { transform: translateY(-6%); } }
+@keyframes idle { 50% { transform: translateY(-5%) rotate(-3deg); } }
+@keyframes collect { 30% { transform: translateY(-20%) scale(1.3); } 100% { transform: translateY(-60%) scale(0); opacity: 0; } }
+@keyframes pop { 0% { transform: scale(.5); } 100% { transform: scale(1); } }
+@keyframes ring { 0% { box-shadow: 0 4px 0 var(--tone-edge), 0 0 0 0 rgba(68, 188, 125, .55); } 80%, 100% { box-shadow: 0 4px 0 var(--tone-edge), 0 0 0 14px rgba(68, 188, 125, 0); } }
+@keyframes breathe { 50% { transform: scale(.92); opacity: .7; } }
+@keyframes shake { 20%, 60% { translate: -5px 0; } 40%, 80% { translate: 5px 0; } }
+@keyframes wiggle { 0%, 100% { rotate: 0deg; } 25% { rotate: -8deg; } 75% { rotate: 8deg; } }
+@keyframes nudge { 0% { transform: translateY(4px); opacity: .6; } }
+@keyframes dotin { 0% { opacity: 0; transform: scale(.3); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes ripple { 0% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.5); } }
+@keyframes bonk { 0% { opacity: 0; transform: scale(.4) rotate(0); } 30% { opacity: 1; transform: scale(1.1) rotate(20deg); } 100% { opacity: 0; transform: scale(1) rotate(50deg); } }
+@keyframes cheer { 30% { transform: translateY(-10%) rotate(-6deg); } 60% { transform: translateY(0) rotate(5deg); } }
+@keyframes poof { 100% { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; } }
+@keyframes tap { 0%, 100% { transform: translate(6px, 10px); } 45% { transform: translate(0, 0); } }
+@keyframes tapring { 0%, 40% { opacity: 0; transform: scale(.4); } 55% { opacity: 1; } 100% { opacity: 0; transform: scale(1.6); } }
+@keyframes fade { 0% { opacity: 0; } }
+@keyframes rise { 0% { transform: translateY(30px) scale(.96); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .05s !important; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="bush" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="85" rx="34" ry="7" fill="#9CC78D" opacity=".6"/>
+      <circle cx="29" cy="60" r="21" fill="#7BBB70"/><circle cx="71" cy="60" r="21" fill="#7BBB70"/>
+      <circle cx="50" cy="42" r="24" fill="#8DCB80"/><circle cx="50" cy="66" r="20" fill="#84C478"/>
+      <circle cx="42" cy="33" r="7" fill="#A8DB9B"/>
+      <circle cx="35" cy="60" r="3.6" fill="#FFFFFF"/><circle cx="65" cy="47" r="3.6" fill="#FFE08A"/><circle cx="58" cy="70" r="3" fill="#FFFFFF"/>
+    </symbol>
+    <symbol id="rock" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="84" rx="33" ry="6" fill="#9CC78D" opacity=".6"/>
+      <path d="M17 77C13 57 26 34 48 30C70 26 87 46 84 66C83 78 74 82 50 82C30 82 19 82 17 77Z" fill="#C8BFB3"/>
+      <path d="M29 51C35 41 45 36 56 37" fill="none" stroke="#E5DFD6" stroke-width="6" stroke-linecap="round"/>
+      <path d="M60 71C66 69 72 65 74 58" fill="none" stroke="#B0A698" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="puddle" viewBox="0 0 100 100">
+      <path d="M12 56C10 40 29 30 46 34C58 21 85 28 87 46C95 58 85 77 64 75C52 83 29 81 21 73C11 71 8 62 12 56Z" fill="#9AD2EE"/>
+      <ellipse cx="43" cy="52" rx="14" ry="6" fill="none" stroke="#E8F7FF" stroke-width="3.5"/>
+      <ellipse cx="67" cy="61" rx="8" ry="3.5" fill="none" stroke="#E8F7FF" stroke-width="3"/>
+    </symbol>
+    <symbol id="box" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="87" rx="35" ry="6" fill="#9CC78D" opacity=".6"/>
+      <rect x="16" y="42" width="68" height="41" rx="8" fill="#E8AE70"/>
+      <rect x="16" y="57" width="68" height="6" fill="#D69859"/>
+      <path d="M12 45C12 29 30 22 50 22C70 22 88 29 88 45Z" fill="#D9945A"/>
+      <path d="M22 36C28 30 38 28 48 28" fill="none" stroke="#F0C08E" stroke-width="4" stroke-linecap="round"/>
+      <rect x="43" y="39" width="14" height="14" rx="4" fill="#FFD36B"/>
+      <circle cx="50" cy="46" r="2.6" fill="#B57A3E"/>
+    </symbol>
+    <symbol id="toy-b" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="24" ry="5" fill="#2C3A4C" opacity=".1"/>
+      <circle cx="50" cy="52" r="31" fill="#FF8878"/>
+      <path d="M21 47Q50 67 79 47" fill="none" stroke="#FFFFFF" stroke-width="7"/>
+      <path d="M28 30Q50 41 72 30" fill="none" stroke="#FFD36B" stroke-width="6"/>
+      <circle cx="38" cy="39" r="6" fill="#FFFFFF" opacity=".55"/>
+    </symbol>
+    <symbol id="toy-n" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="89" rx="24" ry="5" fill="#2C3A4C" opacity=".1"/>
+      <circle cx="27" cy="30" r="12" fill="#C98A58"/><circle cx="73" cy="30" r="12" fill="#C98A58"/>
+      <circle cx="27" cy="30" r="6" fill="#EDBE92"/><circle cx="73" cy="30" r="6" fill="#EDBE92"/>
+      <circle cx="50" cy="55" r="30" fill="#D69B66"/>
+      <ellipse cx="50" cy="67" rx="14" ry="11" fill="#F2D3B0"/>
+      <ellipse cx="50" cy="61" rx="5.5" ry="4" fill="#2C3A4C"/>
+      <path d="M44 71Q50 76 56 71" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="39" cy="49" r="3.5" fill="#2C3A4C"/><circle cx="61" cy="49" r="3.5" fill="#2C3A4C"/>
+    </symbol>
+    <symbol id="toy-c" viewBox="0 0 100 100">
+      <ellipse cx="52" cy="89" rx="27" ry="5" fill="#2C3A4C" opacity=".1"/>
+      <path d="M18 63C18 51 30 47 44 51L56 53C66 49 80 45 86 55C90 67 80 83 56 83L40 83C26 83 18 75 18 63Z" fill="#FFD256"/>
+      <circle cx="40" cy="38" r="17" fill="#FFD256"/>
+      <path d="M25 37C18 35 11 38 11 42C13 46 20 47 25 44Z" fill="#FF9F45"/>
+      <path d="M50 63C58 57 70 59 74 65C66 71 56 71 50 63Z" fill="#F2B83A"/>
+      <circle cx="36" cy="35" r="3.3" fill="#2C3A4C"/>
+    </symbol>
+    <symbol id="toy-t" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="89" rx="18" ry="4.5" fill="#2C3A4C" opacity=".1"/>
+      <rect x="45" y="11" width="10" height="20" rx="4" fill="#8B78C9"/>
+      <path d="M16 47C16 34 34 28 50 28C66 28 84 34 84 47C84 59 62 75 52 86C51 87.5 49 87.5 48 86C38 75 16 59 16 47Z" fill="#B8A4F2"/>
+      <path d="M17 49C30 57 70 57 83 49" fill="none" stroke="#FF90B3" stroke-width="7"/>
+      <path d="M30 37C38 33 46 32 52 32" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+    </symbol>
+    <symbol id="toy-a" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="28" ry="5" fill="#2C3A4C" opacity=".1"/>
+      <rect x="20" y="22" width="60" height="60" rx="12" fill="#6ACBB0"/>
+      <rect x="28" y="30" width="44" height="44" rx="8" fill="none" stroke="#FFFFFF" stroke-width="4" opacity=".7"/>
+      <path d="M38 67L50 36L62 67M42 57H58" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="star" viewBox="0 0 100 100">
+      <path d="M50 8L62 36L92 38L69 58L77 88L50 72L23 88L31 58L8 38L38 36Z" stroke-linejoin="round" stroke-width="8"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main id="app">
+  <section id="home" aria-label="Accueil">
+    <div class="home-in">
+      <header class="hero">
+        <div class="hero-art" id="heroArt"></div>
+        <h1>Bip</h1>
+        <p>Programme le petit robot pour ranger les jouets du jardin.</p>
+        <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Jouer</span></button>
+      </header>
+      <div id="chapters" class="home-in" style="gap:14px"></div>
+      <div class="adults-row"><button class="adults" id="btnAdults"><span id="icoInfo"></span>Pour les adultes</button></div>
+    </div>
+  </section>
+
+  <section id="game" hidden aria-label="Niveau">
+    <div class="top">
+      <button class="ibtn" id="btnHome" aria-label="Retour à la carte"></button>
+      <div class="lvl-pill" id="lvlPill"></div>
+      <div class="tray" id="tray" aria-label="Jouets à ramasser"></div>
+      <button class="ibtn" id="btnHint" aria-label="Montrer le chemin"></button>
+    </div>
+    <button class="bubble" id="bubble" aria-label="Réécouter la consigne">
+      <span class="mini" id="miniBip"></span><span class="msg" id="msg" aria-live="polite"></span><span class="spk" id="icoSpk"></span>
+    </button>
+    <div class="board-wrap" id="boardWrap"><div class="board" id="board"></div></div>
+    <section class="prog" id="progCard" aria-label="Programme de Bip">
+      <div class="prog-head">
+        <span class="lab"><span id="icoProg"></span>Programme</span>
+        <span class="batts" id="batts" hidden></span>
+        <button class="trash" id="btnTrash" aria-label="Tout effacer"></button>
+      </div>
+      <div class="seq-scroll" id="seqScroll"><div class="seq" id="main" data-cid="main"></div></div>
+      <div class="run-col">
+        <button class="play" id="btnRun" aria-label="Lancer le programme"></button>
+        <button class="stepb" id="btnStep" aria-label="Un bloc à la fois"></button>
+      </div>
+    </section>
+    <div class="pal" id="palette" aria-label="Blocs"></div>
+  </section>
+</main>
+
+<div class="hand" id="hand" hidden aria-hidden="true">
+  <svg viewBox="0 0 64 64"><path d="M22 6c3.3 0 6 2.7 6 6v17.5l2.4-.8c3-.9 5.9.8 6.6 3.5l.3 1.3 2.3-.5c3-.6 5.6 1.4 6 4.3l.1.9 1.6-.2c3.2-.3 5.7 2.2 5.7 5.4V52c0 6.6-5.4 12-12 12h-9.5c-4.4 0-8.4-2.4-10.5-6.3L9.8 44c-1.6-2.9-.6-6.5 2.3-7.9 2.4-1.2 5.3-.5 6.9 1.6L16 33.7V12c0-3.3 2.7-6 6-6z" fill="#FFFFFF" stroke="#2C3A4C" stroke-width="3" stroke-linejoin="round" transform="translate(0 -2)"/></svg>
+</div>
+
+<div class="overlay" id="win" hidden>
+  <div class="win-card" role="dialog" aria-labelledby="winTitle">
+    <div class="bipwrap happy" id="winBip"></div>
+    <h2 id="winTitle">Bravo !</h2>
+    <div class="stars" id="winStars"></div>
+    <p id="winText"></p>
+    <div class="btns">
+      <button class="btn soft" id="btnAgain"></button>
+      <button class="btn go" id="btnNext"></button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay sheet" id="sheet" hidden>
+  <div class="sheet-card" role="dialog" aria-labelledby="sheetTitle">
+    <button class="ibtn close" id="btnClose" aria-label="Fermer"></button>
+    <h2 id="sheetTitle">Pour les adultes</h2>
+    <p>Bip initie les enfants de 5 à 7 ans à la pensée algorithmique : prévoir une suite d'instructions, la lancer, observer ce qui se passe, puis corriger.</p>
+    <h3>Ce que l'enfant travaille</h3>
+    <ul>
+      <li>Se repérer sur un quadrillage et coder un déplacement avec des flèches, comme dans le programme du cycle 2.</li>
+      <li>Ranger des instructions dans le bon ordre : une séquence.</li>
+      <li>Trouver son erreur et la corriger. Le bloc qui pose problème devient orange.</li>
+      <li>Découvrir la boucle avec le bloc Répéter, au chapitre 5.</li>
+    </ul>
+    <h3>Comment l'accompagner</h3>
+    <ul>
+      <li>Avant de programmer, demandez-lui de tracer le chemin avec le doigt sur l'écran.</li>
+      <li>Laissez-le se tromper : chaque essai lui apprend quelque chose.</li>
+      <li>Le bouton sous le bouton vert fait avancer Bip d'un seul bloc. Pratique pour chercher l'erreur ensemble.</li>
+      <li>L'ampoule montre le chemin en pointillés numérotés. L'enfant doit alors le traduire en flèches.</li>
+      <li>Sans écran : un enfant joue le robot, l'autre lui donne les flèches à voix haute.</li>
+    </ul>
+    <h3>Les gestes</h3>
+    <ul>
+      <li>Toucher un bloc l'ajoute à la fin du programme. On peut aussi le glisser à l'endroit voulu.</li>
+      <li>Toucher un bloc du programme l'enlève. Le glisser hors du programme aussi.</li>
+      <li>Toucher le nombre du bloc Répéter le change. Toucher la case pointillée choisit où vont les nouveaux blocs.</li>
+      <li>Trois étoiles récompensent le programme le plus court. Réussir compte davantage.</li>
+    </ul>
+    <h3>Installer sur Android</h3>
+    <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application » (ou « Ajouter à l'écran d'accueil »). Bip fonctionne ensuite sans connexion, en plein écran.</p>
+    <h3>Réglages</h3>
+    <div class="toggles">
+      <button class="tg" id="tgVoice" role="switch"><span>Voix qui lit les consignes</span><span class="sw"></span></button>
+      <button class="tg" id="tgSound" role="switch"><span>Petits sons</span><span class="sw"></span></button>
+      <button class="tg" id="tgAll" role="switch"><span>Ouvrir tous les niveaux</span><span class="sw"></span></button>
+      <button class="tg danger" id="btnReset"><span id="resetLabel">Effacer la progression</span></button>
+    </div>
+  </div>
+</div>
+<canvas id="confetti" hidden></canvas>
+
+<script>
+/*@ENGINE@*/
+/*@LEVELS@*/
+/*@APP@*/
+</script>
