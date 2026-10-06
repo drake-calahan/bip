@@ -4,7 +4,7 @@ const newId = () => 'k' + (UID++);
 const G = { i: -1, lv: null, P: null, v: 0, prog: [], fn: [], target: 'main', busy: false, abort: false, step: null,
   fails: 0, dirty: false, last: null, hintT: 0, spd: 1, told: {}, mode: 'classic', sandbox: false, daily: false,
   tiles: {}, tool: 'r', cellPx: 64, sb: { rows: [], tool: 'R', cur: 0 }, sbCellPx: 64 };
-const hasFn = () => G.lv.pal.includes('star');
+const hasFn = () => !!(G.lv.pal && G.lv.pal.includes('star'));
 const totalBlocks = () => countBlocks(G.prog) + countBlocks(G.fn);
 
 const WORLD_WHO = ['zoe', 'zoe', 'papi', 'noctule'];
@@ -92,8 +92,9 @@ function buildBoard() {
   P.cells.forEach((k, idx) => {
     if (k === 'grass') return;
     const x = idx % P.w, y = (idx / P.w) | 0;
-    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switchc: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest' }[k];
-    h += `<div class="it ${k}" data-idx="${idx}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
+    const cls = k === 'switch' ? 'switchc' : k;
+    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest' }[k];
+    h += `<div class="it ${cls}" data-idx="${idx}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
   });
   P.crates.forEach((c, i) => { h += `<div class="it crate" data-ci="${i}" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
   P.toys.forEach((t, i) => { h += `<div class="it toy toy-${t.k}" data-i="${i}" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
@@ -717,6 +718,7 @@ function win() {
     save.stars[G.lv.id] = Math.max(prev, stars); persist();
   }
   checkStickers();
+  if (G.sandbox) award('sandboxwin');
   if (G.daily) { save.daily[DAILY_IDX] = true; persist(); award('daily1'); }
   SFX.win(); buzz([30, 60, 30]);
   confetti();
@@ -724,8 +726,8 @@ function win() {
   setTimeout(() => showWin(stars, n, par), RM ? 300 : 1000);
 }
 function showWin(stars, n, par) {
-  const lastLevel = !G.sandbox && !G.daily && G.i === LEVELS.length - 1;
-  const chapterEnd = !lastLevel && !G.sandbox && !G.daily && G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
+  const lastLevel = G.i === LAST_STORY;
+  const chapterEnd = !lastLevel && G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
   $('#winBip').innerHTML = robotSVG();
   $('#winStars').innerHTML = [1, 2, 3].map(k => I.star(k <= stars)).join('');
   $$('#winStars svg.on').forEach((s, k) => { s.style.animationDelay = (k * 0.18) + 's'; });
@@ -749,8 +751,7 @@ function afterWinNext() {
   $('#win').hidden = true;
   if (G.sandbox) { openSandbox(); return; }
   if (G.daily) { show('home'); return; }
-  const lastLevel = G.i === LEVELS.length - 1;
-  if (lastLevel) {
+  if (G.i >= LAST_STORY) {
     playStory([
       { who: 'zoe', line: 'Regarde qui arrive… tout le monde est là, et le panier est plein !' },
       { who: 'tous', title: 'Le grand pique-nique', line: 'Merci champion ! Tu as retrouvé tous les jouets et préparé le plus beau pique-nique du monde. Bip est très fier de toi !' },

@@ -63,6 +63,13 @@ for (const lv of LEVELS) {
   }
   line += `par=${par}${lv.max ? ' max=' + lv.max : ''}`;
   if (lv.max && par > lv.max) { line += ' OVER MAX'; ok = false; }
+  // la solution ne doit utiliser que des blocs de la palette
+  const pal = new Set([...(lv.pal || []), 'star']);
+  const src = [lv.sol || '', lv.fn || ''].join(' ');
+  const structural = new Set(['(', ')', '|']);
+  const used = (src.match(/N\d+\(|W[ot]\(|I[po]\(|\(|\)|\||tl|tr|\*|[rludfj]/g) || []);
+  const bad = used.filter(t => !structural.has(t) && !/^(N\d+\(|W[ot]\(|I[po]\()$/.test(t) && !pal.has(t === '*' ? 'star' : t));
+  if (bad.length) { line += ` PAL-MISSING:${bad.join('')}`; ok = false; }
   if (par != null && par > prevPar + 4) line += ' (SPIKE?)';
   if (par != null) prevPar = par;
   curve.push([lv.id, ch.name, par]);

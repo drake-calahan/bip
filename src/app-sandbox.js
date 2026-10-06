@@ -41,6 +41,7 @@ function persistSb() {
   save.sandbox[G.sb.cur] = { rows: G.sb.rows.slice() };
   persist();
   renderSbSlots();
+  award('sandbox1');
 }
 function renderSbSlots() {
   $('#sbSlots').innerHTML = '<span>Jardins</span>' + save.sandbox.map((s, i) =>
@@ -68,8 +69,9 @@ function renderSbBoard() {
   P.cells.forEach((k, idx) => {
     if (k === 'grass') return;
     const x = idx % P.w, y = (idx / P.w) | 0;
-    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switchc: 'switchc', gate: 'gate', flower: 'flower' }[k];
-    h += `<div class="it ${k}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
+    const cls = k === 'switch' ? 'switchc' : k;
+    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower' }[k];
+    h += `<div class="it ${cls}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
   });
   P.crates.forEach(c => { h += `<div class="it crate" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
   P.toys.forEach((t, i) => { h += `<div class="it toy" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });

@@ -243,13 +243,16 @@ const DAILY_IDX = (d => (d.getDay() + 6) % 7)(new Date());
 const DAILY_NAMES = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 const DAILY_LEVELS = LEVELS.filter(l => l.daily);
 const dailyLevel = () => DAILY_LEVELS[DAILY_IDX];
+/* Dernier niveau de l'aventure (les défis de Zoé vivent après) */
+const LAST_STORY = LEVELS.reduce((a, l, i) => (l.ch >= 0 ? i : a), 0);
 
 /* Préparation des niveaux : solution de référence, par, variantes */
 LEVELS.forEach(lv => {
+  lv.nv = lv.variants ? lv.variants.length : 1;
+  if (lv.mode === 'ball') { lv.ref = []; lv.refFn = []; lv.par = (lv.tiles || []).length; return; }
   lv.refFn = lv.fn ? parseProg(lv.fn) : [];
   lv.ref = lv.sol ? parseProg(lv.sol) : (solve(lv, lv.pal) || []).map((t, i) => ({ t, id: 'h' + i }));
   lv.par = countBlocks(lv.ref) + countBlocks(lv.refFn);
-  lv.nv = lv.variants ? lv.variants.length : 1;
 });
 
 /* ---------- Écrans ---------- */

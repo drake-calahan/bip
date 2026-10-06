@@ -19,7 +19,7 @@ function parseBallMap(lv, v) {
       cells.push(kind);
     }
   }
-  return { w, h, cells, start, nest, face: lv.face || 'r' };
+  return { w, h, cells, start, nest, face: lv.face || 'r', toys: [], box: null, crates: [], pads: [], switches: [], gates: [], flowers: [] };
 }
 
 /* tiles : liste [x, y, dir] (r l u d). Renvoie { result, steps, why }.

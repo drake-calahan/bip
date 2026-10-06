@@ -103,6 +103,7 @@ svg { display: block; }
 .extra svg, .extra .eico { width: 26px; height: 26px; }
 .extra .eico { display: grid; place-items: center; }
 .extra:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
+.extra > span:not(.eico) { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; text-align: left; }
 .extra small { font-family: var(--text); font-weight: 400; font-size: 13px; color: var(--ink-soft); }
 .extra.daily { background: #FFF6E3; box-shadow: 0 4px 0 var(--loop-edge); }
 .daily-dots { display: flex; gap: 3px; }

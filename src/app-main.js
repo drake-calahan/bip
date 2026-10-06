@@ -100,3 +100,5 @@ function wire() {
   show('home');
 }
 wire();
+// Accès QA/dev (console) : window.__bip.openLevel(i), .run(), .state()
+window.__bip = { G, openLevel, openLevelObj, parseProg, runAll, LEVELS, CHAPTERS, WORLDS, simulate };

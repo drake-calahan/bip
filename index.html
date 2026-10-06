@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#EAF3F3">
-<meta name="description" content="Bip le robot : un jeu pour initier les enfants de CP à la programmation avec des blocs.">
+<meta name="description" content="Bip le robot : un jeu pour initier les enfants de 5 à 7 ans à la programmation et aux petites machines, avec des blocs.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Bip">
@@ -35,7 +35,7 @@
   --iff: #F39AC4; --iff-edge: #D677A4; --iff-soft: #FDEAF3; --iff-ink: #6E2148;
   --fnc: #FFB570; --fnc-edge: #E8924A; --fnc-soft: #FFF0E0;
   --go: #44BC7D; --go-edge: #2E9A60; --stop: #FF9A66; --stop-edge: #E1784A;
-  --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F;
+  --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F; --pollen: #FFD36B;
   --display: 'Grandstander', 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
   --text: 'Andika', 'Verdana', system-ui, sans-serif;
   --blk: clamp(44px, calc((100vw - 32px - 40px) / 6), 60px);
@@ -55,22 +55,29 @@ button:focus-visible, .blk:focus-visible { outline: 3px solid var(--ink); outlin
 svg { display: block; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
-/* ---------- Accueil ---------- */
+/* ---------- Accueil : la grande promenade ---------- */
 #home { height: 100%; overflow-y: auto; padding-inline: 16px; padding-block: 8px 28px; }
 .home-in { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
 .hero { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4px 18px; padding: 20px 20px 22px; border-radius: 28px;
   background: radial-gradient(120% 90% at 20% 110%, var(--grass-b) 0 38%, transparent 38.5%), radial-gradient(90% 70% at 95% 120%, var(--grass-a) 0 45%, transparent 45.5%), var(--card); overflow: hidden; }
-.hero-art { position: relative; width: clamp(108px, 30vw, 170px); aspect-ratio: 1; grid-row: span 3; max-width: 100%; }
+.hero-art { position: relative; width: clamp(108px, 30vw, 170px); aspect-ratio: 1; grid-row: span 4; max-width: 100%; }
 .hero-art .bipsvg { width: 100%; height: 100%; animation: bob 3.2s ease-in-out infinite; }
 .hero-art .float { position: absolute; width: 34%; }
 .hero-art .f1 { right: -14%; top: 2%; animation: bob 2.8s ease-in-out .4s infinite; }
 .hero-art .f2 { left: -12%; bottom: 0; width: 30%; animation: bob 3.4s ease-in-out .9s infinite; }
+.hero-art .bloom { position: absolute; width: 22%; animation: bob 3s ease-in-out infinite; }
 .hero h1 { font-family: var(--display); font-weight: 800; font-size: clamp(48px, 13vw, 76px); line-height: .9; margin: 0; letter-spacing: -.01em; }
-.hero p { margin: 0; color: var(--ink-soft); font-size: clamp(16px, 4vw, 19px); text-wrap: balance; }
+.hero .sub { margin: 0; color: var(--ink-soft); font-size: clamp(16px, 4vw, 19px); text-wrap: balance; }
+.hero .garden { display: flex; gap: 3px; margin-top: 4px; min-height: 20px; }
+.hero .garden span { display: block; width: 20px; height: 20px; animation: pop .5s cubic-bezier(.3, 1.6, .5, 1) backwards; }
+.hero .garden svg { width: 100%; height: 100%; }
 .big-go { justify-self: start; margin-top: 8px; display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 24px;
   color: #fff; background: var(--go); padding: 12px 26px 12px 20px; border-radius: 999px; box-shadow: 0 5px 0 var(--go-edge); }
 .big-go svg { width: 26px; height: 26px; }
 .big-go:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--go-edge); }
+.world-head { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-family: var(--display); font-weight: 800; font-size: 17px; margin: 6px 4px -4px; }
+.world-head .n { flex: none; width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; color: #fff; background: var(--tone, var(--move)); font-size: 16px; }
+.world-head::after { content: ''; flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
 .chap { background: var(--card); border-radius: 24px; padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 12px; }
 .chap-head { display: flex; align-items: center; gap: 12px; }
 .chap-num { flex: none; width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 19px; color: #fff; background: var(--tone); }
@@ -79,6 +86,7 @@ svg { display: block; }
 .chap-head > div { min-width: 0; flex: 1; }
 .chap-ico { flex: none; width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; color: #fff; background: var(--tone); opacity: .9; }
 .chap-ico svg { width: 60%; height: 60%; }
+.chap.done .chap-ico { background: var(--go); }
 .chap[data-tone="sky"] { --tone: var(--move); --tone-edge: var(--move-edge); }
 .chap[data-tone="leaf"] { --tone: var(--leaf); --tone-edge: #4E9E61; }
 .chap[data-tone="water"] { --tone: #5DB6DE; --tone-edge: #3F96BF; }
@@ -88,9 +96,13 @@ svg { display: block; }
 .chap[data-tone="coral"] { --tone: #F58A70; --tone-edge: #D66A50; }
 .chap[data-tone="pink"] { --tone: #E585B4; --tone-edge: #C76594; }
 .chap[data-tone="peach"] { --tone: #F7A55E; --tone-edge: #D9873F; }
+.chap[data-tone="rust"] { --tone: #C97B4A; --tone-edge: #A55D33; }
+.chap[data-tone="wood"] { --tone: #B08954; --tone-edge: #8E6C3D; }
+.chap[data-tone="gold"] { --tone: #E3B341; --tone-edge: #C2922A; }
+.chap[data-tone="orange"] { --tone: #F58A70; --tone-edge: #D66A50; }
 .chap[data-tone="slate"] { --tone: #7286A6; --tone-edge: #566A88; }
-.chap-sep { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-family: var(--display); font-weight: 800; font-size: 15px; margin: 4px 4px -4px; }
-.chap-sep::after { content: ''; flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
+.chap[data-tone="indigo"] { --tone: #7C89C9; --tone-edge: #5D6BAE; }
+.chap[data-tone="night"] { --tone: #6A6DAE; --tone-edge: #515491; }
 .lvls { display: flex; flex-wrap: wrap; gap: 12px 14px; }
 .lvl { position: relative; width: 58px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .lvl .n { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 22px; color: #fff; background: var(--tone); box-shadow: 0 4px 0 var(--tone-edge); }
@@ -101,9 +113,18 @@ svg { display: block; }
 .lvl:disabled .n svg { width: 22px; height: 22px; }
 .lvl.next .n { animation: ring 1.8s ease-out infinite; }
 .lvl:not(:disabled):active .n { transform: translateY(3px); box-shadow: 0 1px 0 var(--tone-edge); }
-.adults-row { display: flex; justify-content: center; }
-.adults { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 16px; padding: 10px 16px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); }
-.adults svg { width: 20px; height: 20px; }
+.extra-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.extra { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 999px; background: var(--card); box-shadow: 0 4px 0 var(--line);
+  font-family: var(--display); font-weight: 800; font-size: 17px; color: var(--ink); }
+.extra svg, .extra .eico { width: 26px; height: 26px; }
+.extra .eico { display: grid; place-items: center; }
+.extra:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
+.extra > span:not(.eico) { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; text-align: left; }
+.extra small { font-family: var(--text); font-weight: 400; font-size: 13px; color: var(--ink-soft); }
+.extra.daily { background: #FFF6E3; box-shadow: 0 4px 0 var(--loop-edge); }
+.daily-dots { display: flex; gap: 3px; }
+.daily-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--paper-2); border: 1px solid var(--line); }
+.daily-dots i.on { background: var(--star); border-color: var(--loop-edge); }
 
 /* ---------- Jeu ---------- */
 #game { height: 100%; display: grid; gap: 10px; padding-inline: 16px; padding-block: 8px 12px;
@@ -140,9 +161,28 @@ svg { display: block; }
   background-image: conic-gradient(var(--grass-b) 25%, transparent 0 50%, var(--grass-b) 0 75%, transparent 0);
   background-size: calc(var(--cell) * 2) calc(var(--cell) * 2); }
 .board::after { content: ''; position: absolute; inset: 0; border-radius: 17px; box-shadow: inset 0 3px 0 rgba(255,255,255,.5); pointer-events: none; }
+.board.night { background-color: #3E4470; background-image: conic-gradient(#454B7A 25%, transparent 0 50%, #454B7A 0 75%, transparent 0); border-color: #2E3358; }
+.board.night::after { box-shadow: inset 0 3px 0 rgba(255,255,255,.12); }
+.board.night .it > svg { filter: brightness(.92); }
+.board.night .toy-e { animation: glow 2.2s ease-in-out infinite !important; }
+.board.night .toy-e svg { filter: none; }
 .it { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
 .it > svg { width: 86%; height: 86%; }
-.it.puddle > svg { width: 100%; height: 100%; }
+.it.puddle > svg, .it.water > svg { width: 100%; height: 100%; }
+.it.pad { transition: transform .5s ease-in, opacity .5s; }
+.it.pad.sunk { transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell) + 14%)) scale(.5); opacity: 0; }
+.it.plank > svg { width: 100%; height: 100%; }
+.it.switchc > svg { width: 80%; height: 80%; }
+.it.switchc.pressed > svg { animation: pop .4s cubic-bezier(.3, 1.6, .5, 1); }
+.it.gate > svg { width: 100%; height: 100%; transition: transform .6s ease-in-out, opacity .6s; }
+.it.gate.open > svg { transform: translateY(30%) scaleY(.1); opacity: 0; }
+.it.flower > svg { width: 92%; height: 92%; }
+.it.flower .fp { opacity: .25; }
+.it.flower.painted .fp { opacity: 1; }
+.it.flower.painted > svg { animation: pop .45s cubic-bezier(.3, 1.6, .5, 1); }
+.it.crate { z-index: 3; transition: transform .3s ease-out; }
+.it.crate > svg { width: 88%; height: 88%; }
+.it.nest > svg { width: 96%; height: 96%; }
 .it.toy > svg { width: 74%; height: 74%; animation: idle 3s ease-in-out infinite; animation-delay: calc(var(--x) * -.4s); }
 .it.toy.got > svg { animation: collect .55s ease-in forwards; }
 .it.box > svg { width: 90%; height: 90%; }
@@ -154,17 +194,27 @@ svg { display: block; }
 .facing { position: absolute; left: 50%; top: 50%; width: 0; height: 0; border-left: 11px solid var(--bip-dark); border-top: 9px solid transparent; border-bottom: 9px solid transparent; opacity: .75;
   transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) translateX(calc(var(--cell) * .5)); transition: transform .2s; pointer-events: none; }
 .robot[data-face="r"] { --rot: 0deg; } .robot[data-face="d"] { --rot: 90deg; } .robot[data-face="l"] { --rot: 180deg; } .robot[data-face="u"] { --rot: -90deg; }
+.ball-sprite { position: absolute; z-index: 5; width: var(--cell); height: var(--cell); display: grid; place-items: center;
+  transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); transition: transform .22s ease-in-out; }
+.ball-sprite svg { width: 80%; height: 80%; }
+.ball-sprite.roll { animation: rollball .22s linear; }
 .fx { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
 .dot { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell) + var(--ox, 0px)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
 .dot.corner { place-items: start start; padding: 3%; }
 .dot.corner b { width: 34%; height: 34%; }
 .dot b { width: 40%; height: 40%; border-radius: 50%; background: rgba(255,255,255,.9); border: 3px dashed var(--bip-dark); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: calc(var(--cell) * .2); color: var(--bip-dark); opacity: 0; animation: dotin .3s ease-out forwards; animation-delay: inherit; }
 .dot.jumpdot b { border-color: var(--jump-edge); color: var(--jump-edge); }
+.paint { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; pointer-events: none; }
+.paint i { width: 46%; height: 46%; border-radius: 46% 54% 52% 48%; background: var(--pollen); opacity: .85; animation: pop .3s ease-out; box-shadow: 0 0 0 3px rgba(255, 211, 107, .25); }
 .splash { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); }
 .splash i { position: absolute; inset: 18%; border-radius: 50%; border: 4px solid #fff; opacity: 0; animation: ripple .9s ease-out forwards; }
 .splash i:nth-child(2) { animation-delay: .18s; }
 .bonk { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
 .bonk svg { width: 50%; height: 50%; animation: bonk .6s ease-out forwards; }
+.tilemark { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
+.tilemark i { width: 62%; height: 62%; border-radius: 30%; background: rgba(255,255,255,.85); border: 3px solid var(--bip-dark); display: grid; place-items: center; animation: pop .25s ease-out; }
+.tilemark i svg { width: 78%; height: 78%; color: var(--bip-dark); }
+.tilemark.pick i { border-color: var(--go); background: #E9F9F0; }
 
 /* Visages de Bip */
 .bipsvg .shadow { fill: rgba(44, 58, 76, .14); }
@@ -268,8 +318,21 @@ svg { display: block; }
 .sense.yes i { border-color: var(--go); }
 @keyframes sense { 0% { transform: scale(.4); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1); opacity: .9; } }
 .pal { grid-area: pal; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 4px; }
+.pal .blk.eraser { background: var(--paper-2); color: var(--ink-soft); box-shadow: 0 4px 0 var(--line); }
 .running .pal .blk { opacity: .55; }
 .running #progCard .slot { opacity: .4; }
+
+/* Mode création */
+.sandbox-tray { grid-area: pal; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 4px; }
+.sb-item { flex: none; width: var(--blk); height: var(--blk); border-radius: 16px; background: var(--card); box-shadow: 0 4px 0 var(--line); display: grid; place-items: center; }
+.sb-item svg { width: 66%; height: 66%; }
+.sb-item.on { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--go); }
+.sb-item.eraser { color: var(--ink-soft); }
+.sb-item .t { position: absolute; }
+.sb-slots { display: flex; align-items: center; gap: 6px; font-size: 15px; color: var(--ink-soft); }
+.sb-slots button { min-width: 40px; height: 32px; padding: 0 10px; border-radius: 999px; background: var(--card); font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--ink-soft); box-shadow: 0 2px 0 var(--line); }
+.sb-slots button.on { background: var(--ink); color: #fff; box-shadow: none; }
+.sb-slots button.has { color: var(--go-edge); }
 
 .ghost { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; margin: 0; opacity: .95; box-shadow: 0 10px 24px rgba(44, 58, 76, .25) !important; }
 .lifting { position: absolute !important; opacity: 0 !important; pointer-events: none; }
@@ -279,7 +342,7 @@ svg { display: block; }
 .hand { position: fixed; z-index: 40; width: 54px; height: 54px; margin: -6px 0 0 -14px; pointer-events: none; animation: tap 1.3s ease-in-out infinite; filter: drop-shadow(0 4px 6px rgba(44, 58, 76, .25)); }
 .hand::before { content: ''; position: absolute; left: 4px; top: -2px; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 3px solid var(--go); animation: tapring 1.3s ease-out infinite; }
 
-/* Bravo + feuille adultes */
+/* ---------- Superpositions : histoire, bravo, album, adultes ---------- */
 .overlay { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 16px; background: rgba(44, 58, 76, .35); animation: fade .25s ease-out; }
 .win-card { width: min(420px, 100%); background: var(--card); border-radius: 30px; padding: 20px 20px 22px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; animation: rise .45s cubic-bezier(.3, 1.4, .5, 1); }
 .win-card .bipwrap { width: 108px; height: 108px; }
@@ -295,6 +358,37 @@ svg { display: block; }
 .btn.go { color: #fff; background: var(--go); box-shadow: 0 5px 0 var(--go-edge); }
 .btn.soft { background: var(--paper); box-shadow: 0 5px 0 var(--line); }
 .btn:active { transform: translateY(3px); }
+
+.story-card { width: min(460px, 100%); background: var(--card); border-radius: 30px; padding: 22px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; animation: rise .4s cubic-bezier(.3, 1.4, .5, 1); }
+.story-art { width: min(150px, 40vw); aspect-ratio: 1; }
+.story-art svg { width: 100%; height: 100%; }
+.story-art.wide { width: min(300px, 70vw); aspect-ratio: 2 / 1.15; }
+.story-who { font-family: var(--display); font-weight: 800; font-size: 19px; color: var(--ink-soft); }
+.story-line { font-size: 19px; line-height: 1.4; text-wrap: balance; }
+.story-dots { display: flex; gap: 5px; }
+.story-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--paper-2); }
+.story-dots i.on { background: var(--ink-soft); }
+
+.album-card { width: min(560px, 100%); max-height: 88%; overflow-y: auto; background: var(--card); border-radius: 28px; padding: 22px 18px 24px; animation: rise .35s ease-out; position: relative; }
+.album-card h2 { margin: 0 44px 4px 0; font-family: var(--display); font-weight: 800; font-size: 26px; }
+.album-card > p { margin: 0 0 12px; color: var(--ink-soft); font-size: 15px; }
+.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 10px; }
+.stk { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px 8px; border-radius: 18px; background: var(--paper); text-align: center; }
+.stk .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--paper-2); color: var(--ink-soft); }
+.stk .ico svg { width: 30px; height: 30px; }
+.stk.got .ico { background: var(--loop-soft); color: var(--loop-ink); box-shadow: inset 0 0 0 2px var(--loop); }
+.stk b { font-family: var(--display); font-weight: 800; font-size: 12.5px; line-height: 1.15; }
+.stk small { display: none; }
+.stk.got small { display: block; font-size: 11px; color: var(--ink-soft); }
+.stk:not(.got) { opacity: .55; }
+.stk.new .ico { animation: pop .5s cubic-bezier(.3, 1.6, .5, 1); }
+.sticker-toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 90; display: flex; align-items: center; gap: 10px;
+  background: var(--card); border-radius: 999px; padding: 10px 18px 10px 10px; box-shadow: 0 8px 24px rgba(44,58,76,.3); animation: rise .4s cubic-bezier(.3, 1.4, .5, 1); }
+.sticker-toast .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--loop-soft); color: var(--loop-ink); box-shadow: inset 0 0 0 2px var(--loop); }
+.sticker-toast .ico svg { width: 30px; height: 30px; }
+.sticker-toast b { font-family: var(--display); font-weight: 800; font-size: 16px; }
+.sticker-toast small { display: block; color: var(--ink-soft); font-size: 13px; }
+
 .sheet { align-items: end; }
 @media (min-width: 640px) { .sheet { align-items: center; } }
 .sheet-card { position: relative; width: min(640px, 100%); max-height: 88%; overflow-y: auto; background: var(--card); border-radius: 28px; padding: 22px 20px 26px; animation: rise .35s ease-out; -webkit-user-select: text; user-select: text; }
@@ -341,6 +435,8 @@ svg { display: block; }
 @keyframes tapring { 0%, 40% { opacity: 0; transform: scale(.4); } 55% { opacity: 1; } 100% { opacity: 0; transform: scale(1.6); } }
 @keyframes fade { 0% { opacity: 0; } }
 @keyframes rise { 0% { transform: translateY(30px) scale(.96); opacity: 0; } }
+@keyframes rollball { 50% { scale: 1.1 .9; } }
+@keyframes glow { 50% { filter: brightness(1.35); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .05s !important; }
 }
@@ -365,6 +461,62 @@ svg { display: block; }
       <path d="M12 56C10 40 29 30 46 34C58 21 85 28 87 46C95 58 85 77 64 75C52 83 29 81 21 73C11 71 8 62 12 56Z" fill="#9AD2EE"/>
       <ellipse cx="43" cy="52" rx="14" ry="6" fill="none" stroke="#E8F7FF" stroke-width="3.5"/>
       <ellipse cx="67" cy="61" rx="8" ry="3.5" fill="none" stroke="#E8F7FF" stroke-width="3"/>
+    </symbol>
+    <symbol id="water" viewBox="0 0 100 100">
+      <path d="M12 56C10 40 29 30 46 34C58 21 85 28 87 46C95 58 85 77 64 75C52 83 29 81 21 73C11 71 8 62 12 56Z" fill="#8CC6EA"/>
+      <path d="M30 55q7-5 14 0t14 0" fill="none" stroke="#E8F7FF" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M52 64q6-4 12 0" fill="none" stroke="#E8F7FF" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="pad" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="58" rx="38" ry="26" fill="#6FBF73"/>
+      <ellipse cx="50" cy="55" rx="34" ry="22" fill="#8CD489"/>
+      <path d="M50 33V77M50 50C42 46 34 44 26 46M50 58C58 54 66 54 73 58" stroke="#5FAA62" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="50" cy="40" r="4" fill="#F2A9C4"/>
+    </symbol>
+    <symbol id="plank" viewBox="0 0 100 100">
+      <path d="M12 56C10 40 29 30 46 34C58 21 85 28 87 46C95 58 85 77 64 75C52 83 29 81 21 73C11 71 8 62 12 56Z" fill="#8CC6EA"/>
+      <rect x="8" y="38" width="84" height="24" rx="8" fill="#C89B62"/>
+      <rect x="8" y="38" width="84" height="8" rx="4" fill="#DBB57F"/>
+      <path d="M28 48h12M56 52h14" stroke="#A97C47" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="switchc" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="84" rx="26" ry="6" fill="#9CC78D" opacity=".6"/>
+      <rect x="44" y="52" width="12" height="24" rx="5" fill="#F0E6D2"/>
+      <path d="M22 56C22 34 34 22 50 22C66 22 78 34 78 56C78 62 72 66 64 66H36C28 66 22 62 22 56Z" fill="#E5566B"/>
+      <circle cx="40" cy="40" r="7" fill="#FFFFFF" opacity=".85"/>
+      <circle cx="60" cy="44" r="5" fill="#FFFFFF" opacity=".6"/>
+      <path d="M35 62C40 65 60 65 65 62" stroke="#B03A4E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="gate" viewBox="0 0 100 100">
+      <rect x="16" y="18" width="10" height="66" rx="5" fill="#A8794E"/>
+      <rect x="74" y="18" width="10" height="66" rx="5" fill="#A8794E"/>
+      <rect x="16" y="18" width="68" height="10" rx="5" fill="#BC8B5C"/>
+      <rect x="16" y="48" width="68" height="9" rx="4.5" fill="#BC8B5C"/>
+      <rect x="16" y="74" width="68" height="10" rx="5" fill="#BC8B5C"/>
+      <circle cx="50" cy="53" r="7" fill="#FFD36B" stroke="#A8794E" stroke-width="3"/>
+    </symbol>
+    <symbol id="crate" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="32" ry="5" fill="#2C3A4C" opacity=".12"/>
+      <rect x="14" y="20" width="72" height="64" rx="10" fill="#D9A968"/>
+      <rect x="14" y="20" width="72" height="64" rx="10" fill="none" stroke="#B4854A" stroke-width="5"/>
+      <path d="M14 34h72M14 70h72" stroke="#B4854A" stroke-width="5"/>
+      <path d="M30 20v64M70 20v64" stroke="#B4854A" stroke-width="5"/>
+      <circle cx="50" cy="52" r="9" fill="#F2C98A"/>
+    </symbol>
+    <symbol id="flower" viewBox="0 0 100 100">
+      <path d="M50 62V86M50 74C44 74 38 70 36 64M50 78C56 78 62 75 64 70" stroke="#5FAA62" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <g class="fp">
+        <circle cx="50" cy="30" r="13" fill="#FFD36B"/><circle cx="32" cy="44" r="13" fill="#FFD36B"/><circle cx="68" cy="44" r="13" fill="#FFD36B"/>
+        <circle cx="38" cy="62" r="12" fill="#FFC94F"/><circle cx="62" cy="62" r="12" fill="#FFC94F"/><circle cx="50" cy="48" r="12" fill="#FFE08A"/>
+      </g>
+      <circle cx="50" cy="49" r="8" fill="#E8934A"/>
+      <g fill="#FFFFFF" opacity=".35"><circle cx="36" cy="40" r="4"/><circle cx="64" cy="40" r="4"/></g>
+    </symbol>
+    <symbol id="nest" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="62" rx="38" ry="22" fill="#B08954"/>
+      <ellipse cx="50" cy="56" rx="32" ry="16" fill="#8E6C3D"/>
+      <path d="M22 58q28 12 56 0M26 66q24 10 48 0" stroke="#6E5230" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M34 50q16-8 32 0" stroke="#C89B62" stroke-width="4" fill="none" stroke-linecap="round"/>
     </symbol>
     <symbol id="box" viewBox="0 0 100 100">
       <ellipse cx="50" cy="87" rx="35" ry="6" fill="#9CC78D" opacity=".6"/>
@@ -413,8 +565,118 @@ svg { display: block; }
       <rect x="28" y="30" width="44" height="44" rx="8" fill="none" stroke="#FFFFFF" stroke-width="4" opacity=".7"/>
       <path d="M38 67L50 36L62 67M42 57H58" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
+    <symbol id="toy-e" viewBox="0 0 100 100">
+      <g class="e-glow"><circle cx="50" cy="52" r="38" fill="#FFE9A8" opacity=".45"/></g>
+      <path d="M50 26C36 26 30 40 32 52C34 64 42 76 50 76C58 76 66 64 68 52C70 40 64 26 50 26Z" fill="#FFE08A"/>
+      <circle cx="43" cy="46" r="4" fill="#2C3A4C"/><circle cx="57" cy="46" r="4" fill="#2C3A4C"/>
+      <path d="M45 58Q50 62 55 58" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M36 30L30 20M64 30L70 20M50 24V14" stroke="#E9A923" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="50" cy="34" r="6" fill="#FFF6D8"/>
+    </symbol>
     <symbol id="star" viewBox="0 0 100 100">
       <path d="M50 8L62 36L92 38L69 58L77 88L50 72L23 88L31 58L8 38L38 36Z" stroke-linejoin="round" stroke-width="8"/>
+    </symbol>
+    <symbol id="ball" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="24" ry="5" fill="#2C3A4C" opacity=".12"/>
+      <circle cx="50" cy="50" r="34" fill="#FF8878"/>
+      <path d="M20 45Q50 64 80 45" fill="none" stroke="#FFFFFF" stroke-width="7"/>
+      <path d="M27 27Q50 38 73 27" fill="none" stroke="#FFD36B" stroke-width="6"/>
+      <circle cx="39" cy="42" r="4.5" fill="#2C3A4C"/><circle cx="61" cy="42" r="4.5" fill="#2C3A4C"/>
+      <path d="M43 58Q50 64 57 58" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-zoe" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="22" ry="4" fill="#2C3A4C" opacity=".1"/>
+      <ellipse cx="50" cy="58" rx="30" ry="26" fill="#E5566B"/>
+      <path d="M50 33C36 36 24 46 22 58L50 58Z" fill="#2C3A4C"/>
+      <path d="M50 33C64 36 76 46 78 58L50 58Z" fill="#2C3A4C"/>
+      <path d="M26 66C34 72 42 75 50 75C58 75 66 72 74 66L78 58H22Z" fill="#E5566B"/>
+      <circle cx="50" cy="58" r="10" fill="#2C3A4C"/>
+      <circle cx="38" cy="52" r="6.5" fill="#FFFFFF"/><circle cx="62" cy="52" r="6.5" fill="#FFFFFF"/>
+      <circle cx="39" cy="53" r="3" fill="#2C3A4C"/><circle cx="61" cy="53" r="3" fill="#2C3A4C"/>
+      <path d="M28 44C20 40 14 42 10 48C16 50 22 49 28 48Z" fill="#E5566B"/>
+      <path d="M72 44C80 40 86 42 90 48C84 50 78 49 72 48Z" fill="#E5566B"/>
+      <path d="M44 70Q50 74 56 70" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-toupie" viewBox="0 0 100 100">
+      <rect x="45" y="8" width="10" height="16" rx="4" fill="#8B78C9"/>
+      <path d="M16 44C16 32 32 26 50 26C68 26 84 32 84 44C84 56 62 70 52 80C51 81.5 49 81.5 48 80C38 70 16 56 16 44Z" fill="#B8A4F2"/>
+      <path d="M17 46C30 54 70 54 83 46" fill="none" stroke="#FF90B3" stroke-width="7"/>
+      <circle cx="40" cy="38" r="4" fill="#2C3A4C"/><circle cx="60" cy="38" r="4" fill="#2C3A4C"/>
+      <path d="M43 46Q50 51 57 46" fill="none" stroke="#2C3A4C" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-lulu" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="86" rx="30" ry="6" fill="#2C3A4C" opacity=".1"/>
+      <ellipse cx="50" cy="66" rx="32" ry="18" fill="#69BD7B"/>
+      <circle cx="46" cy="38" r="22" fill="#7BCB8C"/>
+      <circle cx="39" cy="34" r="7" fill="#FFFFFF"/><circle cx="57" cy="34" r="7" fill="#FFFFFF"/>
+      <circle cx="40" cy="35" r="3" fill="#2C3A4C"/><circle cx="56" cy="35" r="3" fill="#2C3A4C"/>
+      <path d="M42 46Q46 50 50 46Q54 50 58 46" fill="none" stroke="#2C3A4C" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="30" cy="42" r="5" fill="#F2A9C4" opacity=".7"/><circle cx="62" cy="42" r="5" fill="#F2A9C4" opacity=".7"/>
+    </symbol>
+    <symbol id="avatar-papi" viewBox="0 0 100 100">
+      <rect x="30" y="30" width="40" height="42" rx="12" fill="#B08954"/>
+      <rect x="36" y="38" width="28" height="18" rx="7" fill="#F5EFE2"/>
+      <circle cx="44" cy="47" r="3.4" fill="#2C3A4C"/><circle cx="56" cy="47" r="3.4" fill="#2C3A4C"/>
+      <rect x="40" y="62" width="20" height="5" rx="2.5" fill="#8E6C3D"/>
+      <circle cx="24" cy="46" r="9" fill="none" stroke="#8E6C3D" stroke-width="5"/>
+      <circle cx="24" cy="46" r="2.5" fill="#8E6C3D"/>
+      <circle cx="76" cy="46" r="9" fill="none" stroke="#8E6C3D" stroke-width="5"/>
+      <circle cx="76" cy="46" r="2.5" fill="#8E6C3D"/>
+      <path d="M42 26C42 18 46 14 50 14C54 14 58 18 58 26" fill="none" stroke="#8E6C3D" stroke-width="5" stroke-linecap="round"/>
+      <rect x="38" y="72" width="10" height="12" rx="4" fill="#8E6C3D"/><rect x="52" y="72" width="10" height="12" rx="4" fill="#8E6C3D"/>
+    </symbol>
+    <symbol id="avatar-pilou" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="86" rx="28" ry="5" fill="#2C3A4C" opacity=".1"/>
+      <path d="M78 62C84 58 88 52 86 44C78 46 74 52 74 58Z" fill="#D9A968"/>
+      <circle cx="46" cy="62" r="28" fill="#C89B62"/>
+      <path d="M46 62m-28 0a28 28 0 0 1 56 0" fill="#DBAF74"/>
+      <path d="M24 54C30 50 40 48 48 50M26 66C32 62 42 60 50 62M30 76C36 73 44 72 52 73" stroke="#A97C47" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="62" cy="54" r="10" fill="#F5EFE2"/>
+      <circle cx="64" cy="54" r="4" fill="#2C3A4C"/>
+      <path d="M58 68Q62 71 66 68" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M40 34q4-6 0-10M52 32q4-6 0-10" fill="none" stroke="#A97C47" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-noctule" viewBox="0 0 100 100">
+      <circle cx="50" cy="54" r="40" fill="#FFE9A8" opacity=".4"/>
+      <path d="M50 28C40 28 34 38 36 50C38 62 44 74 50 74C56 74 62 62 64 50C66 38 60 28 50 28Z" fill="#FFD36B"/>
+      <circle cx="44" cy="46" r="3.6" fill="#2C3A4C"/><circle cx="56" cy="46" r="3.6" fill="#2C3A4C"/>
+      <path d="M46 56Q50 60 54 56" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M38 32L32 24M62 32L68 24M50 26V18" stroke="#E9A923" stroke-width="4" stroke-linecap="round"/>
+      <path d="M30 60l-8 4M70 60l8 4" stroke="#E9A923" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-ballon" viewBox="0 0 100 100">
+      <circle cx="50" cy="52" r="32" fill="#FF8878"/>
+      <path d="M21 47Q50 66 79 47" fill="none" stroke="#FFFFFF" stroke-width="7"/>
+      <path d="M28 30Q50 41 72 30" fill="none" stroke="#FFD36B" stroke-width="6"/>
+      <circle cx="39" cy="42" r="4.5" fill="#2C3A4C"/><circle cx="61" cy="42" r="4.5" fill="#2C3A4C"/>
+      <path d="M43 58Q50 64 57 58" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-cube" viewBox="0 0 100 100">
+      <rect x="22" y="24" width="56" height="56" rx="12" fill="#6ACBB0"/>
+      <rect x="30" y="32" width="40" height="40" rx="8" fill="none" stroke="#FFFFFF" stroke-width="4" opacity=".7"/>
+      <circle cx="40" cy="48" r="4" fill="#2C3A4C"/><circle cx="60" cy="48" r="4" fill="#2C3A4C"/>
+      <path d="M42 62Q50 68 58 62" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="picnic" viewBox="0 0 200 115">
+      <rect x="0" y="86" width="200" height="29" rx="10" fill="#CDE8C2"/>
+      <path d="M30 90L170 90 150 115 50 115Z" fill="#F2B8A0"/>
+      <path d="M40 102h120M60 92v20M140 92v20M100 90v25" stroke="#E29B82" stroke-width="4"/>
+      <ellipse cx="100" cy="52" rx="34" ry="16" fill="#E8AE70"/>
+      <path d="M70 48C70 32 84 24 100 24C116 24 130 32 130 48Z" fill="#D9945A"/>
+      <rect x="94" y="14" width="12" height="12" rx="4" fill="#B57A3E"/>
+      <circle cx="88" cy="44" r="5" fill="#FF8878"/><circle cx="104" cy="42" r="5" fill="#FFD256"/><circle cx="116" cy="46" r="4" fill="#6ACBB0"/>
+      <g transform="translate(20 46) scale(.42)"><use href="#avatar-zoe" width="100" height="100"/></g>
+      <g transform="translate(148 46) scale(.42)"><use href="#bip-body" width="100" height="100"/></g>
+      <g transform="translate(58 62) scale(.34)"><use href="#toy-n" width="100" height="100"/></g>
+      <g transform="translate(118 62) scale(.34)"><use href="#toy-c" width="100" height="100"/></g>
+      <circle cx="40" cy="20" r="5" fill="#FFE08A"/><circle cx="160" cy="16" r="4" fill="#FFE08A"/><circle cx="120" cy="10" r="3" fill="#FFE08A"/>
+    </symbol>
+    <symbol id="bip-body" viewBox="0 0 100 100">
+      <rect x="18" y="26" width="64" height="58" rx="21" fill="#77AFEA"/>
+      <rect x="28" y="36" width="44" height="30" rx="12" fill="#F5FAFF"/>
+      <ellipse cx="41" cy="51" rx="4.6" ry="6.2" fill="#2C3A4C"/><ellipse cx="59" cy="51" rx="4.6" ry="6.2" fill="#2C3A4C"/>
+      <circle cx="31" cy="74" r="4" fill="#FFB6B2"/><circle cx="69" cy="74" r="4" fill="#FFB6B2"/>
+      <circle cx="50" cy="12" r="6.5" fill="#FF9E6B"/>
     </symbol>
   </defs>
 </svg>
@@ -425,11 +687,18 @@ svg { display: block; }
       <header class="hero">
         <div class="hero-art" id="heroArt"></div>
         <h1>Bip</h1>
-        <p>Programme le petit robot pour ranger les jouets du jardin.</p>
-        <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Jouer</span></button>
+        <p class="sub">Programme le petit robot, construis des machines et prépare le grand pique-nique !</p>
+        <div class="garden" id="garden" aria-label="Jardin fleuri"></div>
+        <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Continuer</span></button>
       </header>
-      <div id="chapters" class="home-in" style="gap:14px"></div>
-      <div class="adults-row"><button class="adults" id="btnAdults"><span id="icoInfo"></span>Pour les adultes</button></div>
+      <div id="journey"></div>
+      <div class="extra-row">
+        <button class="extra daily" id="btnDaily"><span class="eico" id="icoDaily"></span>
+          <span>Le défi de Zoé<small id="dailyLabel"></small><span class="daily-dots" id="dailyDots"></span></span></button>
+        <button class="extra" id="btnSandbox"><span class="eico" id="icoSandbox"></span><span>Mon jardin<small>Crée ton niveau !</small></span></button>
+        <button class="extra" id="btnAlbum"><span class="eico" id="icoAlbum"></span><span>L'album de Zoé<small id="albumCount"></small></span></button>
+        <button class="extra" id="btnAdults"><span id="icoInfo"></span><span>Pour les adultes</span></button>
+      </div>
     </div>
   </section>
 
@@ -446,7 +715,7 @@ svg { display: block; }
     <div class="board-wrap" id="boardWrap"><div class="vars" id="vars" hidden></div><div class="board" id="board"></div></div>
     <section class="prog" id="progCard" aria-label="Programme de Bip">
       <div class="prog-head">
-        <span class="lab"><span id="icoProg"></span>Programme</span>
+        <span class="lab"><span id="icoProg"></span><span id="progLab">Programme</span></span>
         <span class="batts" id="batts" hidden></span>
         <button class="trash" id="btnTrash" aria-label="Tout effacer"></button>
       </div>
@@ -458,10 +727,35 @@ svg { display: block; }
     </section>
     <div class="pal" id="palette" aria-label="Blocs"></div>
   </section>
+
+  <section id="sandbox" hidden aria-label="Mon jardin">
+    <div class="top">
+      <button class="ibtn" id="btnSbHome" aria-label="Retour à la carte"></button>
+      <div class="lvl-pill">Mon jardin</div>
+      <div class="sb-slots" id="sbSlots"></div>
+      <button class="ibtn" id="btnSbPlay" aria-label="Jouer dans mon jardin" style="background:#DDF4E7;color:var(--go-edge)"></button>
+    </div>
+    <button class="bubble" id="sbBubble">
+      <span class="mini" id="miniBip2"></span><span class="msg" id="sbMsg" aria-live="polite"></span>
+    </button>
+    <div class="board-wrap" id="sbBoardWrap"><div class="board" id="sbBoard"></div></div>
+    <div class="sb-slots" id="sbTools" style="justify-content:center"></div>
+    <div class="sandbox-tray" id="sbTray" aria-label="Éléments du jardin"></div>
+  </section>
 </main>
 
 <div class="hand" id="hand" hidden aria-hidden="true">
   <svg viewBox="0 0 64 64"><path d="M22 6c3.3 0 6 2.7 6 6v17.5l2.4-.8c3-.9 5.9.8 6.6 3.5l.3 1.3 2.3-.5c3-.6 5.6 1.4 6 4.3l.1.9 1.6-.2c3.2-.3 5.7 2.2 5.7 5.4V52c0 6.6-5.4 12-12 12h-9.5c-4.4 0-8.4-2.4-10.5-6.3L9.8 44c-1.6-2.9-.6-6.5 2.3-7.9 2.4-1.2 5.3-.5 6.9 1.6L16 33.7V12c0-3.3 2.7-6 6-6z" fill="#FFFFFF" stroke="#2C3A4C" stroke-width="3" stroke-linejoin="round" transform="translate(0 -2)"/></svg>
+</div>
+
+<div class="overlay" id="story" hidden>
+  <div class="story-card" role="dialog" aria-labelledby="storyWho">
+    <div class="story-art" id="storyArt"></div>
+    <div class="story-who" id="storyWho"></div>
+    <p class="story-line" id="storyLine"></p>
+    <div class="story-dots" id="storyDots"></div>
+    <div class="btns"><button class="btn go" id="btnStoryNext"><span>Suite</span><span id="icoStoryNext"></span></button></div>
+  </div>
 </div>
 
 <div class="overlay" id="win" hidden>
@@ -477,44 +771,57 @@ svg { display: block; }
   </div>
 </div>
 
+<div class="overlay" id="album" hidden>
+  <div class="album-card" role="dialog" aria-labelledby="albumTitle">
+    <button class="ibtn close" id="btnAlbumClose" aria-label="Fermer"></button>
+    <h2 id="albumTitle">L'album de Zoé</h2>
+    <p>Chaque jolie journée mérite une image. Gagne-les toutes !</p>
+    <div class="album-grid" id="albumGrid"></div>
+  </div>
+</div>
+
 <div class="overlay sheet" id="sheet" hidden>
   <div class="sheet-card" role="dialog" aria-labelledby="sheetTitle">
     <button class="ibtn close" id="btnClose" aria-label="Fermer"></button>
     <h2 id="sheetTitle">Pour les adultes</h2>
-    <p>Bip initie les enfants de 5 à 7 ans à la pensée algorithmique : prévoir une suite d'instructions, la lancer, observer ce qui se passe, puis corriger.</p>
+    <p>Bip initie les enfants de 5 à 7 ans à la pensée algorithmique et aux premières machines : prévoir une suite d'instructions, la lancer, observer, corriger — puis construire un petit système qui fonctionne.</p>
     <h3>Ce que l'enfant travaille</h3>
     <ul>
-      <li>Se repérer sur un quadrillage et coder un déplacement avec des flèches, comme dans le programme du cycle 2.</li>
-      <li>Ranger des instructions dans le bon ordre : une séquence.</li>
-      <li>Trouver son erreur et la corriger. Le bloc qui pose problème devient orange.</li>
-      <li>Découvrir la boucle avec le bloc Répéter, au chapitre 5.</li>
+      <li>Se repérer sur un quadrillage, coder un déplacement (flèches, puis repère relatif au chapitre 5).</li>
+      <li>Séquence, boucle (Répéter, chapitre 4), boucle conditionnelle (Jusqu'à, chapitre 7), condition (Si… sinon, chapitre 8), fonction (bloc magique, chapitre 9), débogage (chapitre 14).</li>
+      <li><b>Nouveauté v2 — l'état des machines</b> : les champignons ouvrent les barrières (chapitre 10) et les caisses se déplacent ou deviennent des ponts (chapitre 11). L'enfant découvre qu'une action modifie le monde pour la suite du programme.</li>
+      <li><b>Nouveauté v2 — programmer autrement</b> : au chapitre 13, on ne programme plus le robot mais le lieu (les toboggans de Ballon) : une première rencontre avec les systèmes et les programmes comme données.</li>
+      <li><b>Créer</b> : le mode « Mon jardin » permet d'inventer ses propres niveaux et de les faire résoudre par Bip.</li>
     </ul>
-    <h3>Chapitres 6 à 10 : pour aller plus loin</h3>
-    <p>Ces chapitres visent plutôt la fin du CP et le CE1. Accompagnez davantage l'enfant au début de chacun.</p>
+    <h3>Le parcours (4 mondes, 16 chapitres, 80 niveaux)</h3>
     <ul>
-      <li><b>Tourner</b> : Bip avance là où il regarde et pivote à gauche ou à droite. L'enfant doit se mettre à la place du robot (repère relatif).</li>
-      <li><b>Répéter jusqu'à</b> : une boucle qui s'arrête toute seule, devant un obstacle ou quand tous les jouets sont ramassés.</li>
-      <li><b>Si… sinon</b> : Bip regarde devant lui et choisit la ligne verte ou la ligne grise. Ces niveaux ont trois jardins : le même programme doit réussir partout. C'est tout l'intérêt d'une condition.</li>
-      <li><b>Le bloc magique</b> : on range une suite de blocs dans la ligne étoile pour la réutiliser. C'est une fonction.</li>
-      <li><b>Détective</b> : le programme est déjà écrit mais contient une erreur à trouver et corriger (débogage).</li>
+      <li><b>Le jardin de Bip</b> (1-4) : flèches, obstacles, saut, boucle Répéter.</li>
+      <li><b>La grande promenade</b> (5-9) : repère relatif, nénuphars qui coulent (on ne revient pas en arrière), Jusqu'à, Si… sinon, bloc magique.</li>
+      <li><b>Les ateliers de Grand-Papa</b> (10-14) : champignons et barrières, caisses-ponts, pollen doré, toboggans de Ballon, détective.</li>
+      <li><b>Le jardin de nuit</b> (15-16) : tout ce qui précède, sous les étoiles, jusqu'au grand final du pique-nique.</li>
+    </ul>
+    <h3>Rituels et récompenses</h3>
+    <ul>
+      <li>Le <b>défi de Zoé</b> : un petit niveau inédit chaque jour de la semaine (fonctionne hors connexion). Sept points à allumer.</li>
+      <li>L'<b>album de Zoé</b> : une image par chapitre, une par monde terminé, et quelques surprises. Uniquement décoratif.</li>
+      <li>Trois étoiles récompensent le programme le plus court ; réussir compte davantage que performer.</li>
     </ul>
     <h3>Comment l'accompagner</h3>
     <ul>
       <li>Avant de programmer, demandez-lui de tracer le chemin avec le doigt sur l'écran.</li>
-      <li>Laissez-le se tromper : chaque essai lui apprend quelque chose.</li>
-      <li>Le bouton sous le bouton vert fait avancer Bip d'un seul bloc. Pratique pour chercher l'erreur ensemble.</li>
-      <li>L'ampoule montre le chemin en pointillés numérotés. L'enfant doit alors le traduire en flèches.</li>
-      <li>Sans écran : un enfant joue le robot, l'autre lui donne les flèches à voix haute.</li>
+      <li>Laissez-le se tromper : chaque essai lui apprend quelque chose, et le jeu montre toujours quel bloc pose problème.</li>
+      <li>Le bouton sous le bouton vert fait avancer Bip d'un seul bloc : parfait pour chercher une erreur ensemble.</li>
+      <li>L'ampoule montre le chemin en pointillés numérotés à traduire en blocs.</li>
+      <li>Sans écran : un enfant joue le robot, l'autre lui donne les instructions à voix haute.</li>
     </ul>
     <h3>Les gestes</h3>
     <ul>
-      <li>Toucher un bloc l'ajoute à la fin du programme. On peut aussi le glisser à l'endroit voulu.</li>
-      <li>Toucher un bloc du programme l'enlève. Le glisser hors du programme aussi.</li>
-      <li>Toucher le rond blanc d'un bloc Répéter, Jusqu'à ou Si change son réglage (nombre de fois, condition). Toucher la case pointillée choisit où vont les nouveaux blocs.</li>
-      <li>Trois étoiles récompensent le programme le plus court. Réussir compte davantage.</li>
+      <li>Toucher un bloc l'ajoute au programme ; le glisser le déplace ; toucher un bloc du programme l'enlève.</li>
+      <li>Le rond blanc des blocs Répéter, Jusqu'à et Si change leur réglage.</li>
+      <li>Aux toboggans : toucher l'herbe pose une flèche, toucher encore la fait tourner, la gomme l'enlève.</li>
     </ul>
     <h3>Installer sur Android</h3>
-    <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application » (ou « Ajouter à l'écran d'accueil »). Bip fonctionne ensuite sans connexion, en plein écran.</p>
+    <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application ». Bip fonctionne ensuite sans connexion, en plein écran.</p>
     <h3>Réglages</h3>
     <div class="toggles">
       <button class="tg" id="tgVoice" role="switch"><span>Voix qui lit les consignes</span><span class="sw"></span></button>
@@ -529,13 +836,18 @@ svg { display: block; }
 <script>
 /* ===== Moteur pur : simulation d'un programme sur un niveau =====
    Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), star (bloc magique)
-   Conteneurs : loop {n, body} · while {c:'free'|'toys', body} · if {c:'puddle'|'obst', body, els} */
+   Conteneurs : loop {n, body} · while {c:'free'|'toys', body} · if {c:'puddle'|'obst', body, els}
+   Terrain : . herbe · # buisson · o rocher · ~ flaque · K coffre
+             - nénuphar (s'enfonce quand Bip le quitte) · s champignon (ouvre les barrières)
+             G barrière (bloque tant que fermée) · * fleur (à peindre en marchant dessus)
+   Entités : C caisse (poussée par Bip ; dans l'eau elle devient un pont)
+   Jouets : b n c t a z e (e = luciole) */
 const DIRS = { r: [1, 0], l: [-1, 0], u: [0, -1], d: [0, 1] };
 const LEFT = { u: 'l', l: 'd', d: 'r', r: 'u' };
 const RIGHT = { u: 'r', r: 'd', d: 'l', l: 'u' };
-const TOY_CHARS = 'bnctaz';
+const TOY_CHARS = 'bnctaze';
 const CONTAINERS = ['loop', 'while', 'if'];
-const MAX_ACTS = 90, MAX_CHECKS = 180;
+const MAX_ACTS = 110, MAX_CHECKS = 220;
 
 function mapOf(lv, v) { return lv.variants ? lv.variants[v || 0] : lv.map; }
 
@@ -544,7 +856,7 @@ function parseLevel(lv, v) {
   const h = rows.length, w = rows[0].length;
   const cells = [];
   let start = null, box = null;
-  const toys = [];
+  const toys = [], pads = [], switches = [], gates = [], crates = [], flowers = [];
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const ch = rows[y][x];
@@ -553,19 +865,24 @@ function parseLevel(lv, v) {
       else if (ch === 'o') kind = 'rock';
       else if (ch === '~') kind = 'puddle';
       else if (ch === 'K') { kind = 'box'; box = [x, y]; }
+      else if (ch === '-') { kind = 'pad'; pads.push(cells.length); }
+      else if (ch === 's') { kind = 'switch'; switches.push(cells.length); }
+      else if (ch === 'G') { kind = 'gate'; gates.push(cells.length); }
+      else if (ch === '*') { kind = 'flower'; flowers.push(cells.length); }
+      else if (ch === 'C') crates.push([x, y]);
       else if (ch === 'R') start = [x, y];
       else if (TOY_CHARS.includes(ch)) toys.push({ x, y, k: ch });
       cells.push(kind);
     }
   }
-  return { w, h, cells, start, box, toys, face: lv.face || 'r' };
+  return { w, h, cells, start, box, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
 }
 
 function cellAt(P, x, y) {
   if (x < 0 || y < 0 || x >= P.w || y >= P.h) return 'out';
   return P.cells[y * P.w + x];
 }
-const isBlocked = c => c === 'out' || c === 'bush' || c === 'rock';
+const isBlockedKind = c => c === 'out' || c === 'bush' || c === 'rock';
 
 function countBlocks(list) {
   let n = 0;
@@ -577,17 +894,49 @@ function countBlocks(list) {
   return n;
 }
 
-/* Renvoie { steps, result, P, ... } — chaque étape est animable (move, jump, turn, check) */
+/* Renvoie { steps, result, P, ... } — chaque étape est animable
+   (move, jump, turn, check, push, gate). Le pas s'enfonce via step.sink,
+   la fleur peinte via step.paint, la barrière s'ouvre via un pas 'gate'. */
 function simulate(lv, prog, fn, v) {
   fn = fn || [];
   const P = parseLevel(lv, v);
   let x = P.start[0], y = P.start[1], face = P.face;
   const got = new Set(), steps = [];
+  const crates = P.crates.map(c => c.slice());      // positions vives des caisses
+  const crateHome = P.crates.map((c, i) => i);      // index d'affichage
+  const livePads = new Set(P.pads);                 // nénuphars encore flottants
+  const painted = new Set();                        // cases fleuries peintes
+  let gatesOpen = false;
   let acts = 0, checks = 0;
   if (!countBlocks(prog)) return { steps, result: 'empty', P };
+
+  const crateAt = (cx, cy) => crates.findIndex(c => c && c[0] === cx && c[1] === cy);
+  const blockedAt = (bx, by) => {
+    const c = cellAt(P, bx, by);
+    if (isBlockedKind(c) || (c === 'gate' && !gatesOpen)) return true;
+    return crateAt(bx, by) >= 0;
+  };
   const ahead = () => { const [dx, dy] = DIRS[face]; return cellAt(P, x + dx, y + dy); };
-  const test = c => c === 'puddle' ? ahead() === 'puddle' : c === 'obst' ? isBlocked(ahead()) : got.size === P.toys.length;
+  const test = c => c === 'puddle' ? ['puddle', 'water'].includes(ahead()) : c === 'obst' ? blockedAt(x + DIRS[face][0], y + DIRS[face][1]) : got.size === P.toys.length;
   const stop = (r, extra) => Object.assign({ __stop: true, r }, extra);
+
+  const gateStep = at => steps.push({ ins: null, kind: 'gate', at, from: at, to: at, face });
+  const arrive = (st, nx, ny) => {                 // effets d'arrivée de Bip sur une case
+    const idx = ny * P.w + nx;
+    if (P.cells[idx] === 'switch' && !gatesOpen) {
+      gatesOpen = true;
+      gateStep([nx, ny]);
+    }
+    if (P.cells[idx] === 'flower' && !painted.has(idx)) { painted.add(idx); st.paint = [nx, ny]; }
+  };
+  const leaveCell = (st, fx, fy) => {              // le nénuphar coule quand on le quitte
+    const idx = fy * P.w + fx;
+    if (P.cells[idx] === 'pad' && livePads.has(idx)) {
+      livePads.delete(idx);
+      P.cells[idx] = 'water';
+      st.sink = [fx, fy];
+    }
+  };
 
   function act(it, path) {
     if (++acts > MAX_ACTS) throw stop('tired');
@@ -601,13 +950,46 @@ function simulate(lv, prog, fn, v) {
     let kind, to;
     if (it.t === 'j') { const [dx, dy] = DIRS[face]; to = [x + 2 * dx, y + 2 * dy]; kind = 'jump'; }
     else { if (it.t !== 'f') face = it.t; const [dx, dy] = DIRS[face]; to = [x + dx, y + dy]; kind = 'move'; }
-    const c = cellAt(P, to[0], to[1]);
-    if (isBlocked(c)) { steps.push({ ins, kind, from, to, face, fail: c === 'out' ? 'out' : c }); throw stop('bump', { why: c }); }
+    const st = { ins, kind, from, to, face };
+
+    const ci = crateAt(to[0], to[1]);
+    if (ci >= 0 && kind === 'move') {              // pousser la caisse
+      const [dx, dy] = DIRS[face];
+      const bx = to[0] + dx, by = to[1] + dy;
+      const bc = cellAt(P, bx, by);
+      const crateOnTarget = bc === 'grass' || bc === 'flower' || bc === 'switch' || bc === 'plank';
+      if (bc === 'puddle' || bc === 'water') {      // dans l'eau : la caisse devient un pont
+        crates[ci] = null;
+        P.cells[by * P.w + bx] = 'plank';
+        st.crate = { from: to.slice(), to: [bx, by], plank: true };
+      } else if (crateOnTarget && crateAt(bx, by) < 0 && !P.toys.some(t => t.x === bx && t.y === by)) {
+        crates[ci] = [bx, by];
+        st.crate = { from: to.slice(), to: [bx, by] };
+        if (bc === 'switch' && !gatesOpen) { gatesOpen = true; st.crate.gate = [bx, by]; }  // la caisse appuie le champignon
+      } else {
+        steps.push({ ins, kind, from, to, face, fail: 'crate' });
+        throw stop('bump', { why: 'crate' });
+      }
+    } else if (isBlockedKind(cellAt(P, to[0], to[1])) || (cellAt(P, to[0], to[1]) === 'gate' && !gatesOpen)) {
+      const c = cellAt(P, to[0], to[1]);
+      steps.push({ ins, kind, from, to, face, fail: c === 'out' ? 'out' : c });
+      throw stop('bump', { why: c });
+    } else if (crateAt(to[0], to[1]) >= 0 && kind === 'jump') {  // atterrir sur une caisse : aïe
+      steps.push({ ins, kind, from, to, face, fail: 'crate' });
+      throw stop('bump', { why: 'crate' });
+    }
+
+    leaveCell(st, x, y);
     x = to[0]; y = to[1];
-    if (c === 'puddle') { steps.push({ ins, kind, from, to, face, fail: 'puddle' }); throw stop('splash'); }
+    if (st.crate) st.kind = kind = 'push';
+    const c = cellAt(P, x, y);
+    if (c === 'puddle' || c === 'water') { steps.push(Object.assign(st, { fail: 'puddle' })); throw stop('splash'); }
     let collect = null;
     P.toys.forEach((t, i) => { if (!got.has(i) && t.x === x && t.y === y) { got.add(i); collect = i; } });
-    steps.push({ ins, kind, from, to, face, collect });
+    if (collect != null) st.collect = collect;
+    steps.push(st);
+    arrive(st, x, y);
+    if (st.crate && st.crate.gate) gateStep(st.crate.gate);
   }
   function check(it, path, ok) {
     if (++checks > MAX_CHECKS) throw stop('tired');
@@ -620,7 +1002,7 @@ function simulate(lv, prog, fn, v) {
       } else if (it.t === 'while') {
         let k = 0;
         for (;;) {
-          const done = it.c === 'toys' ? test('toys') : isBlocked(ahead());
+          const done = it.c === 'toys' ? test('toys') : blockedAt(x + DIRS[face][0], y + DIRS[face][1]);
           check(it, path, !done);
           if (done || !it.body.length) break;
           k++;
@@ -639,20 +1021,28 @@ function simulate(lv, prog, fn, v) {
   try { run(prog, [], 0); }
   catch (e) { if (e && e.__stop) return { steps, result: e.r, why: e.why, P }; throw e; }
   if (got.size < P.toys.length) return { steps, result: 'missing', P, left: P.toys.length - got.size };
+  if (painted.size < P.flowers.length) return { steps, result: 'unpainted', P, left: P.flowers.length - painted.size };
   if (P.box && !(x === P.box[0] && y === P.box[1])) return { steps, result: 'notbox', P };
   return { steps, result: 'win', P };
 }
 
-/* Solveur BFS (blocs simples seulement) : plus court programme sans boucle */
+/* Solveur BFS (blocs simples, sans caisses ni barrières) : plus court programme.
+   État : position + jouets + fleurs peintes + nénuphars franchis. */
 function solve(lv, palette, v) {
   const P = parseLevel(lv, v);
+  const rows = mapOf(lv, v);
+  for (const row of rows) if (/[CG]/.test(row)) return null;   // mécanique non résolue : sol explicite requis
   const moves = palette.filter(m => !CONTAINERS.includes(m) && m !== 'star');
   const full = (1 << P.toys.length) - 1;
-  const key = (x, y, f, m) => `${x},${y},${f},${m}`;
-  const q = [[P.start[0], P.start[1], P.face, 0, []]];
-  const seen = new Set([key(P.start[0], P.start[1], P.face, 0)]);
+  const flAll = (1 << P.flowers.length) - 1;
+  const flowerIdx = idx => P.flowers.indexOf(idx);
+  const key = (x, y, f, m, fl, pd) => `${x},${y},${f},${m},${fl},${pd}`;
+  const q = [[P.start[0], P.start[1], P.face, 0, 0, 0, []]];
+  const seen = new Set([key(P.start[0], P.start[1], P.face, 0, 0, 0)]);
+  const padIdx = idx => P.pads.indexOf(idx);
+  const won = (m, fl, x, y) => m === full && fl === flAll && (!P.box || (x === P.box[0] && y === P.box[1]));
   while (q.length) {
-    const [x, y, f, m, path] = q.shift();
+    const [x, y, f, m, fl, pd, path] = q.shift();
     for (const mv of moves) {
       let nf = f, tx = x, ty = y;
       if (mv === 'tl') nf = LEFT[f];
@@ -660,13 +1050,23 @@ function solve(lv, palette, v) {
       else if (mv === 'j') { const [dx, dy] = DIRS[f]; tx = x + 2 * dx; ty = y + 2 * dy; }
       else { if (mv !== 'f') nf = mv; const [dx, dy] = DIRS[nf]; tx = x + dx; ty = y + dy; }
       const c = cellAt(P, tx, ty);
-      if (isBlocked(c) || c === 'puddle') continue;
+      if (isBlockedKind(c) || c === 'puddle') continue;
+      const tIdx = ty * P.w + tx;
+      const tPi = padIdx(tIdx);
+      if (tPi >= 0 && (pd & (1 << tPi))) continue;  // nénuphar déjà coulé : c'est de l'eau
       let nm = m;
       P.toys.forEach((t, i) => { if (t.x === tx && t.y === ty) nm |= 1 << i; });
+      let nfl = fl, npd = pd;
+      const fi = flowerIdx(tIdx);
+      if (fi >= 0) nfl |= 1 << fi;
+      if (tx !== x || ty !== y) {                   // on quitte la case : un nénuphar y coule
+        const pi = padIdx(y * P.w + x);
+        if (pi >= 0) npd |= 1 << pi;
+      }
       const np = path.concat(mv);
-      if (nm === full && (!P.box || (tx === P.box[0] && ty === P.box[1]))) return np;
-      const k = key(tx, ty, nf, nm);
-      if (!seen.has(k)) { seen.add(k); q.push([tx, ty, nf, nm, np]); }
+      if (won(nm, nfl, tx, ty)) return np;
+      const k = key(tx, ty, nf, nm, nfl, npd);
+      if (!seen.has(k)) { seen.add(k); q.push([tx, ty, nf, nm, nfl, npd, np]); }
     }
   }
   return null;
@@ -701,116 +1101,274 @@ function parseProg(src, mkId) {
 }
 
 
-/* ===== Chapitres et niveaux =====
-   Légende : R départ · b n c t a jouets · # buisson · o rocher · ~ flaque · K coffre · . herbe
-   sol / fn / start : programmes écrits dans le petit langage de parseProg (engine.js)
+/* ===== Mode toboggan : Ballon roule tout seul =====
+   L'enfant ne programme plus Bip : il place des flèches au sol (les tuiles)
+   pour guider Ballon (S, avec sa direction de départ) jusqu'au nid (N).
+   Pure : aucun accès DOM, testable sous Node. */
+function parseBallMap(lv, v) {
+  const rows = lv.variants ? lv.variants[v || 0] : lv.map;
+  const h = rows.length, w = rows[0].length;
+  const cells = [];
+  let start = null, nest = null;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const ch = rows[y][x];
+      let kind = 'grass';
+      if (ch === '#') kind = 'bush';
+      else if (ch === 'o') kind = 'rock';
+      else if (ch === '~') kind = 'puddle';
+      else if (ch === 'N') { kind = 'nest'; nest = [x, y]; }
+      else if (ch === 'S') start = [x, y];
+      cells.push(kind);
+    }
+  }
+  return { w, h, cells, start, nest, face: lv.face || 'r', toys: [], box: null, crates: [], pads: [], switches: [], gates: [], flowers: [] };
+}
+
+/* tiles : liste [x, y, dir] (r l u d). Renvoie { result, steps, why }.
+   result : 'win' · 'out' (sorti du chemin) · 'stop' (bloqué) · 'splash' (flaque)
+            · 'loop' (tourne en rond) · 'none' (aucune tuile). */
+function rollBall(lv, tiles, v) {
+  const P = parseBallMap(lv, v);
+  const map = {};
+  (tiles || []).forEach(([x, y, d]) => { map[y * P.w + x] = d; });
+  const steps = [];
+  if (!tiles || !tiles.length) return { result: 'none', steps, P };
+  const DIRS = { r: [1, 0], l: [-1, 0], u: [0, -1], d: [0, 1] };
+  let x = P.start[0], y = P.start[1], dir = P.face;
+  const seen = new Set();
+  for (let n = 0; n < 240; n++) {
+    const stKey = x + ',' + y + ',' + dir;
+    if (seen.has(stKey)) return { result: 'loop', steps, P };
+    seen.add(stKey);
+    const [dx, dy] = DIRS[dir];
+    const nx = x + dx, ny = y + dy;
+    if (nx < 0 || ny < 0 || nx >= P.w || ny >= P.h) return { result: 'out', steps, P };
+    const c = P.cells[ny * P.w + nx];
+    const step = { from: [x, y], to: [nx, ny], dir };
+    x = nx; y = ny;
+    steps.push(step);
+    if (c === 'bush' || c === 'rock') return { result: 'stop', steps, why: c, P };
+    if (c === 'puddle') return { result: 'splash', steps, P };
+    const td = map[ny * P.w + nx];
+    if (td && td !== dir) { dir = td; step.tile = [nx, ny]; step.nd = td; }
+    if (P.nest && x === P.nest[0] && y === P.nest[1]) return { result: 'win', steps, P };
+  }
+  return { result: 'loop', steps, P };
+}
+
+/* Une tuile n'est posable que sur l'herbe (pas buisson, rocher, flaque, nid, départ). */
+function tileableCells(lv, v) {
+  const P = parseBallMap(lv, v);
+  const out = [];
+  for (let i = 0; i < P.cells.length; i++) {
+    if (P.cells[i] !== 'grass') continue;
+    const x = i % P.w, y = (i / P.w) | 0;
+    if (P.start[0] === x && P.start[1] === y) continue;
+    if (P.nest[0] === x && P.nest[1] === y) continue;
+    out.push([x, y]);
+  }
+  return out;
+}
+
+
+/* ===== Chapitres et niveaux — Bip v2 « Le grand pique-nique » =====
+   Légende : R départ · b n c t a z jouets · e luciole · # buisson · o rocher
+   ~ flaque · K coffre · - nénuphar (coule une fois quitté) · s champignon (ouvre)
+   G barrière · C caisse (poussable, flotte → pont) · * fleur (à peindre)
+   S départ de Ballon · N nid (mode toboggan)
+   sol / fn / start : programmes dans le petit langage de parseProg (engine.js)
+   tiles : tuiles de référence du mode toboggan, "x,y,direction"
    variants : plusieurs jardins, le même programme doit réussir dans tous */
 const ARROWS = ['l', 'u', 'd', 'r'];
 const REL = ['f', 'tl', 'tr'];
-const CHAPTERS = [
-  { name: 'Premiers pas', hint: 'Les flèches font avancer Bip.', tone: 'sky' },
-  { name: 'Les buissons', hint: 'Bip fait le tour des obstacles.', tone: 'leaf' },
-  { name: 'Les flaques', hint: 'Bip évite les pièges.', tone: 'water' },
-  { name: 'Le saut', hint: 'Bip saute là où il regarde.', tone: 'lilac' },
-  { name: 'Répéter', hint: 'Une boucle refait les mêmes blocs.', tone: 'sun' },
-  { name: 'Tourner', hint: 'Bip avance là où il regarde et pivote.', tone: 'teal' },
-  { name: 'Répéter jusqu’à', hint: 'Bip répète tant que la route est libre.', tone: 'coral' },
-  { name: 'Si… sinon', hint: 'Bip regarde devant lui et choisit.', tone: 'pink' },
-  { name: 'Le bloc magique', hint: 'Bip apprend un nouveau bloc.', tone: 'peach' },
-  { name: 'Détective', hint: 'Trouve et corrige les erreurs.', tone: 'slate' },
+
+const WORLDS = [
+  { name: 'Le jardin de Bip',
+    intro: ['Zoé la coccinelle s\'est posée dans le jardin de Bip.', '« Bonjour Bip ! On joue à programmer ? »'] },
+  { name: 'La grande promenade',
+    intro: ['Le vent Zéphyr a éparpillé les jouets tout au long du grand chemin !', '« En route pour le pique-nique ! » dit Zoé.'] },
+  { name: 'Les ateliers de Grand-Papa',
+    intro: ['Grand-Papa Engrenage a construit des ateliers plein de machines.', '« Pilou a tout mélangé en rêvant… aide-nous à remettre de l\'ordre ! »'] },
+  { name: 'Le jardin de nuit',
+    intro: ['Noctule la luciole éclaire le jardin endormi.', '« Les lucioles veulent jouer sous les étoiles ! »'] },
 ];
+
+const CHAPTERS = [
+  // Monde 1
+  { w: 0, who: 'zoe', tone: 'sky', name: 'Premiers pas', hint: 'Les flèches font avancer Bip.',
+    intro: 'Touche une flèche pour l\'ajouter au programme, puis le bouton vert !',
+    end: [{ who: 'zoe', line: 'Tu sais faire marcher Bip ! On continue ?' }] },
+  { w: 0, who: 'bip', tone: 'leaf', name: 'Buissons et flaques', hint: 'Bip contourne et reste au sec.',
+    intro: 'Oh, des buissons et des flaques ! Regarde bien le chemin avant de partir.',
+    end: [{ who: 'zoe', line: 'Bip est propre et les jouets sont rangés. Bravo !' }] },
+  { w: 0, who: 'bip', tone: 'lilac', name: 'Le saut', hint: 'Bip saute par-dessus une case.',
+    intro: 'Nouveau bloc : Saute ! Bip saute par-dessus la case juste devant lui, tout droit.',
+    end: [{ who: 'bip', line: 'Hop hop hop ! J\'adore sauter.' }] },
+  { w: 0, who: 'toupie', tone: 'sun', name: 'Tourne, tourne !', hint: 'Le bloc Répéter refait les mêmes blocs.',
+    intro: 'Moi, Toupie, j\'adore tourner ! Le bloc Répéter refait les mêmes blocs plusieurs fois.',
+    end: [{ who: 'toupie', line: 'Youpi, quelle tournette ! Merci !' }] },
+  // Monde 2
+  { w: 1, who: 'zoe', tone: 'teal', name: 'Le chemin de Zoé', hint: 'Bip avance là où il regarde.',
+    intro: 'Nouveaux blocs ! Avance fait aller Bip tout droit, là où il regarde. Tourner le fait pivoter sur place.',
+    end: [{ who: 'zoe', line: 'Bip sait tourner rond maintenant !' }] },
+  { w: 1, who: 'lulu', tone: 'water', name: 'La mare de Lulu', hint: 'Les nénuphars coulent une fois quittés.',
+    intro: 'Bienvenue dans ma mare ! Mes nénuphars coulent doucement quand Bip les quitte. On ne peut pas revenir en arrière.',
+    end: [{ who: 'lulu', line: 'Tu traverses ma mare comme une grenouille !' }] },
+  { w: 1, who: 'zoe', tone: 'coral', name: 'Jusqu\'au bout', hint: 'Bip répète tant que la route est libre.',
+    intro: 'Répéter jusqu\'à : Bip répète tant qu\'un obstacle n\'est pas devant lui.',
+    end: [{ who: 'zoe', line: 'Plus besoin de compter : Bip s\'arrête tout seul !' }] },
+  { w: 1, who: 'zoe', tone: 'pink', name: 'À gauche ou à droite ?', hint: 'Bip regarde devant et choisit.',
+    intro: 'Le bloc Si : Bip regarde devant lui. Vrai ? Il fait la ligne verte. Sinon, la ligne grise.',
+    end: [{ who: 'zoe', line: 'Un seul programme pour trois jardins, quelle idée géniale !' }] },
+  { w: 1, who: 'zoe', tone: 'peach', name: 'Le bloc magique', hint: 'La ligne étoile range des blocs à réutiliser.',
+    intro: 'Le bloc magique : range des blocs dans la ligne étoile, puis utilise l\'étoile autant de fois que tu veux.',
+    end: [{ who: 'zoe', line: 'Tes programmes sont tout petits maintenant !' }] },
+  // Monde 3
+  { w: 2, who: 'papi', tone: 'rust', name: 'Les champignons magiques', hint: 'Un champignon touché, les barrières s\'ouvrent.',
+    intro: 'Dans mon atelier, petit Bip : marche sur un champignon et les barrières s\'ouvrent !',
+    end: [{ who: 'papi', line: 'Un vrai dépanneur, ce petit robot !' }] },
+  { w: 2, who: 'cube', tone: 'wood', name: 'Pousse-pousse', hint: 'Pousse les caisses ; dans l\'eau elles flottent.',
+    intro: 'Pousse les caisses en marchant dedans ! Jetées dans l\'eau, elles deviennent des ponts.',
+    end: [{ who: 'cube', line: 'On a construit des ponts ensemble !' }] },
+  { w: 2, who: 'zoe', tone: 'gold', name: 'Le pollen doré', hint: 'Bip peint l\'herbe où il marche.',
+    intro: 'Regarde : Bip laisse du pollen doré là où il marche ! Couvre toutes les fleurs.',
+    end: [{ who: 'zoe', line: 'Quel jardin tout doré ! Les abeilles vont adorer.' }] },
+  { w: 2, who: 'ballon', tone: 'orange', name: 'Les toboggans de Ballon', hint: 'Pose des flèches au sol et lance Ballon.',
+    intro: 'Cette fois c\'est moi qui roule ! Pose des flèches sur l\'herbe pour me guider jusqu\'à mon nid.',
+    end: [{ who: 'ballon', line: 'Plein tonneau ! Quelle glissade !' }] },
+  { w: 2, who: 'pilou', tone: 'slate', name: 'L\'atelier de Pilou', hint: 'Trouve et corrige les erreurs.',
+    intro: 'Pardon… j\'ai mélangé des programmes en dormant. Tu peux les réparer, s\'il te plaît ?',
+    end: [{ who: 'pilou', line: 'Merci… je vais dormir moins fort. Bzzz…' }] },
+  // Monde 4
+  { w: 3, who: 'noctule', tone: 'indigo', name: 'Les lucioles de Noctule', hint: 'Tout ce que tu sais, sous les étoiles.', night: true,
+    intro: 'Bienvenue dans le jardin de nuit. Mes copines lucioles adorent jouer : va les chercher !',
+    end: [{ who: 'noctule', line: 'Le jardin scintille grâce à toi !' }] },
+  { w: 3, who: 'zoe', tone: 'night', name: 'Le grand pique-nique', hint: 'Le grand final : tout ensemble !', night: true,
+    intro: 'C\'est l\'heure du grand pique-nique ! Un dernier effort… tous ensemble !',
+    end: [{ who: 'zoe', line: 'Youpiii ! Le plus beau pique-nique du monde !' }] },
+];
+
 const LEVELS = [
+  /* ============ Monde 1 — Le jardin de Bip ============ */
   // Chapitre 1 — Premiers pas
   { ch: 0, pal: ['r'], map: ['.....', 'R..b.', '.....'],
-    text: "Bip veut le ballon ! Touche la flèche pour l'ajouter, puis le bouton vert." },
-  { ch: 0, pal: ['u', 'd'], map: ['..R..', '.....', '.....', '..n..'],
-    text: 'Le nounours est en bas. Quelle flèche faut-il ?' },
-  { ch: 0, pal: ARROWS, map: ['R.b..', '.....', '.....', '..c..'],
-    text: "Deux jouets ! D'abord le ballon, puis le canard." },
-  { ch: 0, pal: ARROWS, map: ['.....', 'b.R.t', '.....', '.....'],
-    text: 'Un jouet de chaque côté. Bip peut revenir sur ses pas.' },
-  // Chapitre 2 — Les buissons
+    text: 'Zoé veut le ballon ! Touche la flèche pour l\'ajouter, puis le bouton vert.' },
+  { ch: 0, pal: ['u', 'd'], map: ['..R..', '.....', '..n..'],
+    text: 'Le nounours est en bas. Trouve les bonnes flèches.' },
+  { ch: 0, pal: ARROWS, map: ['R.b..', '.....', '..c..'],
+    text: 'Deux jouets ! D\'abord le ballon, puis le canard.' },
+  { ch: 0, pal: ARROWS, map: ['..t..', '..R..', '..b..'],
+    text: 'Un jouet au-dessus, un jouet en dessous. Bip peut revenir sur ses pas.' },
+  { ch: 0, pal: ARROWS, map: ['R.b..', '.a...'],
+    text: 'Le vent Zéphyr a soufflé ce matin ! Ramasse le ballon et le cube.' },
+  // Chapitre 2 — Buissons et flaques
   { ch: 1, pal: ARROWS, map: ['.....', 'R.#.b', '.....'],
     text: 'Oh, un buisson ! Bip ne peut pas passer dedans. Fais le tour.' },
-  { ch: 1, pal: ARROWS, map: ['R.#..', '..#.a', '.....', 'o....'],
+  { ch: 1, pal: ARROWS, map: ['R.#.a', '.....', '.....'],
     text: 'Les buissons font un mur. Trouve le passage.' },
-  { ch: 1, pal: ARROWS, map: ['..n..', '.#.#.', 'c....', '.#.o.', '..R..'],
-    text: 'Deux jouets cachés entre les buissons.' },
-  { ch: 1, pal: ARROWS, map: ['R.#..', '..#.t', '..o..', 'b....'],
-    text: 'Un petit labyrinthe. Montre le chemin avec ton doigt avant de commencer.' },
-  // Chapitre 3 — Les flaques
-  { ch: 2, pal: ARROWS, map: ['.....', 'R.~.b', '.....'],
+  { ch: 1, pal: ARROWS, map: ['.....', 'R~..b', '.....'],
     text: 'Attention, une flaque ! Si Bip marche dedans, il est tout mouillé.' },
-  { ch: 2, pal: ARROWS, map: ['R.~..', '..~.c', '~...~'],
-    text: 'Des flaques partout. Trouve un chemin bien sec.' },
-  { ch: 2, pal: ARROWS, map: ['R.~..', '.#..n', '..~#.', 'b....'],
+  { ch: 1, pal: ARROWS, map: ['R.~..', '.....', '..~#b'],
     text: 'Buissons et flaques : prends ton temps.' },
-  { ch: 2, pal: ARROWS, map: ['K.b..', '.~#~.', '..R.n'],
+  { ch: 1, pal: ARROWS, map: ['K.b..', '.~#~.', '..R.n'],
     text: 'Voici le coffre ! Ramasse les jouets, puis range-les dans le coffre.' },
-  // Chapitre 4 — Le saut
-  { ch: 3, pal: [...ARROWS, 'j'], map: ['##o##', 'R.~.b', '#o###'],
+  // Chapitre 3 — Le saut
+  { ch: 2, pal: [...ARROWS, 'j'], map: ['##o##', 'R.~.b', '#o###'],
     text: 'Bip sait sauter ! Il saute par-dessus une case, tout droit devant lui.' },
-  { ch: 3, pal: [...ARROWS, 'j'], map: ['R.~..', '..~.n', '..~..'],
-    text: 'Une rivière de flaques. Avance, puis saute !' },
-  { ch: 3, pal: [...ARROWS, 'j'], map: ['..R..', '.....', '~~~~~', '.....', '..c..'],
-    text: "Bip saute toujours du côté où il regarde. Fais-le d'abord regarder en bas." },
-  { ch: 3, pal: [...ARROWS, 'j'], map: ['R.~.b', '####.', 'Ka~..'],
-    text: 'Saute, marche, saute… puis range tout dans le coffre.' },
-  // Chapitre 5 — Répéter
-  { ch: 4, pal: ['r', 'loop'], max: 2, sol: 'N5(r)', map: ['......', 'R....b', '......'],
-    text: "Bip n'a que 2 piles ! Le bloc Répéter refait la même flèche plusieurs fois." },
-  { ch: 4, pal: [...ARROWS, 'loop'], max: 3, sol: 'N4(r d)', map: ['R....', '.b...', '#.n..', '##.c.', '###.a'],
+  { ch: 2, pal: [...ARROWS, 'j'], map: ['R.~..', '..~.n', '.....'],
+    text: 'Une flaque sur le chemin. Avance, puis saute !' },
+  { ch: 2, pal: [...ARROWS, 'j'], map: ['R~~..b', '......'],
+    text: 'Deux flaques collées : saute par-dessus, Bip sait faire.' },
+  { ch: 2, pal: [...ARROWS, 'j'], map: ['R.~.n', '.###.', '...K.'],
+    text: 'Saute vers le nounours, puis va ranger au coffre.' },
+  { ch: 2, pal: [...ARROWS, 'j'], map: ['R.~.b', '####.', 'Ka~..'],
+    text: 'Le grand défi du saut ! Saute, ramasse le cube, saute encore, puis au coffre.' },
+  // Chapitre 4 — Tourne, tourne ! (Répéter)
+  { ch: 3, pal: ['r', 'loop'], max: 2, sol: 'N5(r)', map: ['......', 'R....b', '......'],
+    text: 'Bip n\'a que 2 piles ! Le bloc Répéter refait la même flèche plusieurs fois.' },
+  { ch: 3, pal: [...ARROWS, 'loop'], max: 3, sol: 'N4(r d)', map: ['R....', '.b...', '#.n..', '##.c.', '###.a'],
     text: 'Un escalier ! Mets deux flèches dans le bloc Répéter.' },
-  { ch: 4, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', '....n'],
-    text: "Deux blocs Répéter, l'un après l'autre." },
-  { ch: 4, pal: [...ARROWS, 'j', 'loop'], max: 4, sol: 'N2(r j) d', map: ['##o####', 'R.~b.~n', '######K'],
+  { ch: 3, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', '....n'],
+    text: 'Deux blocs Répéter, l\'un après l\'autre.' },
+  { ch: 3, pal: [...ARROWS, 'loop'], max: 4, sol: 'r N6(d)', map: ['R..', '...', '.b.', '...', '.n.', '...', '.c.'],
+    text: 'L\'allée aux jouets : tout droit, en ligne droite !' },
+  { ch: 3, pal: [...ARROWS, 'j', 'loop'], max: 4, sol: 'N2(r j) d', map: ['##o####', 'R.~b.~n', '######K'],
     text: 'Le grand défi ! Saute, ramasse et range tout dans le coffre.' },
 
-  // Chapitre 6 — Tourner (repère relatif)
-  { ch: 5, pal: REL, face: 'u', map: ['..b..', '.....', '.....', '..R..'],
+  /* ============ Monde 2 — La grande promenade ============ */
+  // Chapitre 5 — Le chemin de Zoé (repère relatif)
+  { ch: 4, pal: REL, face: 'u', map: ['..b..', '.....', '.....', '..R..'],
     text: 'Nouveaux blocs ! Avance fait aller Bip tout droit, là où il regarde. Ici, il regarde vers le haut.' },
-  { ch: 5, pal: REL, face: 'r', map: ['....n', '.....', 'R....'],
-    text: 'Tourne fait pivoter Bip sur place, sans avancer. Tourne-le, puis avance.' },
-  { ch: 5, pal: REL, face: 'r', map: ['R.##.', '#.#..', '#t..b'],
+  { ch: 4, pal: REL, face: 'r', map: ['....n', '.....', 'R....'],
+    text: 'Tourner fait pivoter Bip sur place, sans avancer. Tourne-le, puis avance.' },
+  { ch: 4, pal: [...REL, 'j'], face: 'd', map: ['..b..', '..~..', '..R..', '.....'],
+    text: 'Le ballon est derrière Bip ! Demi-tour, puis saute la flaque.' },
+  { ch: 4, pal: REL, face: 'r', map: ['R.##.', '#.#..', '#t..b'],
     text: 'Un chemin en zigzag. Imagine que tu es Bip : à gauche ou à droite ?' },
-  { ch: 5, pal: [...REL, 'j'], face: 'd', map: ['..b..', '..~..', '..R..', '.....'],
-    text: 'Le ballon est derrière Bip ! Fais-lui faire demi-tour, puis saute la flaque.' },
-
-  // Chapitre 7 — Répéter jusqu'à (boucle conditionnelle)
+  { ch: 4, pal: REL, face: 'u', map: ['..t..', '.#.#.', '.~R~.', '.#.#.', '..n..'],
+    text: 'Sors de la mare et ramasse les deux jouets. Imagine que tu es Bip !' },
+  // Chapitre 6 — La mare de Lulu (nénuphars)
+  { ch: 5, pal: ARROWS, map: ['R--b.'],
+    text: 'Bienvenue chez Lulu ! Les nénuphars coulent quand Bip les quitte. Va chercher le ballon.' },
+  { ch: 5, pal: ARROWS, sol: 'u r r d d l', map: ['-b-', 'R~-', '-c-'],
+    text: 'Deux jouets sur les îles. Une fois parti d\'un nénuphar, impossible d\'y revenir !' },
+  { ch: 5, pal: [...ARROWS, 'j'], map: ['R--b', '.~~.', '.n~.'],
+    text: 'Traverse la mare, puis reviens chercher le nounours en sautant.' },
+  { ch: 5, pal: ARROWS, sol: 'r r r r d d l l', map: ['R---b', '~~~~.', '..K..'],
+    text: 'La grande traversée : les nénuphars sont le seul chemin. Au coffre !' },
+  { ch: 5, pal: [...ARROWS, 'loop'], max: 7, sol: 'N5(r) d d l l', map: ['R--.-b', '~~~...', '...K..'],
+    text: 'Que de nénuphars ! Un bloc Répéter et Bip saute de feuille en feuille.' },
+  // Chapitre 7 — Jusqu'au bout (boucle conditionnelle)
   { ch: 6, pal: [...REL, 'while'], max: 2, sol: 'Wo(f)', map: ['.......', 'R.....b', '.......'],
-    text: "Nouveau : Répéter jusqu'à. Bip répète jusqu'à ce qu'un obstacle soit devant lui. Ici, le bord du jardin." },
+    text: 'Nouveau : Répéter jusqu\'à. Bip répète jusqu\'à ce qu\'un obstacle soit devant lui. Ici, le bord du jardin.' },
   { ch: 6, pal: [...REL, 'while'], max: 5, sol: 'Wo(f) tr Wo(f)',
     variants: [
       ['R..b#..', '.......', '.......', '.......', '...n...'],
       ['R....b#', '.......', '.......', '.....n.', '.....o.'],
       ['R.b#...', '.......', '.......', '.......', '..n....'],
     ],
-    text: "Trois jardins, un seul programme ! Les chemins n'ont pas la même longueur." },
+    text: 'Trois jardins, un seul programme ! Les chemins n\'ont pas la même longueur.' },
   { ch: 6, pal: [...REL, 'while'], max: 2, sol: 'Wt(f)',
     variants: [
       ['.......', 'R..b..~', '.......'],
       ['.......', 'R....b~', '.......'],
       ['.......', 'R.b.~..', '.......'],
     ],
-    text: "Attention à la flaque ! Touche le rond du bloc pour changer : jusqu'à un obstacle, ou jusqu'à avoir tous les jouets." },
+    text: 'Touche le rond du bloc pour changer : jusqu\'à un obstacle, ou jusqu\'à avoir tous les jouets.' },
   { ch: 6, pal: [...REL, 'while', 'loop'], max: 4, sol: 'N3(Wo(f) tr)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', 'n...c'],
-    text: "Un Répéter jusqu'à, dans un Répéter ! Bip fait le tour de la mare." },
-
-  // Chapitre 8 — Si… sinon (conditions), plusieurs jardins
+    text: 'Un Répéter jusqu\'à, dans un Répéter ! Bip fait le tour de la mare.' },
+  { ch: 6, pal: [...REL, 'while', 'loop'], max: 5, sol: 'N4(Wo(f) tr)', map: ['R...b', '.###.', '.#~#.', '.###.', 'n...c'],
+    text: 'Le grand anneau : fais tout le tour, Bip s\'arrête tout seul à chaque coin !' },
+  // Chapitre 8 — À gauche ou à droite ? (si… sinon)
   { ch: 7, pal: [...REL, 'j', 'while', 'if'], max: 4, sol: 'Wo(Ip(j|f))',
     variants: [
       ['........', 'R.~.~..b', '........'],
       ['........', 'R..~..~b', '........'],
       ['........', 'R~..~.b.', '........'],
     ],
-    text: 'Nouveau : le bloc Si. Si une flaque est devant Bip, il fait la ligne verte. Sinon, il fait la ligne grise.' },
+    text: 'Nouveau : le bloc Si. Si une flaque est devant Bip, il fait la ligne verte. Sinon, la ligne grise.' },
   { ch: 7, pal: [...REL, 'while', 'if'], max: 4, sol: 'Wt(Io(tr|f))',
     variants: [
       ['R....', '####.', '####.', 'b....'],
       ['R..#.', '##.##', '##.##', 'b....'],
       ['R....', '####.', '#b...', '#....'],
     ],
-    text: 'Le bloc Si peut aussi regarder les obstacles. Si un obstacle est devant, Bip tourne. Sinon, il avance.' },
+    text: 'Le bloc Si peut regarder les obstacles. Si un obstacle est devant, Bip tourne. Sinon, il avance.' },
+  { ch: 7, pal: [...REL, 'while', 'if'], max: 4, sol: 'Wt(Io(tr|f))',
+    variants: [
+      ['R....', '####.', '.a.#.', '.###.', '.....'],
+      ['R..#.', '##.#.', '##.#.', 'b..#.', '####.'],
+      ['R....', '####.', '...#.', '.#.#.', '#t...'],
+    ],
+    text: 'Le grand escargot ! Répète jusqu\'à avoir tous les jouets.' },
+  { ch: 7, pal: [...REL, 'j', 'while', 'if'], max: 4, sol: 'Wt(Ip(j|f))',
+    variants: [
+      ['R~-..b', '..~...', '......'],
+      ['R-~..b', '..~...', '......'],
+      ['R.~-b.', '..~...', '......'],
+    ],
+    text: 'Flaques et nénuphars mélangés : le même programme doit tout ramasser !' },
   { ch: 7, pal: [...REL, 'j', 'while', 'if'], max: 9, sol: 'Wo(Ip(j|f)) tr Wo(Ip(j|f))',
     variants: [
       ['R.~.n.', '......', '.....~', '.....b'],
@@ -818,19 +1376,11 @@ const LEVELS = [
       ['R~..~.', '......', '.....~', '.....n'],
     ],
     text: 'Des flaques et un virage, dans trois jardins différents.' },
-  { ch: 7, pal: [...REL, 'while', 'if'], max: 4, sol: 'Wt(Io(tr|f))',
-    variants: [
-      ['R....', '####.', '.a.#.', '.###.', '.....'],
-      ['R..#.', '##.#.', '##.#.', 'b..#.', '####.'],
-      ['R....', '####.', '...#.', '.#.#.', '#t...'],
-    ],
-    text: "Le grand escargot ! Répète jusqu'à avoir tous les jouets." },
-
   // Chapitre 9 — Le bloc magique (fonction)
   { ch: 8, pal: [...REL, 'star'], max: 7, sol: '* * *', fn: 'f tl f tr', face: 'r', map: ['...a', '..n.', '.c.#', 'R.##'],
-    text: 'Nouveau : le bloc magique. Range des blocs dans la ligne étoile, puis utilise l’étoile autant de fois que tu veux.' },
+    text: 'Nouveau : le bloc magique. Range des blocs dans la ligne étoile, puis utilise l\'étoile autant de fois que tu veux.' },
   { ch: 8, pal: [...REL, 'j', 'star'], max: 8, sol: '* tr * tr *', fn: 'f j f', map: ['R.~.b', '.###.', '.#o#~', '.###.', 'n.~.c'],
-    text: "Les trois côtés se ressemblent. Apprends le trajet d'un côté au bloc magique." },
+    text: 'Les trois côtés se ressemblent. Apprends le trajet d\'un côté au bloc magique.' },
   { ch: 8, pal: [...REL, 'star'], max: 9, sol: '* * * *', fn: 'f tl tl f tr', face: 'u', map: ['#~.~#', '~.b.~', '.nRc.', '~.a.~', '#~.~#'],
     text: 'Bip va chercher un jouet, puis revient au milieu. Quatre fois !' },
   { ch: 8, pal: [...REL, 'j', 'while', 'if', 'star'], max: 8, sol: 'Wo(*) tr Wo(*)', fn: 'Ip(j|f)',
@@ -839,30 +1389,147 @@ const LEVELS = [
       ['R~.~c.', '.....~', '......', '.....a'],
       ['R.~...', '......', '.....~', '.....t'],
     ],
-    text: 'Tu te souviens du niveau 31 ? Avec un bloc magique qui contient un Si, le programme est plus court.' },
+    text: 'Un bloc magique qui contient un Si : le programme devient tout petit.' },
+  { ch: 8, pal: [...REL, 'star'], max: 7, sol: '* * *', fn: 'N5(f) tl', face: 'r',
+    map: ['n....t', '......', '......', '......', '......', 'R....c'],
+    text: 'Le grand tour du jardin ! Un seul trajet à apprendre à l\'étoile.' },
 
-  // Chapitre 10 — Détective (débogage) et défi final
-  { ch: 9, pal: ARROWS, start: 'd r r r r u', map: ['R.#..', '..#.a', '.....', 'o....'],
-    text: 'Bip a écrit un programme, mais il y a une erreur. Lance-le, regarde où ça coince, puis corrige-le.' },
-  { ch: 9, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', start: 'N3(r) N4(d)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', '....n'],
-    text: "Ce programme s'arrête trop tôt. Quel nombre faut-il changer ?" },
-  { ch: 9, pal: [...REL, 'j', 'while', 'if'], max: 4, sol: 'Wo(Ip(j|f))', start: 'Wo(Ip(f|j))',
+  /* ============ Monde 3 — Les ateliers de Grand-Papa ============ */
+  // Chapitre 10 — Les champignons magiques (interrupteurs)
+  { ch: 9, pal: ARROWS, sol: 'r r r', map: ['RsGb'],
+    text: 'L\'atelier de Grand-Papa ! Marche sur le champignon : la barrière s\'ouvre.' },
+  { ch: 9, pal: [...REL, 'while'], max: 2, sol: 'Wo(f)', map: ['R.sG.b.'],
+    text: 'Répète jusqu\'à : la barrière s\'ouvre toute seule pendant que Bip avance. Magique !' },
+  { ch: 9, pal: ARROWS, sol: 'd r u r r r', map: ['R.G.b', '.s...'],
+    text: 'La barrière bloque le chemin. Le champignon est caché en dessous !' },
+  { ch: 9, pal: [...ARROWS, 'f', 'tl', 'tr'], sol: 'f f d d l d', face: 'r', map: ['R.s', '.#.', '.Gb', '.K.'],
+    text: 'Ouvre la barrière, ramasse le cube, puis au coffre au fond de l\'atelier.' },
+  { ch: 9, pal: [...REL, 'while', 'if'], max: 4, sol: 'Wo(Io(tr|f))', face: 'r',
+    variants: [
+      ['R..sG..b', '........', '........'],
+      ['R.s.G..b', '........', '........'],
+      ['Rs...G.b', '........', '........'],
+    ],
+    text: 'Trois ateliers : la barrière n\'est jamais au même endroit. Si un obstacle est devant, Bip tourne !' },
+  // Chapitre 11 — Pousse-pousse (caisses)
+  { ch: 10, pal: ARROWS, sol: 'r r r', map: ['RC~b'],
+    text: 'Une caisse ! Marche dedans pour la pousser. Dans l\'eau… elle devient un pont !' },
+  { ch: 10, pal: ARROWS, sol: 'r r r r', map: ['RC.~b'],
+    text: 'Encore un pont à construire : pousse la caisse jusqu\'à la flaque.' },
+  { ch: 10, pal: ARROWS, sol: 'r r r d', map: ['R.C..', '###b.'],
+    text: 'La caisse bloque le couloir. Pousse-la pour te frayer un chemin.' },
+  { ch: 10, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.n.'],
+    text: 'Pousse la caisse sur le champignon : elle reste appuyée dessus et la barrière s\'ouvre !' },
+  { ch: 10, pal: ARROWS, sol: 'r r r r r', map: ['RC~.bK', '#....#', '......'],
+    text: 'Le grand pont ! Pousse la caisse dans l\'eau, traverse, ramasse tout et range au coffre.' },
+  // Chapitre 12 — Le pollen doré (peinture)
+  { ch: 11, pal: ARROWS, map: ['R***'],
+    text: 'Regarde : Bip laisse du pollen doré là où il marche ! Couvre toutes les fleurs.' },
+  { ch: 11, pal: ARROWS, map: ['R..*.', '.*.*.'],
+    text: 'Passe sur toutes les fleurs. Parfois il faut revenir en arrière !' },
+  { ch: 11, pal: ARROWS, map: ['R.*b.', '*....'],
+    text: 'Jouet et fleurs : ramasse le ballon et couvre toutes les fleurs.' },
+  { ch: 11, pal: ARROWS, map: ['..#..', '*.#.*', '.....', 'R.#..'],
+    text: 'Le miroir : deux fleurs jumelles, une de chaque côté du mur !' },
+  { ch: 11, pal: ['r', 'loop'], max: 2, sol: 'N7(r)', map: ['R*******'],
+    text: 'Une allée de fleurs et une seule pile ! Le bloc Répéter peint tout.' },
+  // Chapitre 13 — Les toboggans de Ballon (mode toboggan)
+  { ch: 12, mode: 'ball', face: 'r', map: ['S..#', '.N..'], tiles: ['1,0,d'],
+    text: 'Nouveau jeu ! Touche l\'herbe pour poser une flèche, puis le bouton vert : Ballon roule !' },
+  { ch: 12, mode: 'ball', face: 'r', map: ['S.#..', '...N.'], tiles: ['1,0,d', '1,1,r'],
+    text: 'Deux flèches pour contourner le buisson.' },
+  { ch: 12, mode: 'ball', face: 'd', map: ['S##..', '...#.', '..N..'], tiles: ['0,1,r', '1,1,d', '1,2,r'],
+    text: 'Un vrai petit labyrinthe pour Ballon.' },
+  { ch: 12, mode: 'ball', face: 'r', map: ['S.#..', '...#.', '.N...'], tiles: ['1,0,d', '1,1,r', '2,1,d', '2,2,l'],
+    text: 'Quatre flèches ! Vérifie bien chaque virage avant de lancer.' },
+  { ch: 12, mode: 'ball', face: 'r', map: ['S....', '###.#', '..N..'], tiles: ['3,0,d', '3,1,d', '3,2,l'],
+    text: 'Le grand toboggan de Ballon : descends jusqu\'au nid !' },
+  // Chapitre 14 — L'atelier de Pilou (détective)
+  { ch: 13, pal: ARROWS, sol: 'r d d r r r u', start: 'd r r r r u', map: ['R.#..', '..#.a', '.....', 'o....'],
+    text: 'Pilou a mélangé un programme ! Lance-le, regarde où ça coince, puis corrige-le.' },
+  { ch: 13, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', start: 'N3(r) N4(d)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', '....n'],
+    text: 'Ce programme s\'arrête trop tôt. Quel nombre faut-il changer ?' },
+  { ch: 13, pal: [...REL, 'j', 'while', 'if'], max: 4, sol: 'Wo(Ip(j|f))', start: 'Wo(Ip(f|j))',
     variants: [
       ['........', 'R.~.~..b', '........'],
       ['........', 'R..~..~b', '........'],
       ['........', 'R~..~.b.', '........'],
     ],
-    text: "Le bloc Si s'est trompé de ligne. Répare-le pour les trois jardins." },
-  { ch: 9, pal: [...REL, 'j', 'loop', 'while', 'if', 'star'], sol: 'N2(Wo(*) tr) Wo(*)', fn: 'Ip(j|f)',
-    map: ['R.~n..', '#####.', '..o.#~', '#####.', 'K.~.b.'],
-    text: 'Le grand défi final ! Ramasse tout et range dans le coffre. Tous tes blocs sont là.' },
+    text: 'Le bloc Si s\'est trompé de ligne. Répare-le pour les trois jardins.' },
+  { ch: 13, pal: ARROWS, sol: 'r r r r', start: 'r r d d', map: ['RC.~b', '##.##'],
+    text: 'Pilou a poussé trop loin : Bip est bloqué ! Enlève ce qui dépasse.' },
+  { ch: 13, pal: [...ARROWS, 'j'], sol: 'r r r', start: 'j r', map: ['R*.*'],
+    text: 'Pilou a remplacé des flèches par un saut : la première fleur reste blanche !' },
+
+  /* ============ Monde 4 — Le jardin de nuit ============ */
+  // Chapitre 15 — Les lucioles de Noctule (récapitulatif de nuit)
+  { ch: 14, pal: ['r', 'loop'], max: 3, sol: 'N5(r)', map: ['R****e'],
+    text: 'L\'allée dorée : peins toutes les fleurs, la luciole t\'attend au bout.' },
+  { ch: 14, pal: [...REL, 'while'], max: 2, sol: 'Wo(f)', map: ['R.sG.e.'],
+    text: 'La barrière de nuit. Marche sur le champignon lumineux et répète jusqu\'à la luciole.' },
+  { ch: 14, pal: [...ARROWS, 'j'], sol: 'u r r d d l', map: ['-e-', 'R~-', '-e-'],
+    text: 'La mare de nuit ! Ramène les deux lucioles à travers les nénuphars.' },
+  { ch: 14, pal: [...REL, 'star'], max: 8, sol: '* * *', fn: 'f tl f tr', face: 'r',
+    map: ['...e', '..e.', '.e.#', 'R.##'],
+    text: 'La ronde des lucioles : le bloc magique va chercher chacune d\'elles.' },
+  { ch: 14, pal: [...REL, 'j', 'while', 'if'], max: 9, sol: 'Wo(Ip(j|f)) tr Wo(Ip(j|f))',
+    variants: [
+      ['R.~.e.', '......', '.....~', '.....e'],
+      ['R..~.e', '.....~', '......', '.....e'],
+      ['R~..~.', '......', '.....~', '.....e'],
+    ],
+    text: 'Les flaques de nuit : le même programme pour les trois jardins.' },
+  // Chapitre 16 — Le grand pique-nique (final)
+  { ch: 15, pal: [...ARROWS, 'j', 'loop'], sol: 'N2(r j) d', map: ['##o####', 'R.~e.~t', '######K'],
+    text: 'Le grand pique-nique commence ! Saute les flaques et range les surprises dans le coffre.' },
+  { ch: 15, pal: [...REL, 'while', 'if'], max: 4, sol: 'Wt(Io(tr|f))',
+    variants: [
+      ['R....', '####.', '.e.#.', '.###.', '.....'],
+      ['R..#.', '##.#.', '##.#.', 'e..#.', '####.'],
+      ['R....', '####.', '...#.', '.#.#.', '#e...'],
+    ],
+    text: 'L\'escargot de nuit : répète jusqu\'à avoir toutes les lucioles.' },
+  { ch: 15, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.n.'],
+    text: 'Un pont, une barrière, une luciole : l\'atelier de Grand-Papa pour de vrai.' },
+  { ch: 15, pal: [...REL, 'j', 'while', 'if', 'star'], max: 8, sol: 'Wo(*) tr Wo(*)', fn: 'Ip(j|f)',
+    variants: [
+      ['R..~.e', '......', '.....~', '.....t'],
+      ['R~.~c.', '.....~', '......', '.....a'],
+      ['R.~...', '......', '.....~', '.....e'],
+    ],
+    text: 'Le même programme, trois jardins, un bloc magique : tu es un chef !' },
+  { ch: 15, pal: [...ARROWS, 'f', 'tr', 'j', 'loop', 'while', 'if', 'star'], max: 9,
+    sol: 'N2(Wo(*) tr) Wo(*)', fn: 'Ip(j|f)',
+    map: ['R.~e..', '#####.', '..o.#~', '#####.', 'K.~.b.'],
+    text: 'LE GRAND FINAL ! Ramasse tout et range dans le coffre. Tous tes blocs sont là. Bon courage, champion !' },
+
+  /* ============ Les défis de Zoé (un par jour de la semaine) ============ */
+  { ch: -1, daily: true, pal: ARROWS, map: ['.....', 'b.R.c', '.....'],
+    text: 'Défi de Zoé : un jouet de chaque côté, lequel d\'abord ?' },
+  { ch: -1, daily: true, pal: [...ARROWS, 'j'], map: ['..R..', '.....', '~~~~~', '.....', '..t..'],
+    text: 'Défi de Zoé : fais d\'abord regarder Bip vers le bas, puis saute la rivière.' },
+  { ch: -1, daily: true, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', map: ['R...n', '.~~~.', '.~o~.', '.~~~.', '....a'],
+    text: 'Défi de Zoé : deux boucles bien rangées.' },
+  { ch: -1, daily: true, pal: [...REL, 'j', 'while', 'if'], max: 4, sol: 'Wo(Ip(j|f))',
+    variants: [
+      ['........', 'R.~.~..c', '........'],
+      ['........', 'R..~..~c', '........'],
+      ['........', 'R~..~.c.', '........'],
+    ],
+    text: 'Défi de Zoé : trois jardins, un seul programme !' },
+  { ch: -1, daily: true, pal: [...ARROWS, 'j'], sol: 'u r r d d l', map: ['-n-', 'R~-', '-t-'],
+    text: 'Défi de Zoé : la mare secrète, sans mouiller Bip.' },
+  { ch: -1, daily: true, pal: ['r', 'loop'], max: 2, sol: 'N6(r)', map: ['R******'],
+    text: 'Défi de Zoé : l\'allée dorée en une seule pile.' },
+  { ch: -1, daily: true, pal: ARROWS, sol: 'r r r d', map: ['R.C..', '###n.'],
+    text: 'Défi de Zoé : pousse la caisse, attrape la toupie.' },
 ];
 LEVELS.forEach((l, i) => { l.id = i + 1; });
 
 
-/* ===================== Bip le robot — application ===================== */
 (function () {
 'use strict';
+/* ===================== Bip le robot — v2 « Le grand pique-nique » ===================== */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -896,10 +1563,12 @@ const I = {
   lens: S('M42 42m-24 0a24 24 0 1 0 48 0a24 24 0 1 0-48 0M60 60l24 24', 11),
   lock: `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="44" width="56" height="42" rx="10" fill="currentColor"/><path d="M34 46V34a16 16 0 0 1 32 0v12" fill="none" stroke="currentColor" stroke-width="9"/></svg>`,
   info: S('M50 46v26M50 30v1', 11),
-  bush: `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="30" cy="60" r="20" fill="currentColor"/><circle cx="70" cy="60" r="20" fill="currentColor"/><circle cx="50" cy="42" r="24" fill="currentColor"/></svg>`,
-  drop: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 12C50 12 24 44 24 62a26 26 0 0 0 52 0C76 44 50 12 50 12Z" fill="currentColor"/></svg>`,
-  star: on => `<svg viewBox="0 0 100 100" aria-hidden="true" class="${on ? 'on' : ''}"><use href="#star" width="100" height="100" fill="${on ? 'var(--star)' : 'var(--paper-2)'}" stroke="${on ? '#E9A923' : 'var(--line)'}"/></svg>`,
+  eraser: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 62L52 26a8 8 0 0 1 11-1l15 12a8 8 0 0 1 1 11L49 84H30Z" fill="currentColor" opacity=".25"/><path d="M22 62L52 26a8 8 0 0 1 11-1l15 12a8 8 0 0 1 1 11L49 84H30Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><path d="M36 70h44" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></svg>`,
+  album: S('M22 30a8 8 0 0 1 8-8h40a8 8 0 0 1 8 8v48H30a8 8 0 0 1-8-8zM30 70h48M40 46l8-12 8 10 6-6 8 12', 8),
+  garden: S('M50 62V84M50 70C42 70 34 64 32 56M50 76C58 76 66 70 68 62M50 62a14 14 0 1 1 0-28 14 14 0 0 1 0 28z', 7),
+  calendar: S('M20 26h60v54H20zM20 42h60M36 18v14M64 18v14M38 56h8M54 56h8', 7),
   bonk: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6L58 38L92 30L64 52L86 80L52 64L40 96L36 62L6 70L30 46L10 18L42 34Z" fill="#FFD36B" stroke="#E9A923" stroke-width="5" stroke-linejoin="round"/></svg>`,
+  star: on => `<svg viewBox="0 0 100 100" aria-hidden="true" class="${on ? 'on' : ''}"><use href="#star" width="100" height="100" fill="${on ? 'var(--star)' : 'var(--paper-2)'}" stroke="${on ? '#E9A923' : 'var(--line)'}"/></svg>`,
 };
 const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
 const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
@@ -907,6 +1576,8 @@ const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d:
 const CTR = ['loop', 'while', 'if'];
 const isCtr = t => CTR.includes(t);
 const LOOP_NS = [2, 3, 4, 5, 6, 8];
+const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'loop', 'while', 'if', 'star'];
+const BALL_DIRS = ['r', 'd', 'l', 'u'];
 
 function robotSVG() {
   return `<svg viewBox="0 0 100 100" class="bipsvg" aria-hidden="true">
@@ -931,15 +1602,15 @@ function robotSVG() {
 }
 const toyUse = k => `<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#toy-${k}" width="100" height="100"/></svg>`;
 const symUse = k => `<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#${k}" width="100" height="100"/></svg>`;
-const TOY_NAME = { b: 'le ballon', n: 'le nounours', c: 'le canard', t: 'la toupie', a: 'le cube' };
+const TOY_NAME = { b: 'le ballon', n: 'le nounours', c: 'le canard', t: 'la toupie', a: 'le cube', z: 'l\'anneau', e: 'la luciole' };
 
-/* ---------- Sauvegarde (facultative) ---------- */
-const KEY = 'bip-robot-v1';
+/* ---------- Sauvegarde ---------- */
+const KEY = 'bip-robot-v2';
 function loadSave() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-const save = Object.assign({ stars: {}, voice: true, sound: true, all: false }, loadSave());
+const save = Object.assign({ stars: {}, voice: true, sound: true, all: false, stickers: [], daily: {}, sandbox: [null, null, null], seen: { w: {}, c: {}, ce: {} } }, loadSave());
 function persist() { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) { /* stockage indisponible */ } }
 
-/* ---------- Sons doux ---------- */
+/* ---------- Petits sons doux ---------- */
 let ac = null;
 function audio() {
   if (!save.sound) return null;
@@ -977,7 +1648,15 @@ const SFX = {
   bump: () => { tone(240, 120, .28, 'triangle', .1); },
   splash: () => noise(.45, .12),
   nope: () => tone(320, 250, .18, 'triangle', .06),
+  pad: () => tone(300, 180, .3, 'sine', .07),
+  gate: () => { tone(520, 0, .12, 'sine', .06); tone(660, 0, .2, 'sine', .06, .1); },
+  push: () => noise(.22, .07),
+  plank: () => { noise(.3, .09); tone(180, 120, .25, 'sine', .06, .05); },
+  paint: () => { tone(880, 1320, .14, 'sine', .05); },
+  balltap: () => tone(500, 620, .05, 'triangle', .05),
+  loopdizzy: () => { tone(700, 300, .5, 'sine', .06); },
   win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0, .26, 'triangle', .07, i * .13)),
+  sticker: () => [784, 988, 1319].forEach((f, i) => tone(f, 0, .22, 'sine', .06, i * .1)),
 };
 function buzz(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* ignoré */ } }
 
@@ -1001,68 +1680,231 @@ function speak(text) {
 }
 function stopVoice() { try { speechSynthesis.cancel(); } catch (e) { /* */ } }
 
+/* ---------- Personnages de l\'histoire ---------- */
+const CHARS = {
+  bip: { name: 'Bip', art: () => robotSVG() },
+  zoe: { name: 'Zoé', art: () => symUse('avatar-zoe') },
+  toupie: { name: 'Toupie', art: () => symUse('avatar-toupie') },
+  lulu: { name: 'Lulu', art: () => symUse('avatar-lulu') },
+  papi: { name: 'Grand-Papa Engrenage', art: () => symUse('avatar-papi') },
+  pilou: { name: 'Pilou', art: () => symUse('avatar-pilou') },
+  noctule: { name: 'Noctule', art: () => symUse('avatar-noctule') },
+  ballon: { name: 'Ballon', art: () => symUse('avatar-ballon') },
+  cube: { name: 'Cube', art: () => symUse('avatar-cube') },
+  tous: { name: 'Tous ensemble', art: () => symUse('picnic'), wide: true },
+};
+function playStory(lines, done) {
+  const ov = $('#story');
+  let k = 0;
+  stopVoice();
+  const show = () => {
+    const L = lines[k];
+    const ch = CHARS[L.who] || CHARS.zoe;
+    $('#storyArt').innerHTML = L.art || ch.art();
+    $('#storyArt').classList.toggle('wide', !!(L.wide || ch.wide));
+    $('#storyWho').textContent = L.title || ch.name;
+    $('#storyLine').textContent = L.line;
+    $('#storyDots').innerHTML = lines.map((_, j) => `<i class="${j === k ? 'on' : ''}"></i>`).join('');
+    $('#btnStoryNext span:first-child').textContent = k === lines.length - 1 ? 'C\'est parti !' : 'Suite';
+    ov.hidden = false;
+    speak((L.title ? L.title + '. ' : '') + L.line);
+  };
+  $('#btnStoryNext').onclick = () => {
+    SFX.tap(); k++;
+    if (k < lines.length) show();
+    else { ov.hidden = true; if (done) done(); }
+  };
+  show();
+}
+
+/* ---------- Album de stickers ---------- */
+const STICKERS = [];
+CHAPTERS.forEach((c, i) => {
+  STICKERS.push({ id: 'c' + (i + 1), name: c.name, how: 'Chapitre ' + (i + 1) + ' terminé', icon: () => symUse(CHARS[c.who] && c.who !== 'bip' ? 'avatar-' + c.who : 'toy-b') });
+});
+[['w1', 'Jardin doré', 'Monde 1 : trois étoiles partout'],
+ ['w2', 'Promenade dorée', 'Monde 2 : trois étoiles partout'],
+ ['w3', 'Atelier doré', 'Monde 3 : trois étoiles partout'],
+ ['w4', 'Nuit dorée', 'Monde 4 : trois étoiles partout'],
+].forEach(([id, name, how]) => STICKERS.push({ id, name, how, icon: () => I.star(true) }));
+STICKERS.push(
+  { id: 'v1', name: 'Ancien ami', how: 'Joueur de la première heure', icon: () => robotSVG() },
+  { id: 'daily1', name: 'Premier défi', how: 'Un défi de Zoé réussi', icon: () => symUse('avatar-zoe') },
+  { id: 'sandbox1', name: 'Petit jardinier', how: 'Premier jardin créé', icon: () => symUse('flower') },
+  { id: 'sandboxwin', name: 'Jardin réussi', how: 'Bip a fini ton jardin', icon: () => symUse('box') },
+  { id: 'allstars', name: 'Champion étoilé', how: 'Trois étoiles partout !', icon: () => symUse('toy-t') },
+);
+const hasSticker = id => save.stickers.includes(id);
+function award(id) {
+  if (hasSticker(id)) return;
+  const st = STICKERS.find(s => s.id === id);
+  if (!st) return;
+  save.stickers.push(id); persist();
+  SFX.sticker(); buzz([20, 40, 20]);
+  const t = document.createElement('div');
+  t.className = 'sticker-toast';
+  t.innerHTML = `<span class="ico">${st.icon()}</span><span><b>${st.name}</b><small>Dans l'album de Zoé !</small></span>`;
+  document.body.append(t);
+  setTimeout(() => t.remove(), 3600);
+  if (!$('#home').hidden) renderHome();
+}
+function checkStickers() {
+  CHAPTERS.forEach((c, ci) => {
+    const lvls = LEVELS.filter(l => l.ch === ci);
+    if (lvls.length && lvls.every(l => (save.stars[l.id] || 0) > 0)) award('c' + (ci + 1));
+  });
+  WORLDS.forEach((w, wi) => {
+    const lvls = LEVELS.filter(l => l.ch >= 0 && CHAPTERS[l.ch].w === wi);
+    if (lvls.length && lvls.every(l => (save.stars[l.id] || 0) === 3)) award('w' + (wi + 1));
+  });
+  if (LEVELS.every(l => (save.stars[l.id] || 0) === 3)) award('allstars');
+}
+
 /* ---------- Données de niveau ---------- */
+const TONES = { sky: 'var(--move)', leaf: 'var(--leaf)', water: '#5DB6DE', lilac: 'var(--jump)', sun: '#F5B83A', teal: 'var(--rel)', coral: '#F58A70', pink: '#E585B4', peach: '#F7A55E', rust: '#C97B4A', wood: '#B08954', gold: '#E3B341', orange: '#F58A70', slate: '#7286A6', indigo: '#7C89C9', night: '#6A6DAE' };
+I.bush = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="30" cy="60" r="20" fill="currentColor"/><circle cx="70" cy="60" r="20" fill="currentColor"/><circle cx="50" cy="42" r="24" fill="currentColor"/></svg>`;
+I.drop = `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 12C50 12 24 44 24 62a26 26 0 0 0 52 0C76 44 50 12 50 12Z" fill="currentColor"/></svg>`;
+I.mushroom = `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="44" y="52" width="12" height="24" rx="5" fill="currentColor" opacity=".55"/><path d="M22 56C22 34 34 22 50 22C66 22 78 34 78 56C78 62 72 66 64 66H36C28 66 22 62 22 56Z" fill="currentColor"/></svg>`;
+I.crate = `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="18" y="20" width="64" height="60" rx="10" fill="currentColor"/><path d="M18 36h64M18 64h64M36 20v60M64 20v60" stroke="var(--card)" stroke-width="6"/></svg>`;
+I.flower = `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 58V84" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="40" r="13" fill="currentColor"/><circle cx="33" cy="52" r="13" fill="currentColor"/><circle cx="67" cy="52" r="13" fill="currentColor"/><circle cx="40" cy="66" r="11" fill="currentColor"/><circle cx="60" cy="66" r="11" fill="currentColor"/></svg>`;
+I.pad2 = `<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="54" rx="36" ry="24" fill="currentColor"/><path d="M50 34V72M50 48C42 44 34 42 27 45" stroke="var(--card)" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
+I.firefly = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="52" r="30" fill="currentColor" opacity=".4"/><path d="M50 28C40 28 35 38 37 50C39 62 44 72 50 72C56 72 61 62 63 50C65 38 60 28 50 28Z" fill="currentColor"/></svg>`;
+const CH_ICON = [I.arrow, I.bush, I.drop, I.jump, I.loop, I.tr, I.until, I.fork, I.magic, I.mushroom, I.crate, I.flower, symUse('ball').replace('viewBox', 'width="100%" height="100%" viewBox'), I.lens, I.firefly, I.star(true)];
+const DAILY_IDX = (d => (d.getDay() + 6) % 7)(new Date());
+const DAILY_NAMES = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+const DAILY_LEVELS = LEVELS.filter(l => l.daily);
+const dailyLevel = () => DAILY_LEVELS[DAILY_IDX];
+/* Dernier niveau de l'aventure (les défis de Zoé vivent après) */
+const LAST_STORY = LEVELS.reduce((a, l, i) => (l.ch >= 0 ? i : a), 0);
+
+/* Préparation des niveaux : solution de référence, par, variantes */
 LEVELS.forEach(lv => {
+  lv.nv = lv.variants ? lv.variants.length : 1;
+  if (lv.mode === 'ball') { lv.ref = []; lv.refFn = []; lv.par = (lv.tiles || []).length; return; }
   lv.refFn = lv.fn ? parseProg(lv.fn) : [];
   lv.ref = lv.sol ? parseProg(lv.sol) : (solve(lv, lv.pal) || []).map((t, i) => ({ t, id: 'h' + i }));
   lv.par = countBlocks(lv.ref) + countBlocks(lv.refFn);
-  lv.nv = lv.variants ? lv.variants.length : 1;
 });
-const TONES = { sky: 'var(--move)', leaf: 'var(--leaf)', water: '#5DB6DE', lilac: 'var(--jump)', sun: '#F5B83A', teal: 'var(--rel)', coral: '#F58A70', pink: '#E585B4', peach: '#F7A55E', slate: '#7286A6' };
-const CH_ICON = [I.arrow, I.bush, I.drop, I.jump, I.loop, I.tr, I.until, I.fork, I.magic, I.lens];
-const unlocked = i => save.all || i === 0 || (save.stars[LEVELS[i - 1].id] || 0) > 0;
-const nextIndex = () => { const i = LEVELS.findIndex(l => !(save.stars[l.id] > 0)); return i < 0 ? LEVELS.length - 1 : i; };
 
 /* ---------- Écrans ---------- */
 const STANDALONE = matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
 function show(id) {
   $('#home').hidden = id !== 'home';
   $('#game').hidden = id !== 'game';
+  $('#sandbox').hidden = id !== 'sandbox';
   if (id === 'home') { renderHome(); hideHand(); stopVoice(); }
 }
 
+/* ---------- Accueil : la grande promenade ---------- */
+const unlocked = i => save.all || i === 0 || (save.stars[LEVELS[i - 1].id] || 0) > 0;
+const nextIndex = () => { const i = LEVELS.findIndex(l => !(save.stars[l.id] > 0)); return i < 0 ? LEVELS.length - 1 : i; };
+const chapterDone = ci => LEVELS.filter(l => l.ch === ci).every(l => (save.stars[l.id] || 0) > 0);
+const worldOf = ci => CHAPTERS[ci].w;
+
 function renderHome() {
-  const wrap = $('#chapters');
-  const nx = nextIndex();
-  wrap.innerHTML = CHAPTERS.map((c, ci) => {
+  // Jardin fleuri du héros : une fleur par chapitre terminé
+  const nb = CHAPTERS.filter((_, ci) => chapterDone(ci)).length;
+  $('#garden').innerHTML = Array.from({ length: nb }, (_, k) => `<span style="animation-delay:${k * .12}s">${symUse('flower')}</span>`).join('');
+  $('#albumCount').textContent = `${save.stickers.length}/${STICKERS.length} images`;
+  $('#dailyLabel').textContent = 'Aujourd\'hui : ' + DAILY_NAMES[DAILY_IDX];
+  $('#dailyDots').innerHTML = DAILY_NAMES.map((_, k) => `<i class="${save.daily[k] ? 'on' : ''}"></i>`).join('');
+
+  let h = '';
+  let lastWorld = -1;
+  CHAPTERS.forEach((c, ci) => {
+    const w = worldOf(ci);
+    if (w !== lastWorld) {
+      lastWorld = w;
+      h += `<div class="world-head"><span class="n">${w + 1}</span>${WORLDS[w].name}</div>`;
+    }
     const lvls = LEVELS.map((l, i) => [l, i]).filter(([l]) => l.ch === ci);
-    const sep = ci === 5 ? '<div class="chap-sep">Pour aller plus loin</div>' : '';
-    return `${sep}<article class="chap" data-tone="${c.tone}">
+    h += `<article class="chap${chapterDone(ci) ? ' done' : ''}" data-tone="${c.tone}">
       <div class="chap-head"><span class="chap-num">${ci + 1}</span><div><h2>${c.name}</h2><p>${c.hint}</p></div><span class="chap-ico">${CH_ICON[ci] || ''}</span></div>
       <div class="lvls">${lvls.map(([l, i]) => {
         const st = save.stars[l.id] || 0, open = unlocked(i);
-        return `<button class="lvl${i === nx && open ? ' next' : ''}" data-i="${i}" ${open ? '' : 'disabled'} aria-label="Niveau ${l.id}${open ? (st ? ', ' + st + ' étoiles' : '') : ', fermé'}">
+        return `<button class="lvl${i === nextIndex() && open ? ' next' : ''}" data-i="${i}" ${open ? '' : 'disabled'} aria-label="Niveau ${l.id}${open ? (st ? ', ' + st + ' étoiles' : '') : ', fermé'}">
           <span class="n">${open ? l.id : I.lock}</span><span class="st">${open ? [1, 2, 3].map(k => I.star(k <= st)).join('') : ''}</span></button>`;
       }).join('')}</div></article>`;
-  }).join('');
-  $$('.lvl', wrap).forEach(b => b.addEventListener('click', () => { audio(); openLevel(+b.dataset.i); }));
+  });
+  // Le défi de Zoé n'est pas sur la carte : il vit dans sa carte tout en bas
+  $('#journey').innerHTML = h;
+  $$('.lvl', $('#journey')).forEach(b => b.addEventListener('click', () => { audio(); openLevel(+b.dataset.i); }));
 }
+
+/* ---------- Album ---------- */
+function renderAlbum() {
+  $('#albumGrid').innerHTML = STICKERS.map(st => {
+    const got = hasSticker(st.id);
+    return `<div class="stk${got ? ' got' : ''}"><span class="ico">${got ? st.icon() : I.lock}</span><b>${st.name}</b><small>${st.how}</small></div>`;
+  }).join('');
+}
+
+/* ---------- Feuille adultes ---------- */
+function syncToggles() {
+  $('#tgVoice').setAttribute('aria-checked', String(!!save.voice));
+  $('#tgSound').setAttribute('aria-checked', String(!!save.sound));
+  $('#tgAll').setAttribute('aria-checked', String(!!save.all));
+}
+let resetArm = 0;
+function openSheet() { syncToggles(); $('#sheet').hidden = false; hideHand(); stopVoice(); }
+function closeSheet() { $('#sheet').hidden = true; if (!$('#home').hidden) renderHome(); }
 
 /* ---------- État du jeu ---------- */
 let UID = 1;
 const newId = () => 'k' + (UID++);
-const G = { i: 0, lv: null, P: null, v: 0, prog: [], fn: [], target: 'main', busy: false, abort: false, step: null, fails: 0, dirty: false, last: null, hintT: 0, spd: 1, told: {} };
-const hasFn = () => G.lv.pal.includes('star');
+const G = { i: -1, lv: null, P: null, v: 0, prog: [], fn: [], target: 'main', busy: false, abort: false, step: null,
+  fails: 0, dirty: false, last: null, hintT: 0, spd: 1, told: {}, mode: 'classic', sandbox: false, daily: false,
+  tiles: {}, tool: 'r', cellPx: 64, sb: { rows: [], tool: 'R', cur: 0 }, sbCellPx: 64 };
+const hasFn = () => !!(G.lv.pal && G.lv.pal.includes('star'));
 const totalBlocks = () => countBlocks(G.prog) + countBlocks(G.fn);
 
-function openLevel(i) {
-  if (!unlocked(i)) return;
-  G.i = i; G.lv = LEVELS[i];
-  G.prog = G.lv.start ? parseProg(G.lv.start, newId) : [];
-  G.fn = G.lv.startFn ? parseProg(G.lv.startFn, newId) : [];
+const WORLD_WHO = ['zoe', 'zoe', 'papi', 'noctule'];
+function storyForLevel(lv) {
+  if (lv.daily || lv.sandbox || lv.ch == null || lv.ch < 0) return null;
+  const lines = [];
+  const w = CHAPTERS[lv.ch].w;
+  const firstOfWorld = CHAPTERS.find(c => c.w === w) === CHAPTERS[lv.ch];
+  if (firstOfWorld && !save.seen.w[w]) {
+    save.seen.w[w] = true;
+    WORLDS[w].intro.forEach(l => lines.push({ who: WORLD_WHO[w], line: l, title: 'Monde ' + (w + 1) + ' : ' + WORLDS[w].name }));
+  }
+  if (!save.seen.c[lv.ch]) {
+    save.seen.c[lv.ch] = true;
+    lines.push({ who: CHAPTERS[lv.ch].who, line: CHAPTERS[lv.ch].intro, title: 'Chapitre ' + (lv.ch + 1) });
+  }
+  persist();
+  return lines.length ? lines : null;
+}
+
+function openLevel(i) { openLevelObj(LEVELS[i], { index: i }); }
+function openLevelObj(lv, opts = {}) {
+  G.mode = lv.mode === 'ball' ? 'ball' : 'classic';
+  G.sandbox = !!opts.sandbox;
+  G.i = opts.index != null ? opts.index : LEVELS.indexOf(lv);
+  G.lv = lv;
+  G.tiles = {};
+  G.tool = 'r';
+  G.prog = lv.start ? parseProg(lv.start, newId) : [];
+  G.fn = lv.startFn ? parseProg(lv.startFn, newId) : [];
   G.target = 'main'; G.fails = 0; G.step = null; G.abort = true; G.busy = false; G.dirty = false; G.last = null; G.told = {};
   $('#win').hidden = true;
   show('game');
   setRunning(false);
-  const tone = TONES[CHAPTERS[G.lv.ch].tone];
-  $('#lvlPill').innerHTML = `<i style="background:${tone}"></i>Niveau ${G.lv.id}`;
+  const tone = TONES[CHAPTERS[lv.ch] ? CHAPTERS[lv.ch].tone : 'sky'];
+  $('#lvlPill').innerHTML = `<i style="background:${tone}"></i>${lv.daily ? 'Défi de ' + DAILY_NAMES[DAILY_IDX] : lv.sandbox ? 'Mon jardin' : 'Niveau ' + lv.id}`;
   $('#btnHint').classList.remove('glow'); $('#btnStep').classList.remove('glow');
-  $('#fnRow').hidden = !hasFn();
+  $('#fnRow').hidden = !hasFn() || G.mode === 'ball';
+  $('#seqScroll').hidden = G.mode === 'ball';
+  $('#btnStep').hidden = G.mode === 'ball';
   buildVars();
   setVariant(0);
-  buildPalette(); renderProg();
-  say(G.lv.text);
-  if (STANDALONE) { try { history.pushState({ g: 1 }, ''); } catch (e) { /* */ } }
+  const start = () => {
+    buildPalette(); renderProg();
+    say(lv.text);
+    if (STANDALONE) { try { history.pushState({ g: 1 }, ''); } catch (e) { /* */ } }
+  };
+  const story = storyForLevel(lv);
+  if (story) playStory(story, start); else start();
 }
 
 function say(text, quiet) {
@@ -1084,8 +1926,10 @@ function buildVars() {
   }));
 }
 function setVariant(v) {
-  G.v = v; G.P = parseLevel(G.lv, v);
+  G.v = v;
+  G.P = G.mode === 'ball' ? parseBallMap(G.lv, v) : parseLevel(G.lv, v);
   buildBoard(); buildTray();
+  if (G.mode === 'ball') renderTiles();
   $$('#vars button').forEach(b => b.classList.toggle('on', +b.dataset.v === v));
 }
 function varMark(v, cls) { const b = $(`#vars button[data-v="${v}"]`); if (b) { b.classList.remove('pass', 'fail'); b.classList.add(cls); } }
@@ -1093,17 +1937,25 @@ function varMark(v, cls) { const b = $(`#vars button[data-v="${v}"]`); if (b) { 
 /* ---------- Plateau ---------- */
 function buildBoard() {
   const P = G.P, b = $('#board');
+  b.classList.toggle('night', !!(G.lv.ch >= 0 && CHAPTERS[G.lv.ch] && CHAPTERS[G.lv.ch].night));
   b.style.setProperty('--cols', P.w); b.style.setProperty('--rows', P.h);
   let h = '';
   P.cells.forEach((k, idx) => {
     if (k === 'grass') return;
     const x = idx % P.w, y = (idx / P.w) | 0;
-    h += `<div class="it ${k}" style="--x:${x};--y:${y}">${symUse(k)}</div>`;
+    const cls = k === 'switch' ? 'switchc' : k;
+    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest' }[k];
+    h += `<div class="it ${cls}" data-idx="${idx}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
   });
-  P.toys.forEach((t, i) => { h += `<div class="it toy" data-i="${i}" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
+  P.crates.forEach((c, i) => { h += `<div class="it crate" data-ci="${i}" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
+  P.toys.forEach((t, i) => { h += `<div class="it toy toy-${t.k}" data-i="${i}" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
   h += `<div class="fx" id="fx"></div>`;
-  const facing = G.lv.pal.some(t => ['j', 'f', 'tl', 'tr'].includes(t));
-  h += `<div class="it robot" id="robot" data-face="${P.face}" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div>${facing ? '<i class="facing"></i>' : ''}</div>`;
+  if (G.mode === 'ball') {
+    h += `<div class="ball-sprite" id="ballSprite" style="--x:${P.start[0]};--y:${P.start[1]}">${symUse('ball')}</div>`;
+  } else {
+    const facing = G.lv.pal.some(t => ['j', 'f', 'tl', 'tr'].includes(t));
+    h += `<div class="it robot" id="robot" data-face="${P.face}" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div>${facing ? '<i class="facing"></i>' : ''}</div>`;
+  }
   b.innerHTML = h;
   G.dirty = false;
   fitBoard();
@@ -1115,18 +1967,12 @@ function fitBoard() {
   const vars = $('#vars'), vh = vars.hidden ? 0 : vars.offsetHeight + 8;
   const cell = Math.max(24, Math.floor(Math.min((r.width - 16) / G.P.w, (r.height - vh - 16) / G.P.h, 112)));
   $('#board').style.setProperty('--cell', cell + 'px');
+  G.cellPx = cell;
   placeHand();
 }
 function resetBoard() {
-  const R = $('#robot'); if (!R) return;
-  R.classList.add('instant'); R.classList.remove('happy', 'oops', 'wet', 'puzzled', 'jumping');
-  R.style.setProperty('--x', G.P.start[0]); R.style.setProperty('--y', G.P.start[1]); R.dataset.face = G.P.face;
-  R.style.transitionDuration = '';
-  void R.offsetWidth; R.classList.remove('instant');
-  $$('.it.toy').forEach(t => t.classList.remove('got'));
-  $$('#tray .tt').forEach(t => t.classList.remove('got'));
-  $('#fx').innerHTML = '';
-  G.dirty = false;
+  buildBoard(); buildTray();
+  if (G.mode === 'ball') renderTiles();
 }
 function buildTray() {
   const P = G.P;
@@ -1179,11 +2025,24 @@ function blockHTML(t, id, inPal) {
 }
 function buildPalette() {
   const p = $('#palette');
+  if (G.mode === 'ball') {
+    p.innerHTML = BALL_DIRS.map(d => blockHTML(d, null, true)).join('') +
+      `<div class="blk eraser${G.tool === 'erase' ? ' in' : ''}" data-t="erase" role="button" tabindex="0" aria-label="Gomme">${I.eraser}</div>`;
+    $$('.blk', p).forEach(el => el.addEventListener('pointerdown', e => { e.preventDefault(); selectTool(el.dataset.t); }));
+    $$('.blk', p).forEach(el => { if (el.dataset.t === G.tool) el.classList.add('in'); });
+    return;
+  }
   p.innerHTML = G.lv.pal.map(t => blockHTML(t, null, true)).join('');
   $$('.blk', p).forEach(el => {
     el.addEventListener('pointerdown', e => press(e, { from: 'pal', t: el.dataset.t }, el));
     el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); addBlock(el.dataset.t); } });
   });
+}
+function selectTool(t) {
+  G.tool = t;
+  $$('#palette .blk').forEach(el => el.classList.toggle('in', el.dataset.t === t));
+  SFX.tap();
+  say(t === 'erase' ? 'La gomme ! Touche une flèche posée pour l\'enlever.' : 'Touche l\'herbe pour poser la flèche.', true);
 }
 const slotHTML = cid => `<div class="slot${G.target === cid ? ' on' : ''}" data-cid="${cid}" role="button" aria-label="Ajouter ici">+</div>`;
 const seqHTML = (list, cid) => list.map(itemHTML).join('') + slotHTML(cid);
@@ -1191,7 +2050,7 @@ const itemHTML = it => isCtr(it.t) ? ctrHTML(it) : blockHTML(it.t, it.id);
 function pillHTML(it) {
   if (it.t === 'loop') return '×' + it.n;
   if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : symUse('bush');
-  return it.c === 'puddle' ? symUse('puddle') : symUse('bush');
+  return it.c === 'puddle' ? symUse('puddle') : symUse('gate');
 }
 function pillLabel(it) {
   if (it.t === 'loop') return `Répéter ${it.n} fois`;
@@ -1211,6 +2070,7 @@ function ctrHTML(it) {
   return `<div class="${cls}" data-id="${it.id}">${head}<div class="seq ctr-body" data-cid="${it.id}">${seqHTML(it.body, it.id)}</div></div>`;
 }
 function renderProg() {
+  if (G.mode === 'ball') { updateBatt(); return; }
   if (G.target !== 'main' && !locate(G.target)) G.target = 'main';
   $('#main').innerHTML = seqHTML(G.prog, 'main');
   if (hasFn()) { $('#fnSeq').innerHTML = seqHTML(G.fn, 'fn'); $('#fnRow').classList.toggle('target', G.target === 'fn'); }
@@ -1234,6 +2094,12 @@ function bindProg(root) {
 }
 function updateBatt() {
   const b = $('#batts');
+  if (G.mode === 'ball') {
+    b.hidden = false;
+    const n = Object.keys(G.tiles).length;
+    b.innerHTML = `<span class="bl" style="margin:0">${n} flèche${n > 1 ? 's' : ''} posée${n > 1 ? 's' : ''}</span>`;
+    return;
+  }
   if (!G.lv.max) { b.hidden = true; return; }
   const left = Math.max(0, G.lv.max - totalBlocks());
   b.hidden = false;
@@ -1437,12 +2303,12 @@ function poofAt(el, x, y) {
   document.body.append(p); setTimeout(() => p.remove(), 500);
 }
 
-/* ---------- Exécution ---------- */
+/* ---------- Exécution (Bip) ---------- */
 function setRunning(on) {
   $('#game').classList.toggle('running', !!on);
   const b = $('#btnRun');
   b.innerHTML = on === true ? I.stop : I.play;
-  b.setAttribute('aria-label', on === true ? 'Arrêter Bip' : 'Lancer le programme');
+  b.setAttribute('aria-label', on === true ? 'Arrêter' : 'Lancer le programme');
   if (on) hideHand(); else requestAnimationFrame(placeHand);
 }
 function emptyNudge() {
@@ -1452,6 +2318,7 @@ function emptyNudge() {
 }
 const speedFor = sim => { const n = sim.steps.length; return n > 40 ? .5 : n > 24 ? .65 : n > 14 ? .8 : 1; };
 async function runAll() {
+  if (G.mode === 'ball') return runBall();
   if (G.busy) { G.abort = true; return; }
   if (!totalBlocks() || !G.prog.length) { emptyNudge(); return; }
   stopVoice(); G.step = null; clearMarks(); hideHint();
@@ -1484,7 +2351,7 @@ const CHECK_SAY = {
   'while-toys': ok => ok ? 'Il manque des jouets : Bip continue.' : 'Tous les jouets sont là : la boucle s’arrête.',
 };
 async function stepOnce() {
-  if (G.busy) return;
+  if (G.busy || G.mode === 'ball') return;
   if (!G.prog.length) { emptyNudge(); return; }
   if (!G.step) { stopVoice(); resetBoard(); clearMarks(); hideHint(); G.step = { sim: simulate(G.lv, G.prog, G.fn, G.v), i: 0 }; G.dirty = true; G.spd = 1; }
   const { sim } = G.step, st = sim.steps[G.step.i];
@@ -1508,6 +2375,7 @@ function finishStep(sim) {
   finish(sim, G.lv.nv > 1 ? G.v : null);
 }
 function mark(ins) {
+  if (!ins) return;
   clearNow();
   const b = $(`#progCard [data-id="${ins.id}"]`);
   if (b) b.classList.add('now');
@@ -1521,9 +2389,22 @@ function mark(ins) {
   $('#fnRow').classList.toggle('now', ins.path.some(p => p.call));
   if (b) b.scrollIntoView({ block: 'nearest', behavior: RM ? 'auto' : 'smooth' });
 }
+function crateEl(from) {
+  return $$('#board .it.crate').find(c => c.style.getPropertyValue('--x') == from[0] && c.style.getPropertyValue('--y') == from[1]);
+}
 async function doStep(st, keep) {
-  const R = $('#robot'), spr = $('.sprite', R);
+  const R = $('#robot'), spr = R ? $('.sprite', R) : null;
   const k = T * G.spd;
+  const fx = $('#fx');
+  if (st.kind === 'gate') {
+    mark(st.ins);
+    $$('#board .it.gate').forEach(g => g.classList.add('open'));
+    $$('#board .it.switchc').forEach(s => s.classList.add('pressed'));
+    SFX.gate();
+    await sleep(700 * k);
+    return;
+  }
+  if (!R) return;
   R.style.transitionDuration = Math.round((st.kind === 'jump' ? 520 : 380) * k) + 'ms';
   mark(st.ins);
   const [dx, dy] = DIRS[st.face];
@@ -1536,7 +2417,7 @@ async function doStep(st, keep) {
       s.className = 'sense' + (st.ok ? ' yes' : '');
       s.style.cssText = `--x:${st.from[0] + dx};--y:${st.from[1] + dy}`;
       s.innerHTML = '<i></i>';
-      $('#fx').append(s);
+      fx.append(s);
       setTimeout(() => s.remove(), 520 * k);
     }
     await sleep((keep ? 600 : 420) * k);
@@ -1550,7 +2431,7 @@ async function doStep(st, keep) {
     await sleep(360 * k);
     return;
   }
-  if (st.fail === 'out' || st.fail === 'bush' || st.fail === 'rock') {
+  if (st.fail === 'out' || st.fail === 'bush' || st.fail === 'rock' || st.fail === 'crate' || st.fail === 'gate') {
     const far = st.kind === 'jump' ? 70 : 34;
     st.kind === 'jump' ? SFX.jump() : SFX.step();
     await spr.animate([
@@ -1562,7 +2443,7 @@ async function doStep(st, keep) {
     SFX.bump(); buzz(60);
     R.classList.add('oops');
     const bx = st.from[0] + dx * (st.kind === 'jump' ? 1.5 : .5), by = st.from[1] + dy * (st.kind === 'jump' ? 1.5 : .5);
-    const kk = document.createElement('div'); kk.className = 'bonk'; kk.style.cssText = `--x:${bx};--y:${by}`; kk.innerHTML = I.bonk; $('#fx').append(kk);
+    const kk = document.createElement('div'); kk.className = 'bonk'; kk.style.cssText = `--x:${bx};--y:${by}`; kk.innerHTML = I.bonk; fx.append(kk);
     await sleep(300 * T);
     return;
   }
@@ -1578,10 +2459,50 @@ async function doStep(st, keep) {
     R.style.setProperty('--x', st.to[0]); R.style.setProperty('--y', st.to[1]);
     await sleep(400 * k);
   }
+  if (st.sink) {
+    SFX.pad();
+    const idx = st.sink[1] * G.P.w + st.sink[0];
+    const pad = $(`#board .it.pad[data-idx="${idx}"]`);
+    if (pad) {
+      const w = document.createElement('div');
+      w.className = 'it water'; w.style.cssText = `--x:${st.sink[0]};--y:${st.sink[1]}`;
+      w.innerHTML = symUse('water');
+      $('#board').insertBefore(w, pad);
+      pad.classList.add('sunk');
+      setTimeout(() => pad.remove(), 700 * T);
+    }
+  }
+  if (st.crate) {
+    SFX.push();
+    const ce = crateEl(st.crate.from);
+    if (ce) {
+      ce.style.setProperty('--x', st.crate.to[0]); ce.style.setProperty('--y', st.crate.to[1]);
+      if (st.crate.plank) {
+        await sleep(320 * k);
+        ce.remove();
+        const pl = document.createElement('div');
+        pl.className = 'it plank'; pl.style.cssText = `--x:${st.crate.to[0]};--y:${st.crate.to[1]}`;
+        pl.innerHTML = symUse('plank');
+        $('#board').appendChild(pl);
+        SFX.plank();
+        const sp = document.createElement('div'); sp.className = 'splash'; sp.style.cssText = `--x:${st.crate.to[0]};--y:${st.crate.to[1]}`;
+        sp.innerHTML = '<i></i><i></i>'; fx.append(sp);
+      }
+    }
+  }
+  if (st.paint) {
+    SFX.paint();
+    const p = document.createElement('div');
+    p.className = 'paint'; p.style.cssText = `--x:${st.paint[0]};--y:${st.paint[1]}`;
+    p.innerHTML = '<i></i>'; fx.append(p);
+    const idx = st.paint[1] * G.P.w + st.paint[0];
+    const fl = $(`#board .it.flower[data-idx="${idx}"]`);
+    if (fl) fl.classList.add('painted');
+  }
   if (st.fail === 'puddle') {
     SFX.splash(); buzz(40);
     R.classList.add('wet');
-    const s = document.createElement('div'); s.className = 'splash'; s.style.cssText = `--x:${st.to[0]};--y:${st.to[1]}`; s.innerHTML = '<i></i><i></i>'; $('#fx').append(s);
+    const s = document.createElement('div'); s.className = 'splash'; s.style.cssText = `--x:${st.to[0]};--y:${st.to[1]}`; s.innerHTML = '<i></i><i></i>'; fx.append(s);
     spr.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(8%) scale(1.04,.9)' }, { transform: 'translateY(0)' }], { duration: 400 * T });
     await sleep(500 * T);
     return;
@@ -1603,15 +2524,18 @@ function finish(sim, v) {
   G.fails++;
   let msg = '';
   if (sim.result === 'bump') {
-    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : 'Aïe ! Bip s’est cogné dans un buisson.';
+    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : 'Aïe ! Bip s’est cogné dans un buisson.';
     msg += ' Le bloc orange pose problème.';
     badMark(last.ins);
   } else if (sim.result === 'splash') {
-    msg = 'Plouf ! Bip a marché dans une flaque. Le bloc orange pose problème.';
+    msg = 'Plouf ! Bip a marché dans l’eau. Le bloc orange pose problème.';
     badMark(last.ins);
   } else if (sim.result === 'tired') {
     R.classList.add('puzzled');
     msg = 'Bip est fatigué : son programme ne s’arrête jamais ! Regarde tes boucles.';
+  } else if (sim.result === 'unpainted') {
+    R.classList.add('puzzled');
+    msg = sim.left > 1 ? `Il reste ${sim.left} fleurs sans pollen. Marche dessus !` : 'Il reste une fleur sans pollen. Marche dessus !';
   } else if (sim.result === 'missing') {
     R.classList.add('puzzled');
     const starUnused = hasFn() && !G.fn.length && G.prog.some(containsStar);
@@ -1635,20 +2559,26 @@ function badMark(ins) {
 /* ---------- Réussite ---------- */
 function win() {
   const R = $('#robot');
-  R.classList.add('happy');
+  if (R) R.classList.add('happy');
   clearNow();
   const n = totalBlocks(), par = G.lv.par;
-  const stars = n <= par ? 3 : n <= par + 2 ? 2 : 1;
-  const prev = save.stars[G.lv.id] || 0;
-  save.stars[G.lv.id] = Math.max(prev, stars); persist();
+  let stars = n <= par ? 3 : n <= par + 2 ? 2 : 1;
+  if (G.sandbox) { stars = 3; }
+  else if (!G.daily) {
+    const prev = save.stars[G.lv.id] || 0;
+    save.stars[G.lv.id] = Math.max(prev, stars); persist();
+  }
+  checkStickers();
+  if (G.sandbox) award('sandboxwin');
+  if (G.daily) { save.daily[DAILY_IDX] = true; persist(); award('daily1'); }
   SFX.win(); buzz([30, 60, 30]);
   confetti();
   $('#btnHint').classList.remove('glow'); $('#btnStep').classList.remove('glow');
   setTimeout(() => showWin(stars, n, par), RM ? 300 : 1000);
 }
 function showWin(stars, n, par) {
-  const lastLevel = G.i === LEVELS.length - 1;
-  const chapterEnd = !lastLevel && LEVELS[G.i + 1].ch !== G.lv.ch;
+  const lastLevel = G.i === LAST_STORY;
+  const chapterEnd = !lastLevel && G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
   $('#winBip').innerHTML = robotSVG();
   $('#winStars').innerHTML = [1, 2, 3].map(k => I.star(k <= stars)).join('');
   $$('#winStars svg.on').forEach((s, k) => { s.style.animationDelay = (k * 0.18) + 's'; });
@@ -1656,8 +2586,9 @@ function showWin(stars, n, par) {
   let text = stars === 3
     ? `Programme parfait : ${n} bloc${n > 1 ? 's' : ''}, c’est le plus court.`
     : `Ton programme a ${n} blocs. On peut réussir avec ${par}. Tu essaies ?`;
+  if (G.sandbox) { title = 'Quel jardin !'; text = 'Bip a fini TON jardin. Tu peux le modifier, ou en créer un autre !'; }
   if (G.lv.nv > 1 && stars === 3) text = `Ton programme marche dans les ${G.lv.nv} jardins, avec ${n} blocs seulement !`;
-  if (lastLevel) { title = 'Champion !'; text = 'Tu as fini toute l’aventure de Bip. Tu sais programmer un robot !'; }
+  if (lastLevel) { title = 'Champion !'; text = 'Tu as fini toute l’aventure de Bip. Tu sais vraiment programmer un robot !'; }
   else if (chapterEnd && stars === 3) text += ` Prochain chapitre : ${CHAPTERS[G.lv.ch + 1].name.toLowerCase()}.`;
   $('#winTitle').textContent = title;
   $('#winText').textContent = text;
@@ -1667,10 +2598,29 @@ function showWin(stars, n, par) {
   speak(title + ' ' + text);
   setTimeout(() => $('#btnNext').focus({ preventScroll: true }), 50);
 }
+function afterWinNext() {
+  $('#win').hidden = true;
+  if (G.sandbox) { openSandbox(); return; }
+  if (G.daily) { show('home'); return; }
+  if (G.i >= LAST_STORY) {
+    playStory([
+      { who: 'zoe', line: 'Regarde qui arrive… tout le monde est là, et le panier est plein !' },
+      { who: 'tous', title: 'Le grand pique-nique', line: 'Merci champion ! Tu as retrouvé tous les jouets et préparé le plus beau pique-nique du monde. Bip est très fier de toi !' },
+    ], () => show('home'));
+    return;
+  }
+  const chapterEnd = G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
+  const next = () => openLevel(G.i + 1);
+  if (chapterEnd && !save.seen.ce[G.lv.ch]) {
+    save.seen.ce[G.lv.ch] = true; persist();
+    playStory(CHAPTERS[G.lv.ch].end, next);
+  } else next();
+}
 
 /* ---------- Aide : le chemin en pointillés ---------- */
 function showHint() {
   if (G.busy) return;
+  if (G.mode === 'ball') { hintTiles(); return; }
   hideHint();
   if (G.dirty) resetBoard();
   const sim = simulate(G.lv, G.lv.ref, G.lv.refFn, G.v);
@@ -1692,21 +2642,21 @@ function showHint() {
   clearTimeout(G.hintT);
   G.hintT = setTimeout(hideHint, 9000 + k * 200);
 }
-function hideHint() { clearTimeout(G.hintT); $$('#fx .hint').forEach(d => d.remove()); }
+function hideHint() { clearTimeout(G.hintT); $$('#fx .hint').forEach(d => d.remove()); $$('#board .tilemark.hint').forEach(t => t.remove()); }
 
 /* ---------- Main qui montre (niveaux d'initiation) ---------- */
 function coachTarget() {
-  if ($('#game').hidden || G.busy || !$('#win').hidden || !$('#sheet').hidden || D) return null;
+  if ($('#game').hidden || G.busy || !$('#win').hidden || !$('#sheet').hidden || !$('#story').hidden || D || G.mode === 'ball') return null;
   const id = G.lv.id;
   if (id === 1 && !save.stars[1]) return G.prog.length ? $('#btnRun') : $('#palette .blk');
-  if (id === 17 && !save.stars[17]) {
+  if (id === 16 && !save.stars[16]) {
     const lp = G.prog.find(x => x.t === 'loop');
     if (!lp) return $('#palette .blk[data-t="loop"]');
     if (!lp.body.length) return G.target === lp.id ? $('#palette .blk[data-t="r"]') : $(`.ctr[data-id="${lp.id}"] .slot`);
     if (lp.n < 5) return $(`.ctr[data-id="${lp.id}"] > .ctr-head .ctr-p`);
     return $('#btnRun');
   }
-  if (id === 33 && !save.stars[33]) {
+  if (id === 36 && !save.stars[36]) {
     if (!G.fn.length) return G.target === 'fn' ? $('#palette .blk[data-t="f"]') : $('#fnSeq .slot');
     return null;
   }
@@ -1749,43 +2699,296 @@ function confetti() {
   })(t0);
 }
 
-/* ---------- Feuille adultes ---------- */
-function syncToggles() {
-  $('#tgVoice').setAttribute('aria-checked', String(!!save.voice));
-  $('#tgSound').setAttribute('aria-checked', String(!!save.sound));
-  $('#tgAll').setAttribute('aria-checked', String(!!save.all));
+/* ---------- Mode toboggans : programmer le lieu ---------- */
+function renderTiles() {
+  $$('#board .tilemark').forEach(t => t.remove());
+  const board = $('#board');
+  Object.entries(G.tiles).forEach(([key, d]) => {
+    const [x, y] = key.split(',').map(Number);
+    const t = document.createElement('div');
+    t.className = 'tilemark'; t.style.cssText = `--x:${x};--y:${y}`;
+    t.innerHTML = `<i>${blockHTML(d, null, false)}</i>`;
+    board.appendChild(t);
+  });
+  updateBatt();
 }
-let resetArm = 0;
-function openSheet() { syncToggles(); $('#sheet').hidden = false; hideHand(); stopVoice(); }
-function closeSheet() { $('#sheet').hidden = true; if (!$('#home').hidden) renderHome(); else placeHand(); }
+function hintTiles() {
+  if (G.busy) return;
+  hideHint();
+  $('#btnHint').classList.remove('glow');
+  (G.lv.tiles || []).forEach(s => {
+    const [x, y] = s.split(',').map(Number);
+    const t = document.createElement('div');
+    t.className = 'tilemark hint'; t.style.cssText = `--x:${x};--y:${y}`;
+    t.innerHTML = `<i>${symUse('star')}</i>`;
+    $('#board').appendChild(t);
+  });
+  say('Les étoiles montrent où poser une flèche. Devine la direction de chaque flèche !');
+  clearTimeout(G.hintT);
+  G.hintT = setTimeout(hideHint, 6000);
+}
+function ballCellFromEvent(e) {
+  const r = $('#board').getBoundingClientRect();
+  const x = Math.floor((e.clientX - r.left - 7) / G.cellPx);
+  const y = Math.floor((e.clientY - r.top - 7) / G.cellPx);
+  if (x < 0 || y < 0 || x >= G.P.w || y >= G.P.h) return null;
+  return [x, y];
+}
+function onBoardTap(e) {
+  if (G.mode !== 'ball' || G.busy) return;
+  const cell = ballCellFromEvent(e);
+  if (!cell) return;
+  const [x, y] = cell;
+  const idx = y * G.P.w + x;
+  const kind = G.P.cells[idx];
+  const isStart = G.P.start[0] === x && G.P.start[1] === y;
+  const isNest = G.P.nest && G.P.nest[0] === x && G.P.nest[1] === y;
+  const key = x + ',' + y;
+  if (kind !== 'grass' || isStart || isNest) { SFX.nope(); return; }
+  audio();
+  if (G.tool === 'erase') {
+    if (key in G.tiles) { delete G.tiles[key]; SFX.del(); renderTiles(); }
+    return;
+  }
+  if (key in G.tiles) {
+    const i = BALL_DIRS.indexOf(G.tiles[key]);
+    const nd = BALL_DIRS[(i + 1) % BALL_DIRS.length];
+    if (nd === BALL_DIRS[0] && i === BALL_DIRS.length - 1) delete G.tiles[key]; else G.tiles[key] = nd;
+  } else G.tiles[key] = G.tool;
+  SFX.tap();
+  renderTiles();
+}
+async function runBall() {
+  if (G.busy) { G.abort = true; return; }
+  const tiles = Object.entries(G.tiles).map(([k, d]) => { const [x, y] = k.split(',').map(Number); return [x, y, d]; });
+  if (!tiles.length) {
+    SFX.nope();
+    say('Pose d\'abord des flèches sur l\'herbe : touche une case, puis le bouton vert !');
+    return;
+  }
+  stopVoice(); G.busy = true; G.abort = false; setRunning(true);
+  G.dirty = true;
+  resetBoard(); renderTiles();
+  say('C\'est parti, Ballon !', true);
+  const res = rollBall(G.lv, tiles, G.v);
+  const ball = $('#ballSprite');
+  for (const st of res.steps) {
+    if (G.abort) break;
+    ball.style.setProperty('--x', st.to[0]); ball.style.setProperty('--y', st.to[1]);
+    if (!RM) { ball.classList.remove('roll'); void ball.offsetWidth; ball.classList.add('roll'); }
+    if (st.tile) {
+      SFX.turn();
+      const tm = $(`#board .tilemark[style*="--x:${st.tile[0]}"][style*="--y:${st.tile[1]}"]`);
+      if (tm) { tm.classList.add('pick'); setTimeout(() => tm.classList.remove('pick'), 400); }
+      if (st.nd) { G.tiles[st.tile.join(',')] = st.nd; renderTiles(); }
+    } else SFX.balltap();
+    await sleep(240 * T);
+  }
+  const aborted = G.abort; G.busy = false; setRunning(false);
+  if (aborted) { resetBoard(); renderTiles(); say('Stop ! Ballon s\'arrête.', true); return; }
+  ballFinish(res, tiles.length);
+}
+function ballFinish(res, n) {
+  const ball = $('#ballSprite');
+  const par = G.lv.tiles ? G.lv.tiles.length : n;
+  if (res.result === 'win') {
+    const stars = n <= par ? 3 : n <= par + 2 ? 2 : 1;
+    const prev = save.stars[G.lv.id] || 0;
+    save.stars[G.lv.id] = Math.max(prev, stars); persist();
+    checkStickers();
+    SFX.win(); buzz([30, 60, 30]); confetti();
+    $('#winBip').innerHTML = robotSVG();
+    $('#winStars').innerHTML = [1, 2, 3].map(k => I.star(k <= stars)).join('');
+    $('#winTitle').textContent = 'Plein tonneau !';
+    $('#winText').textContent = stars === 3 ? `Ballon est arrivé au nid avec ${n} flèche${n > 1 ? 's' : ''} seulement !` : `Ballon est au nid ! On peut réussir avec ${par} flèches. Tu essaies ?`;
+    $('#btnAgain').innerHTML = `${I.replay}<span>Encore</span>`;
+    $('#btnNext').innerHTML = `<span>Suivant</span>${I.next}`;
+    $('#win').hidden = false;
+    speak($('#winTitle').textContent + ' ' + $('#winText').textContent);
+    setTimeout(() => $('#btnNext').focus({ preventScroll: true }), 50);
+    return;
+  }
+  G.fails++;
+  let msg = '';
+  if (res.result === 'out') { msg = 'Oups ! Ballon est sorti du jardin. Il manque une flèche quelque part !'; }
+  else if (res.result === 'stop') { msg = 'Ballon est bloqué contre un obstacle. Une flèche peut le détourner !'; }
+  else if (res.result === 'splash') { msg = 'Plouf ! Ballon a roulé dans l\'eau. Détourne-le avec une flèche !'; }
+  else if (res.result === 'loop') { SFX.loopdizzy(); msg = 'Ballon tourne en rond ! Regarde bien tes flèches.'; }
+  else if (res.result === 'none') { msg = 'Pose des flèches sur l\'herbe d\'abord !'; }
+  if (G.fails >= 3) $('#btnHint').classList.add('glow');
+  say(msg);
+}
 
-/* ---------- Câblage ---------- */
+/* ---------- Mon jardin : le mode création ---------- */
+const SB_W = 6, SB_H = 5;
+const SB_DEFAULT = () => {
+  const rows = Array.from({ length: SB_H }, () => '.'.repeat(SB_W));
+  rows[2] = 'R' + '.'.repeat(SB_W - 1);
+  return rows;
+};
+const SB_ITEMS = [
+  { ch: 'R', label: 'Départ de Bip', icon: () => `<span style="width:70%;height:70%;display:block">${robotSVG()}</span>` },
+  { ch: 'b', label: TOY_NAME.b, icon: () => toyUse('b') },
+  { ch: 'n', label: TOY_NAME.n, icon: () => toyUse('n') },
+  { ch: 'c', label: TOY_NAME.c, icon: () => toyUse('c') },
+  { ch: 't', label: TOY_NAME.t, icon: () => toyUse('t') },
+  { ch: 'a', label: TOY_NAME.a, icon: () => toyUse('a') },
+  { ch: 'e', label: TOY_NAME.e, icon: () => toyUse('e') },
+  { ch: '#', label: 'Un buisson', icon: () => symUse('bush') },
+  { ch: 'o', label: 'Un rocher', icon: () => symUse('rock') },
+  { ch: '~', label: 'Une flaque', icon: () => symUse('puddle') },
+  { ch: '-', label: 'Un nénuphar', icon: () => symUse('pad') },
+  { ch: 's', label: 'Un champignon', icon: () => symUse('switchc') },
+  { ch: 'G', label: 'Une barrière', icon: () => symUse('gate') },
+  { ch: 'C', label: 'Une caisse', icon: () => symUse('crate') },
+  { ch: '*', label: 'Une fleur', icon: () => symUse('flower') },
+  { ch: 'K', label: 'Le coffre', icon: () => symUse('box') },
+  { ch: '.', label: 'Gomme', icon: () => I.eraser, eraser: true },
+];
+function openSandbox() {
+  show('sandbox');
+  if (!G.sb.rows.length) loadSbSlot(G.sb.cur, true);
+  renderSbSlots(); renderSbTools(); renderSbBoard();
+  sbSay('Construis ton jardin ! Touche un élément en bas, puis touche l\'herbe pour le poser.');
+}
+function sbSay(text, quiet) { $('#sbMsg').textContent = text; if (!quiet) speak(text); }
+function loadSbSlot(i, fallback) {
+  G.sb.cur = i;
+  const data = save.sandbox[i];
+  G.sb.rows = data && Array.isArray(data.rows) && data.rows.length === SB_H ? data.rows.map(r => String(r)) : SB_DEFAULT();
+  G.sb.tool = 'R';
+}
+function persistSb() {
+  save.sandbox[G.sb.cur] = { rows: G.sb.rows.slice() };
+  persist();
+  renderSbSlots();
+  award('sandbox1');
+}
+function renderSbSlots() {
+  $('#sbSlots').innerHTML = '<span>Jardins</span>' + save.sandbox.map((s, i) =>
+    `<button data-s="${i}" class="${i === G.sb.cur ? 'on' : ''} ${s ? 'has' : ''}" aria-label="Jardin ${i + 1}">${i + 1}</button>`).join('');
+  $$('#sbSlots button').forEach(b => b.addEventListener('click', () => {
+    if (G.sb.cur !== +b.dataset.s) { G.sb.cur = +b.dataset.s; loadSbSlot(G.sb.cur, true); renderSbBoard(); }
+    renderSbSlots(); renderSbTools(); SFX.tap();
+  }));
+}
+function renderSbTools() {
+  $('#sbTray').innerHTML = SB_ITEMS.map(it =>
+    `<button class="sb-item${it.eraser ? ' eraser' : ''}${G.sb.tool === it.ch ? ' on' : ''}" data-ch="${it.ch}" aria-label="${it.label}">${it.icon()}</button>`).join('');
+  $$('#sbTray .sb-item').forEach(b => b.addEventListener('click', () => {
+    G.sb.tool = b.dataset.ch; SFX.tap();
+    sbSay(SB_ITEMS.find(i => i.ch === G.sb.tool).label + ' : touche l\'herbe pour le poser.', true);
+    renderSbTools();
+  }));
+}
+function renderSbBoard() {
+  const P = parseLevel({ map: G.sb.rows });
+  G.sb.P = P;
+  const b = $('#sbBoard');
+  b.style.setProperty('--cols', P.w); b.style.setProperty('--rows', P.h);
+  let h = '';
+  P.cells.forEach((k, idx) => {
+    if (k === 'grass') return;
+    const x = idx % P.w, y = (idx / P.w) | 0;
+    const cls = k === 'switch' ? 'switchc' : k;
+    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower' }[k];
+    h += `<div class="it ${cls}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
+  });
+  P.crates.forEach(c => { h += `<div class="it crate" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
+  P.toys.forEach((t, i) => { h += `<div class="it toy" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
+  h += `<div class="it robot" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div></div>`;
+  b.innerHTML = h;
+  fitSbBoard();
+}
+function fitSbBoard() {
+  const r = $('#sbBoardWrap').getBoundingClientRect();
+  if (!r.width || !r.height) return;
+  const cell = Math.max(24, Math.floor(Math.min((r.width - 16) / SB_W, (r.height - 16) / SB_H, 112)));
+  $('#sbBoard').style.setProperty('--cell', cell + 'px');
+  G.sbCellPx = cell;
+}
+function onSbTap(e) {
+  const r = $('#sbBoard').getBoundingClientRect();
+  const x = Math.floor((e.clientX - r.left - 7) / G.sbCellPx);
+  const y = Math.floor((e.clientY - r.top - 7) / G.sbCellPx);
+  if (x < 0 || y < 0 || x >= SB_W || y >= SB_H) return;
+  const ch = G.sb.tool;
+  let rows = G.sb.rows.map(r => String(r));
+  if (ch === '.') {
+    const row = rows[y]; rows[y] = row.slice(0, x) + '.' + row.slice(x + 1);
+    SFX.del();
+  } else {
+    if (ch === 'R') rows = rows.map(row => row.replace('R', '.'));
+    const row = rows[y];
+    const prev = row[x];
+    rows[y] = row.slice(0, x) + ch + row.slice(x + 1);
+    if (prev === ch) { rows[y] = row.slice(0, x) + '.' + row.slice(x + 1); SFX.del(); }
+    else SFX.tap();
+  }
+  G.sb.rows = rows;
+  persistSb();
+  renderSbBoard();
+}
+function playSandbox() {
+  const P = parseLevel({ map: G.sb.rows });
+  const toysOrFlowers = P.toys.length + P.flowers.length;
+  if (!P.start) { SFX.nope(); sbSay('Il manque le départ de Bip ! Pose le petit robot quelque part.'); return; }
+  if (!toysOrFlowers) { SFX.nope(); sbSay('Ton jardin est vide de mission : pose au moins un jouet ou une fleur !'); return; }
+  const lv = { ch: -2, pal: FULL_PAL, map: G.sb.rows.slice(), face: 'r', sandbox: true, nv: 1, text: 'À toi de programmer Bip dans TON jardin !' };
+  openLevelObj(lv, { sandbox: true });
+}
+
+/* ---------- Câblage général ---------- */
 function wire() {
   $('#heroArt').innerHTML = robotSVG() + `<span class="float f1">${toyUse('b')}</span><span class="float f2">${toyUse('c')}</span>`;
   $('#icoPlayBig').innerHTML = I.play;
   $('#icoInfo').innerHTML = I.info;
+  $('#icoDaily').innerHTML = symUse('avatar-zoe');
+  $('#icoSandbox').innerHTML = I.garden || S('M50 62V84M50 70C42 70 34 64 32 56M50 76C58 76 66 70 68 62M50 62a14 14 0 1 1 0-28 14 14 0 0 1 0 28z', 7);
+  $('#icoAlbum').innerHTML = I.album;
   $('#btnHome').innerHTML = I.home;
   $('#btnHint').innerHTML = I.bulb;
   $('#miniBip').innerHTML = robotSVG();
+  $('#miniBip2').innerHTML = robotSVG();
   $('#icoSpk').innerHTML = I.speaker;
   $('#icoProg').innerHTML = `<span style="display:block;width:22px;height:22px">${robotSVG()}</span>`;
   $('#fnLab').innerHTML = `${I.magic}<span>=</span>`;
   $('#btnTrash').innerHTML = I.trash;
   $('#btnStep').innerHTML = I.step;
   $('#btnClose').innerHTML = I.close;
+  $('#btnAlbumClose').innerHTML = I.close;
+  $('#icoStoryNext').innerHTML = I.next;
+  $('#btnSbHome').innerHTML = I.home;
+  $('#btnSbPlay').innerHTML = I.play;
   setRunning(false);
 
+  // Joueur v1 : un autocollant souvenir
+  try { if (localStorage.getItem('bip-robot-v1')) setTimeout(() => award('v1'), 1200); } catch (e) { /* */ }
+
   $('#btnPlay').addEventListener('click', () => { audio(); openLevel(nextIndex()); });
+  $('#btnDaily').addEventListener('click', () => { audio(); openLevelObj(dailyLevel(), { daily: true }); });
+  $('#btnSandbox').addEventListener('click', () => { audio(); openSandbox(); });
+  $('#btnAlbum').addEventListener('click', () => { renderAlbum(); $('#album').hidden = false; });
+  $('#btnAlbumClose').addEventListener('click', () => { $('#album').hidden = true; });
+  $('#album').addEventListener('click', e => { if (e.target.id === 'album') $('#album').hidden = true; });
   $('#btnHome').addEventListener('click', () => { G.abort = true; show('home'); });
   $('#btnHint').addEventListener('click', showHint);
   $('#bubble').addEventListener('click', () => speak($('#msg').textContent));
   $('#btnRun').addEventListener('click', () => { audio(); runAll(); });
   $('#btnStep').addEventListener('click', () => { audio(); stepOnce(); });
   $('#fnRow').addEventListener('click', e => { if (e.target.closest('.blk, .ctr, .slot')) return; setTarget('fn'); });
+  $('#board').addEventListener('click', onBoardTap);
+  $('#sbBoard').addEventListener('click', onSbTap);
   let trashT = 0;
   $('#btnTrash').addEventListener('click', e => {
     const b = e.currentTarget;
-    if (G.busy || !totalBlocks()) return;
+    if (G.busy) return;
+    if (G.mode === 'ball') {
+      if (!Object.keys(G.tiles).length) return;
+      G.tiles = {}; SFX.del(); renderTiles(); say('Flèches effacées. On recommence !', true);
+      return;
+    }
+    if (!totalBlocks()) return;
     if (!b.classList.contains('arm')) {
       b.classList.add('arm'); b.setAttribute('aria-label', 'Toucher encore pour tout effacer'); SFX.tap();
       clearTimeout(trashT); trashT = setTimeout(() => { b.classList.remove('arm'); b.setAttribute('aria-label', 'Tout effacer'); }, 2500);
@@ -1797,7 +3000,7 @@ function wire() {
     say('Programme effacé. On recommence !', true);
   });
   $('#btnAgain').addEventListener('click', () => { $('#win').hidden = true; setVariant(0); clearMarks(); $$('#vars button').forEach(b => b.classList.remove('pass', 'fail')); say(G.lv.text); });
-  $('#btnNext').addEventListener('click', () => { $('#win').hidden = true; if (G.i < LEVELS.length - 1) openLevel(G.i + 1); else show('home'); });
+  $('#btnNext').addEventListener('click', afterWinNext);
   $('#btnAdults').addEventListener('click', openSheet);
   $('#btnClose').addEventListener('click', closeSheet);
   $('#sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
@@ -1812,22 +3015,35 @@ function wire() {
       return;
     }
     clearTimeout(resetArm); b.classList.remove('arm');
-    save.stars = {}; save.all = false; persist(); syncToggles();
+    save.stars = {}; save.all = false; save.stickers = []; save.daily = {}; save.seen = { w: {}, c: {}, ce: {} }; save.sandbox = [null, null, null];
+    persist(); syncToggles(); renderHome();
     $('#resetLabel').textContent = 'Progression effacée';
     setTimeout(() => { $('#resetLabel').textContent = 'Effacer la progression'; }, 2000);
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#sheet').hidden) closeSheet(); } });
-  document.addEventListener('contextmenu', e => { if (e.target.closest('.blk, .ctr, .board')) e.preventDefault(); });
+  $('#btnSbHome').addEventListener('click', () => show('home'));
+  $('#btnSbPlay').addEventListener('click', () => { audio(); playSandbox(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (!$('#sheet').hidden) closeSheet();
+      else if (!$('#album').hidden) $('#album').hidden = true;
+      else if (!$('#story').hidden) $('#btnStoryNext').click();
+    }
+  });
+  document.addEventListener('contextmenu', e => { if (e.target.closest('.blk, .ctr, .board, .sb-item')) e.preventDefault(); });
   new ResizeObserver(fitBoard).observe($('#boardWrap'));
-  window.addEventListener('resize', placeHand);
+  new ResizeObserver(fitSbBoard).observe($('#sbBoardWrap'));
+  window.addEventListener('resize', () => { placeHand(); });
   $('#seqScroll').addEventListener('scroll', placeHand, { passive: true });
-  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden) { G.abort = true; show('home'); } });
+  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden || !$('#sandbox').hidden) { G.abort = true; show('home'); } });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopVoice(); });
   show('home');
 }
 wire();
-})();
+// Accès QA/dev (console) : window.__bip.openLevel(i), .run(), .state()
+window.__bip = { G, openLevel, openLevelObj, parseProg, runAll, LEVELS, CHAPTERS, WORLDS, simulate };
 
+})();
 </script>
 
 <script>
