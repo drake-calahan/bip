@@ -215,10 +215,12 @@ function solve(lv, palette, v) {
       else { if (mv !== 'f') nf = mv; const [dx, dy] = DIRS[nf]; tx = x + dx; ty = y + dy; }
       const c = cellAt(P, tx, ty);
       if (isBlockedKind(c) || c === 'puddle') continue;
+      const tIdx = ty * P.w + tx;
+      const tPi = padIdx(tIdx);
+      if (tPi >= 0 && (pd & (1 << tPi))) continue;  // nénuphar déjà coulé : c'est de l'eau
       let nm = m;
       P.toys.forEach((t, i) => { if (t.x === tx && t.y === ty) nm |= 1 << i; });
       let nfl = fl, npd = pd;
-      const tIdx = ty * P.w + tx;
       const fi = flowerIdx(tIdx);
       if (fi >= 0) nfl |= 1 << fi;
       if (tx !== x || ty !== y) {                   // on quitte la case : un nénuphar y coule

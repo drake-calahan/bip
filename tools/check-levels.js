@@ -46,7 +46,7 @@ for (const lv of LEVELS) {
     const r = E.simulate(lv, ref, fn, v);
     line += `[v${v + 1} ref:${r.result}] `;
     if (r.result !== 'win') ok = false;
-    if (lv.max && bfs && bfs.length <= lv.max && !lv.start && !hasCG) line += '(WARN plain fits) ';
+    if (lv.max && bfs && bfs.length <= lv.max && !lv.start && !hasCG && nv === 1) line += '(WARN plain fits) ';
     if (lv.start) {
       const s = E.simulate(lv, E.parseProg(lv.start), [], v);
       line += `start:${s.result} `;
