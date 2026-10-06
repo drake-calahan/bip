@@ -19,7 +19,7 @@
   --iff: #F39AC4; --iff-edge: #D677A4; --iff-soft: #FDEAF3; --iff-ink: #6E2148;
   --fnc: #FFB570; --fnc-edge: #E8924A; --fnc-soft: #FFF0E0;
   --go: #44BC7D; --go-edge: #2E9A60; --stop: #FF9A66; --stop-edge: #E1784A;
-  --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F;
+  --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F; --pollen: #FFD36B;
   --display: 'Grandstander', 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
   --text: 'Andika', 'Verdana', system-ui, sans-serif;
   --blk: clamp(44px, calc((100vw - 32px - 40px) / 6), 60px);
@@ -39,22 +39,29 @@ button:focus-visible, .blk:focus-visible { outline: 3px solid var(--ink); outlin
 svg { display: block; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
-/* ---------- Accueil ---------- */
+/* ---------- Accueil : la grande promenade ---------- */
 #home { height: 100%; overflow-y: auto; padding-inline: 16px; padding-block: 8px 28px; }
 .home-in { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
 .hero { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4px 18px; padding: 20px 20px 22px; border-radius: 28px;
   background: radial-gradient(120% 90% at 20% 110%, var(--grass-b) 0 38%, transparent 38.5%), radial-gradient(90% 70% at 95% 120%, var(--grass-a) 0 45%, transparent 45.5%), var(--card); overflow: hidden; }
-.hero-art { position: relative; width: clamp(108px, 30vw, 170px); aspect-ratio: 1; grid-row: span 3; max-width: 100%; }
+.hero-art { position: relative; width: clamp(108px, 30vw, 170px); aspect-ratio: 1; grid-row: span 4; max-width: 100%; }
 .hero-art .bipsvg { width: 100%; height: 100%; animation: bob 3.2s ease-in-out infinite; }
 .hero-art .float { position: absolute; width: 34%; }
 .hero-art .f1 { right: -14%; top: 2%; animation: bob 2.8s ease-in-out .4s infinite; }
 .hero-art .f2 { left: -12%; bottom: 0; width: 30%; animation: bob 3.4s ease-in-out .9s infinite; }
+.hero-art .bloom { position: absolute; width: 22%; animation: bob 3s ease-in-out infinite; }
 .hero h1 { font-family: var(--display); font-weight: 800; font-size: clamp(48px, 13vw, 76px); line-height: .9; margin: 0; letter-spacing: -.01em; }
-.hero p { margin: 0; color: var(--ink-soft); font-size: clamp(16px, 4vw, 19px); text-wrap: balance; }
+.hero .sub { margin: 0; color: var(--ink-soft); font-size: clamp(16px, 4vw, 19px); text-wrap: balance; }
+.hero .garden { display: flex; gap: 3px; margin-top: 4px; min-height: 20px; }
+.hero .garden span { display: block; width: 20px; height: 20px; animation: pop .5s cubic-bezier(.3, 1.6, .5, 1) backwards; }
+.hero .garden svg { width: 100%; height: 100%; }
 .big-go { justify-self: start; margin-top: 8px; display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 24px;
   color: #fff; background: var(--go); padding: 12px 26px 12px 20px; border-radius: 999px; box-shadow: 0 5px 0 var(--go-edge); }
 .big-go svg { width: 26px; height: 26px; }
 .big-go:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--go-edge); }
+.world-head { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-family: var(--display); font-weight: 800; font-size: 17px; margin: 6px 4px -4px; }
+.world-head .n { flex: none; width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; color: #fff; background: var(--tone, var(--move)); font-size: 16px; }
+.world-head::after { content: ''; flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
 .chap { background: var(--card); border-radius: 24px; padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 12px; }
 .chap-head { display: flex; align-items: center; gap: 12px; }
 .chap-num { flex: none; width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 19px; color: #fff; background: var(--tone); }
@@ -63,6 +70,7 @@ svg { display: block; }
 .chap-head > div { min-width: 0; flex: 1; }
 .chap-ico { flex: none; width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; color: #fff; background: var(--tone); opacity: .9; }
 .chap-ico svg { width: 60%; height: 60%; }
+.chap.done .chap-ico { background: var(--go); }
 .chap[data-tone="sky"] { --tone: var(--move); --tone-edge: var(--move-edge); }
 .chap[data-tone="leaf"] { --tone: var(--leaf); --tone-edge: #4E9E61; }
 .chap[data-tone="water"] { --tone: #5DB6DE; --tone-edge: #3F96BF; }
@@ -72,9 +80,13 @@ svg { display: block; }
 .chap[data-tone="coral"] { --tone: #F58A70; --tone-edge: #D66A50; }
 .chap[data-tone="pink"] { --tone: #E585B4; --tone-edge: #C76594; }
 .chap[data-tone="peach"] { --tone: #F7A55E; --tone-edge: #D9873F; }
+.chap[data-tone="rust"] { --tone: #C97B4A; --tone-edge: #A55D33; }
+.chap[data-tone="wood"] { --tone: #B08954; --tone-edge: #8E6C3D; }
+.chap[data-tone="gold"] { --tone: #E3B341; --tone-edge: #C2922A; }
+.chap[data-tone="orange"] { --tone: #F58A70; --tone-edge: #D66A50; }
 .chap[data-tone="slate"] { --tone: #7286A6; --tone-edge: #566A88; }
-.chap-sep { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-family: var(--display); font-weight: 800; font-size: 15px; margin: 4px 4px -4px; }
-.chap-sep::after { content: ''; flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
+.chap[data-tone="indigo"] { --tone: #7C89C9; --tone-edge: #5D6BAE; }
+.chap[data-tone="night"] { --tone: #6A6DAE; --tone-edge: #515491; }
 .lvls { display: flex; flex-wrap: wrap; gap: 12px 14px; }
 .lvl { position: relative; width: 58px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .lvl .n { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 22px; color: #fff; background: var(--tone); box-shadow: 0 4px 0 var(--tone-edge); }
@@ -85,9 +97,17 @@ svg { display: block; }
 .lvl:disabled .n svg { width: 22px; height: 22px; }
 .lvl.next .n { animation: ring 1.8s ease-out infinite; }
 .lvl:not(:disabled):active .n { transform: translateY(3px); box-shadow: 0 1px 0 var(--tone-edge); }
-.adults-row { display: flex; justify-content: center; }
-.adults { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 16px; padding: 10px 16px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); }
-.adults svg { width: 20px; height: 20px; }
+.extra-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.extra { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 999px; background: var(--card); box-shadow: 0 4px 0 var(--line);
+  font-family: var(--display); font-weight: 800; font-size: 17px; color: var(--ink); }
+.extra svg, .extra .eico { width: 26px; height: 26px; }
+.extra .eico { display: grid; place-items: center; }
+.extra:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
+.extra small { font-family: var(--text); font-weight: 400; font-size: 13px; color: var(--ink-soft); }
+.extra.daily { background: #FFF6E3; box-shadow: 0 4px 0 var(--loop-edge); }
+.daily-dots { display: flex; gap: 3px; }
+.daily-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--paper-2); border: 1px solid var(--line); }
+.daily-dots i.on { background: var(--star); border-color: var(--loop-edge); }
 
 /* ---------- Jeu ---------- */
 #game { height: 100%; display: grid; gap: 10px; padding-inline: 16px; padding-block: 8px 12px;
@@ -124,9 +144,28 @@ svg { display: block; }
   background-image: conic-gradient(var(--grass-b) 25%, transparent 0 50%, var(--grass-b) 0 75%, transparent 0);
   background-size: calc(var(--cell) * 2) calc(var(--cell) * 2); }
 .board::after { content: ''; position: absolute; inset: 0; border-radius: 17px; box-shadow: inset 0 3px 0 rgba(255,255,255,.5); pointer-events: none; }
+.board.night { background-color: #3E4470; background-image: conic-gradient(#454B7A 25%, transparent 0 50%, #454B7A 0 75%, transparent 0); border-color: #2E3358; }
+.board.night::after { box-shadow: inset 0 3px 0 rgba(255,255,255,.12); }
+.board.night .it > svg { filter: brightness(.92); }
+.board.night .toy-e { animation: glow 2.2s ease-in-out infinite !important; }
+.board.night .toy-e svg { filter: none; }
 .it { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
 .it > svg { width: 86%; height: 86%; }
-.it.puddle > svg { width: 100%; height: 100%; }
+.it.puddle > svg, .it.water > svg { width: 100%; height: 100%; }
+.it.pad { transition: transform .5s ease-in, opacity .5s; }
+.it.pad.sunk { transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell) + 14%)) scale(.5); opacity: 0; }
+.it.plank > svg { width: 100%; height: 100%; }
+.it.switchc > svg { width: 80%; height: 80%; }
+.it.switchc.pressed > svg { animation: pop .4s cubic-bezier(.3, 1.6, .5, 1); }
+.it.gate > svg { width: 100%; height: 100%; transition: transform .6s ease-in-out, opacity .6s; }
+.it.gate.open > svg { transform: translateY(30%) scaleY(.1); opacity: 0; }
+.it.flower > svg { width: 92%; height: 92%; }
+.it.flower .fp { opacity: .25; }
+.it.flower.painted .fp { opacity: 1; }
+.it.flower.painted > svg { animation: pop .45s cubic-bezier(.3, 1.6, .5, 1); }
+.it.crate { z-index: 3; transition: transform .3s ease-out; }
+.it.crate > svg { width: 88%; height: 88%; }
+.it.nest > svg { width: 96%; height: 96%; }
 .it.toy > svg { width: 74%; height: 74%; animation: idle 3s ease-in-out infinite; animation-delay: calc(var(--x) * -.4s); }
 .it.toy.got > svg { animation: collect .55s ease-in forwards; }
 .it.box > svg { width: 90%; height: 90%; }
@@ -138,17 +177,27 @@ svg { display: block; }
 .facing { position: absolute; left: 50%; top: 50%; width: 0; height: 0; border-left: 11px solid var(--bip-dark); border-top: 9px solid transparent; border-bottom: 9px solid transparent; opacity: .75;
   transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) translateX(calc(var(--cell) * .5)); transition: transform .2s; pointer-events: none; }
 .robot[data-face="r"] { --rot: 0deg; } .robot[data-face="d"] { --rot: 90deg; } .robot[data-face="l"] { --rot: 180deg; } .robot[data-face="u"] { --rot: -90deg; }
+.ball-sprite { position: absolute; z-index: 5; width: var(--cell); height: var(--cell); display: grid; place-items: center;
+  transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); transition: transform .22s ease-in-out; }
+.ball-sprite svg { width: 80%; height: 80%; }
+.ball-sprite.roll { animation: rollball .22s linear; }
 .fx { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
 .dot { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell) + var(--ox, 0px)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
 .dot.corner { place-items: start start; padding: 3%; }
 .dot.corner b { width: 34%; height: 34%; }
 .dot b { width: 40%; height: 40%; border-radius: 50%; background: rgba(255,255,255,.9); border: 3px dashed var(--bip-dark); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: calc(var(--cell) * .2); color: var(--bip-dark); opacity: 0; animation: dotin .3s ease-out forwards; animation-delay: inherit; }
 .dot.jumpdot b { border-color: var(--jump-edge); color: var(--jump-edge); }
+.paint { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; pointer-events: none; }
+.paint i { width: 46%; height: 46%; border-radius: 46% 54% 52% 48%; background: var(--pollen); opacity: .85; animation: pop .3s ease-out; box-shadow: 0 0 0 3px rgba(255, 211, 107, .25); }
 .splash { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); }
 .splash i { position: absolute; inset: 18%; border-radius: 50%; border: 4px solid #fff; opacity: 0; animation: ripple .9s ease-out forwards; }
 .splash i:nth-child(2) { animation-delay: .18s; }
 .bonk { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
 .bonk svg { width: 50%; height: 50%; animation: bonk .6s ease-out forwards; }
+.tilemark { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; }
+.tilemark i { width: 62%; height: 62%; border-radius: 30%; background: rgba(255,255,255,.85); border: 3px solid var(--bip-dark); display: grid; place-items: center; animation: pop .25s ease-out; }
+.tilemark i svg { width: 78%; height: 78%; color: var(--bip-dark); }
+.tilemark.pick i { border-color: var(--go); background: #E9F9F0; }
 
 /* Visages de Bip */
 .bipsvg .shadow { fill: rgba(44, 58, 76, .14); }
@@ -252,8 +301,21 @@ svg { display: block; }
 .sense.yes i { border-color: var(--go); }
 @keyframes sense { 0% { transform: scale(.4); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1); opacity: .9; } }
 .pal { grid-area: pal; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 4px; }
+.pal .blk.eraser { background: var(--paper-2); color: var(--ink-soft); box-shadow: 0 4px 0 var(--line); }
 .running .pal .blk { opacity: .55; }
 .running #progCard .slot { opacity: .4; }
+
+/* Mode création */
+.sandbox-tray { grid-area: pal; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding-bottom: 4px; }
+.sb-item { flex: none; width: var(--blk); height: var(--blk); border-radius: 16px; background: var(--card); box-shadow: 0 4px 0 var(--line); display: grid; place-items: center; }
+.sb-item svg { width: 66%; height: 66%; }
+.sb-item.on { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--go); }
+.sb-item.eraser { color: var(--ink-soft); }
+.sb-item .t { position: absolute; }
+.sb-slots { display: flex; align-items: center; gap: 6px; font-size: 15px; color: var(--ink-soft); }
+.sb-slots button { min-width: 40px; height: 32px; padding: 0 10px; border-radius: 999px; background: var(--card); font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--ink-soft); box-shadow: 0 2px 0 var(--line); }
+.sb-slots button.on { background: var(--ink); color: #fff; box-shadow: none; }
+.sb-slots button.has { color: var(--go-edge); }
 
 .ghost { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; margin: 0; opacity: .95; box-shadow: 0 10px 24px rgba(44, 58, 76, .25) !important; }
 .lifting { position: absolute !important; opacity: 0 !important; pointer-events: none; }
@@ -263,7 +325,7 @@ svg { display: block; }
 .hand { position: fixed; z-index: 40; width: 54px; height: 54px; margin: -6px 0 0 -14px; pointer-events: none; animation: tap 1.3s ease-in-out infinite; filter: drop-shadow(0 4px 6px rgba(44, 58, 76, .25)); }
 .hand::before { content: ''; position: absolute; left: 4px; top: -2px; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 3px solid var(--go); animation: tapring 1.3s ease-out infinite; }
 
-/* Bravo + feuille adultes */
+/* ---------- Superpositions : histoire, bravo, album, adultes ---------- */
 .overlay { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 16px; background: rgba(44, 58, 76, .35); animation: fade .25s ease-out; }
 .win-card { width: min(420px, 100%); background: var(--card); border-radius: 30px; padding: 20px 20px 22px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; animation: rise .45s cubic-bezier(.3, 1.4, .5, 1); }
 .win-card .bipwrap { width: 108px; height: 108px; }
@@ -279,6 +341,37 @@ svg { display: block; }
 .btn.go { color: #fff; background: var(--go); box-shadow: 0 5px 0 var(--go-edge); }
 .btn.soft { background: var(--paper); box-shadow: 0 5px 0 var(--line); }
 .btn:active { transform: translateY(3px); }
+
+.story-card { width: min(460px, 100%); background: var(--card); border-radius: 30px; padding: 22px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; animation: rise .4s cubic-bezier(.3, 1.4, .5, 1); }
+.story-art { width: min(150px, 40vw); aspect-ratio: 1; }
+.story-art svg { width: 100%; height: 100%; }
+.story-art.wide { width: min(300px, 70vw); aspect-ratio: 2 / 1.15; }
+.story-who { font-family: var(--display); font-weight: 800; font-size: 19px; color: var(--ink-soft); }
+.story-line { font-size: 19px; line-height: 1.4; text-wrap: balance; }
+.story-dots { display: flex; gap: 5px; }
+.story-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--paper-2); }
+.story-dots i.on { background: var(--ink-soft); }
+
+.album-card { width: min(560px, 100%); max-height: 88%; overflow-y: auto; background: var(--card); border-radius: 28px; padding: 22px 18px 24px; animation: rise .35s ease-out; position: relative; }
+.album-card h2 { margin: 0 44px 4px 0; font-family: var(--display); font-weight: 800; font-size: 26px; }
+.album-card > p { margin: 0 0 12px; color: var(--ink-soft); font-size: 15px; }
+.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 10px; }
+.stk { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px 8px; border-radius: 18px; background: var(--paper); text-align: center; }
+.stk .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--paper-2); color: var(--ink-soft); }
+.stk .ico svg { width: 30px; height: 30px; }
+.stk.got .ico { background: var(--loop-soft); color: var(--loop-ink); box-shadow: inset 0 0 0 2px var(--loop); }
+.stk b { font-family: var(--display); font-weight: 800; font-size: 12.5px; line-height: 1.15; }
+.stk small { display: none; }
+.stk.got small { display: block; font-size: 11px; color: var(--ink-soft); }
+.stk:not(.got) { opacity: .55; }
+.stk.new .ico { animation: pop .5s cubic-bezier(.3, 1.6, .5, 1); }
+.sticker-toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 90; display: flex; align-items: center; gap: 10px;
+  background: var(--card); border-radius: 999px; padding: 10px 18px 10px 10px; box-shadow: 0 8px 24px rgba(44,58,76,.3); animation: rise .4s cubic-bezier(.3, 1.4, .5, 1); }
+.sticker-toast .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--loop-soft); color: var(--loop-ink); box-shadow: inset 0 0 0 2px var(--loop); }
+.sticker-toast .ico svg { width: 30px; height: 30px; }
+.sticker-toast b { font-family: var(--display); font-weight: 800; font-size: 16px; }
+.sticker-toast small { display: block; color: var(--ink-soft); font-size: 13px; }
+
 .sheet { align-items: end; }
 @media (min-width: 640px) { .sheet { align-items: center; } }
 .sheet-card { position: relative; width: min(640px, 100%); max-height: 88%; overflow-y: auto; background: var(--card); border-radius: 28px; padding: 22px 20px 26px; animation: rise .35s ease-out; -webkit-user-select: text; user-select: text; }
@@ -325,6 +418,8 @@ svg { display: block; }
 @keyframes tapring { 0%, 40% { opacity: 0; transform: scale(.4); } 55% { opacity: 1; } 100% { opacity: 0; transform: scale(1.6); } }
 @keyframes fade { 0% { opacity: 0; } }
 @keyframes rise { 0% { transform: translateY(30px) scale(.96); opacity: 0; } }
+@keyframes rollball { 50% { scale: 1.1 .9; } }
+@keyframes glow { 50% { filter: brightness(1.35); } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .05s !important; }
 }
@@ -349,6 +444,62 @@ svg { display: block; }
       <path d="M12 56C10 40 29 30 46 34C58 21 85 28 87 46C95 58 85 77 64 75C52 83 29 81 21 73C11 71 8 62 12 56Z" fill="#9AD2EE"/>
       <ellipse cx="43" cy="52" rx="14" ry="6" fill="none" stroke="#E8F7FF" stroke-width="3.5"/>
       <ellipse cx="67" cy="61" rx="8" ry="3.5" fill="none" stroke="#E8F7FF" stroke-width="3"/>
+    </symbol>
+    <symbol id="water" viewBox="0 0 100 100">
+      <path d="M12 56C10 40 29 30 46 34C58 21 85 28 87 46C95 58 85 77 64 75C52 83 29 81 21 73C11 71 8 62 12 56Z" fill="#8CC6EA"/>
+      <path d="M30 55q7-5 14 0t14 0" fill="none" stroke="#E8F7FF" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M52 64q6-4 12 0" fill="none" stroke="#E8F7FF" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="pad" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="58" rx="38" ry="26" fill="#6FBF73"/>
+      <ellipse cx="50" cy="55" rx="34" ry="22" fill="#8CD489"/>
+      <path d="M50 33V77M50 50C42 46 34 44 26 46M50 58C58 54 66 54 73 58" stroke="#5FAA62" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="50" cy="40" r="4" fill="#F2A9C4"/>
+    </symbol>
+    <symbol id="plank" viewBox="0 0 100 100">
+      <path d="M12 56C10 40 29 30 46 34C58 21 85 28 87 46C95 58 85 77 64 75C52 83 29 81 21 73C11 71 8 62 12 56Z" fill="#8CC6EA"/>
+      <rect x="8" y="38" width="84" height="24" rx="8" fill="#C89B62"/>
+      <rect x="8" y="38" width="84" height="8" rx="4" fill="#DBB57F"/>
+      <path d="M28 48h12M56 52h14" stroke="#A97C47" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="switchc" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="84" rx="26" ry="6" fill="#9CC78D" opacity=".6"/>
+      <rect x="44" y="52" width="12" height="24" rx="5" fill="#F0E6D2"/>
+      <path d="M22 56C22 34 34 22 50 22C66 22 78 34 78 56C78 62 72 66 64 66H36C28 66 22 62 22 56Z" fill="#E5566B"/>
+      <circle cx="40" cy="40" r="7" fill="#FFFFFF" opacity=".85"/>
+      <circle cx="60" cy="44" r="5" fill="#FFFFFF" opacity=".6"/>
+      <path d="M35 62C40 65 60 65 65 62" stroke="#B03A4E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="gate" viewBox="0 0 100 100">
+      <rect x="16" y="18" width="10" height="66" rx="5" fill="#A8794E"/>
+      <rect x="74" y="18" width="10" height="66" rx="5" fill="#A8794E"/>
+      <rect x="16" y="18" width="68" height="10" rx="5" fill="#BC8B5C"/>
+      <rect x="16" y="48" width="68" height="9" rx="4.5" fill="#BC8B5C"/>
+      <rect x="16" y="74" width="68" height="10" rx="5" fill="#BC8B5C"/>
+      <circle cx="50" cy="53" r="7" fill="#FFD36B" stroke="#A8794E" stroke-width="3"/>
+    </symbol>
+    <symbol id="crate" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="32" ry="5" fill="#2C3A4C" opacity=".12"/>
+      <rect x="14" y="20" width="72" height="64" rx="10" fill="#D9A968"/>
+      <rect x="14" y="20" width="72" height="64" rx="10" fill="none" stroke="#B4854A" stroke-width="5"/>
+      <path d="M14 34h72M14 70h72" stroke="#B4854A" stroke-width="5"/>
+      <path d="M30 20v64M70 20v64" stroke="#B4854A" stroke-width="5"/>
+      <circle cx="50" cy="52" r="9" fill="#F2C98A"/>
+    </symbol>
+    <symbol id="flower" viewBox="0 0 100 100">
+      <path d="M50 62V86M50 74C44 74 38 70 36 64M50 78C56 78 62 75 64 70" stroke="#5FAA62" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <g class="fp">
+        <circle cx="50" cy="30" r="13" fill="#FFD36B"/><circle cx="32" cy="44" r="13" fill="#FFD36B"/><circle cx="68" cy="44" r="13" fill="#FFD36B"/>
+        <circle cx="38" cy="62" r="12" fill="#FFC94F"/><circle cx="62" cy="62" r="12" fill="#FFC94F"/><circle cx="50" cy="48" r="12" fill="#FFE08A"/>
+      </g>
+      <circle cx="50" cy="49" r="8" fill="#E8934A"/>
+      <g fill="#FFFFFF" opacity=".35"><circle cx="36" cy="40" r="4"/><circle cx="64" cy="40" r="4"/></g>
+    </symbol>
+    <symbol id="nest" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="62" rx="38" ry="22" fill="#B08954"/>
+      <ellipse cx="50" cy="56" rx="32" ry="16" fill="#8E6C3D"/>
+      <path d="M22 58q28 12 56 0M26 66q24 10 48 0" stroke="#6E5230" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M34 50q16-8 32 0" stroke="#C89B62" stroke-width="4" fill="none" stroke-linecap="round"/>
     </symbol>
     <symbol id="box" viewBox="0 0 100 100">
       <ellipse cx="50" cy="87" rx="35" ry="6" fill="#9CC78D" opacity=".6"/>
@@ -397,8 +548,118 @@ svg { display: block; }
       <rect x="28" y="30" width="44" height="44" rx="8" fill="none" stroke="#FFFFFF" stroke-width="4" opacity=".7"/>
       <path d="M38 67L50 36L62 67M42 57H58" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
+    <symbol id="toy-e" viewBox="0 0 100 100">
+      <g class="e-glow"><circle cx="50" cy="52" r="38" fill="#FFE9A8" opacity=".45"/></g>
+      <path d="M50 26C36 26 30 40 32 52C34 64 42 76 50 76C58 76 66 64 68 52C70 40 64 26 50 26Z" fill="#FFE08A"/>
+      <circle cx="43" cy="46" r="4" fill="#2C3A4C"/><circle cx="57" cy="46" r="4" fill="#2C3A4C"/>
+      <path d="M45 58Q50 62 55 58" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M36 30L30 20M64 30L70 20M50 24V14" stroke="#E9A923" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="50" cy="34" r="6" fill="#FFF6D8"/>
+    </symbol>
     <symbol id="star" viewBox="0 0 100 100">
       <path d="M50 8L62 36L92 38L69 58L77 88L50 72L23 88L31 58L8 38L38 36Z" stroke-linejoin="round" stroke-width="8"/>
+    </symbol>
+    <symbol id="ball" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="24" ry="5" fill="#2C3A4C" opacity=".12"/>
+      <circle cx="50" cy="50" r="34" fill="#FF8878"/>
+      <path d="M20 45Q50 64 80 45" fill="none" stroke="#FFFFFF" stroke-width="7"/>
+      <path d="M27 27Q50 38 73 27" fill="none" stroke="#FFD36B" stroke-width="6"/>
+      <circle cx="39" cy="42" r="4.5" fill="#2C3A4C"/><circle cx="61" cy="42" r="4.5" fill="#2C3A4C"/>
+      <path d="M43 58Q50 64 57 58" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-zoe" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="88" rx="22" ry="4" fill="#2C3A4C" opacity=".1"/>
+      <ellipse cx="50" cy="58" rx="30" ry="26" fill="#E5566B"/>
+      <path d="M50 33C36 36 24 46 22 58L50 58Z" fill="#2C3A4C"/>
+      <path d="M50 33C64 36 76 46 78 58L50 58Z" fill="#2C3A4C"/>
+      <path d="M26 66C34 72 42 75 50 75C58 75 66 72 74 66L78 58H22Z" fill="#E5566B"/>
+      <circle cx="50" cy="58" r="10" fill="#2C3A4C"/>
+      <circle cx="38" cy="52" r="6.5" fill="#FFFFFF"/><circle cx="62" cy="52" r="6.5" fill="#FFFFFF"/>
+      <circle cx="39" cy="53" r="3" fill="#2C3A4C"/><circle cx="61" cy="53" r="3" fill="#2C3A4C"/>
+      <path d="M28 44C20 40 14 42 10 48C16 50 22 49 28 48Z" fill="#E5566B"/>
+      <path d="M72 44C80 40 86 42 90 48C84 50 78 49 72 48Z" fill="#E5566B"/>
+      <path d="M44 70Q50 74 56 70" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-toupie" viewBox="0 0 100 100">
+      <rect x="45" y="8" width="10" height="16" rx="4" fill="#8B78C9"/>
+      <path d="M16 44C16 32 32 26 50 26C68 26 84 32 84 44C84 56 62 70 52 80C51 81.5 49 81.5 48 80C38 70 16 56 16 44Z" fill="#B8A4F2"/>
+      <path d="M17 46C30 54 70 54 83 46" fill="none" stroke="#FF90B3" stroke-width="7"/>
+      <circle cx="40" cy="38" r="4" fill="#2C3A4C"/><circle cx="60" cy="38" r="4" fill="#2C3A4C"/>
+      <path d="M43 46Q50 51 57 46" fill="none" stroke="#2C3A4C" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-lulu" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="86" rx="30" ry="6" fill="#2C3A4C" opacity=".1"/>
+      <ellipse cx="50" cy="66" rx="32" ry="18" fill="#69BD7B"/>
+      <circle cx="46" cy="38" r="22" fill="#7BCB8C"/>
+      <circle cx="39" cy="34" r="7" fill="#FFFFFF"/><circle cx="57" cy="34" r="7" fill="#FFFFFF"/>
+      <circle cx="40" cy="35" r="3" fill="#2C3A4C"/><circle cx="56" cy="35" r="3" fill="#2C3A4C"/>
+      <path d="M42 46Q46 50 50 46Q54 50 58 46" fill="none" stroke="#2C3A4C" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="30" cy="42" r="5" fill="#F2A9C4" opacity=".7"/><circle cx="62" cy="42" r="5" fill="#F2A9C4" opacity=".7"/>
+    </symbol>
+    <symbol id="avatar-papi" viewBox="0 0 100 100">
+      <rect x="30" y="30" width="40" height="42" rx="12" fill="#B08954"/>
+      <rect x="36" y="38" width="28" height="18" rx="7" fill="#F5EFE2"/>
+      <circle cx="44" cy="47" r="3.4" fill="#2C3A4C"/><circle cx="56" cy="47" r="3.4" fill="#2C3A4C"/>
+      <rect x="40" y="62" width="20" height="5" rx="2.5" fill="#8E6C3D"/>
+      <circle cx="24" cy="46" r="9" fill="none" stroke="#8E6C3D" stroke-width="5"/>
+      <circle cx="24" cy="46" r="2.5" fill="#8E6C3D"/>
+      <circle cx="76" cy="46" r="9" fill="none" stroke="#8E6C3D" stroke-width="5"/>
+      <circle cx="76" cy="46" r="2.5" fill="#8E6C3D"/>
+      <path d="M42 26C42 18 46 14 50 14C54 14 58 18 58 26" fill="none" stroke="#8E6C3D" stroke-width="5" stroke-linecap="round"/>
+      <rect x="38" y="72" width="10" height="12" rx="4" fill="#8E6C3D"/><rect x="52" y="72" width="10" height="12" rx="4" fill="#8E6C3D"/>
+    </symbol>
+    <symbol id="avatar-pilou" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="86" rx="28" ry="5" fill="#2C3A4C" opacity=".1"/>
+      <path d="M78 62C84 58 88 52 86 44C78 46 74 52 74 58Z" fill="#D9A968"/>
+      <circle cx="46" cy="62" r="28" fill="#C89B62"/>
+      <path d="M46 62m-28 0a28 28 0 0 1 56 0" fill="#DBAF74"/>
+      <path d="M24 54C30 50 40 48 48 50M26 66C32 62 42 60 50 62M30 76C36 73 44 72 52 73" stroke="#A97C47" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="62" cy="54" r="10" fill="#F5EFE2"/>
+      <circle cx="64" cy="54" r="4" fill="#2C3A4C"/>
+      <path d="M58 68Q62 71 66 68" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M40 34q4-6 0-10M52 32q4-6 0-10" fill="none" stroke="#A97C47" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-noctule" viewBox="0 0 100 100">
+      <circle cx="50" cy="54" r="40" fill="#FFE9A8" opacity=".4"/>
+      <path d="M50 28C40 28 34 38 36 50C38 62 44 74 50 74C56 74 62 62 64 50C66 38 60 28 50 28Z" fill="#FFD36B"/>
+      <circle cx="44" cy="46" r="3.6" fill="#2C3A4C"/><circle cx="56" cy="46" r="3.6" fill="#2C3A4C"/>
+      <path d="M46 56Q50 60 54 56" fill="none" stroke="#2C3A4C" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M38 32L32 24M62 32L68 24M50 26V18" stroke="#E9A923" stroke-width="4" stroke-linecap="round"/>
+      <path d="M30 60l-8 4M70 60l8 4" stroke="#E9A923" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-ballon" viewBox="0 0 100 100">
+      <circle cx="50" cy="52" r="32" fill="#FF8878"/>
+      <path d="M21 47Q50 66 79 47" fill="none" stroke="#FFFFFF" stroke-width="7"/>
+      <path d="M28 30Q50 41 72 30" fill="none" stroke="#FFD36B" stroke-width="6"/>
+      <circle cx="39" cy="42" r="4.5" fill="#2C3A4C"/><circle cx="61" cy="42" r="4.5" fill="#2C3A4C"/>
+      <path d="M43 58Q50 64 57 58" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="avatar-cube" viewBox="0 0 100 100">
+      <rect x="22" y="24" width="56" height="56" rx="12" fill="#6ACBB0"/>
+      <rect x="30" y="32" width="40" height="40" rx="8" fill="none" stroke="#FFFFFF" stroke-width="4" opacity=".7"/>
+      <circle cx="40" cy="48" r="4" fill="#2C3A4C"/><circle cx="60" cy="48" r="4" fill="#2C3A4C"/>
+      <path d="M42 62Q50 68 58 62" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="picnic" viewBox="0 0 200 115">
+      <rect x="0" y="86" width="200" height="29" rx="10" fill="#CDE8C2"/>
+      <path d="M30 90L170 90 150 115 50 115Z" fill="#F2B8A0"/>
+      <path d="M40 102h120M60 92v20M140 92v20M100 90v25" stroke="#E29B82" stroke-width="4"/>
+      <ellipse cx="100" cy="52" rx="34" ry="16" fill="#E8AE70"/>
+      <path d="M70 48C70 32 84 24 100 24C116 24 130 32 130 48Z" fill="#D9945A"/>
+      <rect x="94" y="14" width="12" height="12" rx="4" fill="#B57A3E"/>
+      <circle cx="88" cy="44" r="5" fill="#FF8878"/><circle cx="104" cy="42" r="5" fill="#FFD256"/><circle cx="116" cy="46" r="4" fill="#6ACBB0"/>
+      <g transform="translate(20 46) scale(.42)"><use href="#avatar-zoe" width="100" height="100"/></g>
+      <g transform="translate(148 46) scale(.42)"><use href="#bip-body" width="100" height="100"/></g>
+      <g transform="translate(58 62) scale(.34)"><use href="#toy-n" width="100" height="100"/></g>
+      <g transform="translate(118 62) scale(.34)"><use href="#toy-c" width="100" height="100"/></g>
+      <circle cx="40" cy="20" r="5" fill="#FFE08A"/><circle cx="160" cy="16" r="4" fill="#FFE08A"/><circle cx="120" cy="10" r="3" fill="#FFE08A"/>
+    </symbol>
+    <symbol id="bip-body" viewBox="0 0 100 100">
+      <rect x="18" y="26" width="64" height="58" rx="21" fill="#77AFEA"/>
+      <rect x="28" y="36" width="44" height="30" rx="12" fill="#F5FAFF"/>
+      <ellipse cx="41" cy="51" rx="4.6" ry="6.2" fill="#2C3A4C"/><ellipse cx="59" cy="51" rx="4.6" ry="6.2" fill="#2C3A4C"/>
+      <circle cx="31" cy="74" r="4" fill="#FFB6B2"/><circle cx="69" cy="74" r="4" fill="#FFB6B2"/>
+      <circle cx="50" cy="12" r="6.5" fill="#FF9E6B"/>
     </symbol>
   </defs>
 </svg>
@@ -409,11 +670,18 @@ svg { display: block; }
       <header class="hero">
         <div class="hero-art" id="heroArt"></div>
         <h1>Bip</h1>
-        <p>Programme le petit robot pour ranger les jouets du jardin.</p>
-        <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Jouer</span></button>
+        <p class="sub">Programme le petit robot, construis des machines et prépare le grand pique-nique !</p>
+        <div class="garden" id="garden" aria-label="Jardin fleuri"></div>
+        <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Continuer</span></button>
       </header>
-      <div id="chapters" class="home-in" style="gap:14px"></div>
-      <div class="adults-row"><button class="adults" id="btnAdults"><span id="icoInfo"></span>Pour les adultes</button></div>
+      <div id="journey"></div>
+      <div class="extra-row">
+        <button class="extra daily" id="btnDaily"><span class="eico" id="icoDaily"></span>
+          <span>Le défi de Zoé<small id="dailyLabel"></small><span class="daily-dots" id="dailyDots"></span></span></button>
+        <button class="extra" id="btnSandbox"><span class="eico" id="icoSandbox"></span><span>Mon jardin<small>Crée ton niveau !</small></span></button>
+        <button class="extra" id="btnAlbum"><span class="eico" id="icoAlbum"></span><span>L'album de Zoé<small id="albumCount"></small></span></button>
+        <button class="extra" id="btnAdults"><span id="icoInfo"></span><span>Pour les adultes</span></button>
+      </div>
     </div>
   </section>
 
@@ -430,7 +698,7 @@ svg { display: block; }
     <div class="board-wrap" id="boardWrap"><div class="vars" id="vars" hidden></div><div class="board" id="board"></div></div>
     <section class="prog" id="progCard" aria-label="Programme de Bip">
       <div class="prog-head">
-        <span class="lab"><span id="icoProg"></span>Programme</span>
+        <span class="lab"><span id="icoProg"></span><span id="progLab">Programme</span></span>
         <span class="batts" id="batts" hidden></span>
         <button class="trash" id="btnTrash" aria-label="Tout effacer"></button>
       </div>
@@ -442,10 +710,35 @@ svg { display: block; }
     </section>
     <div class="pal" id="palette" aria-label="Blocs"></div>
   </section>
+
+  <section id="sandbox" hidden aria-label="Mon jardin">
+    <div class="top">
+      <button class="ibtn" id="btnSbHome" aria-label="Retour à la carte"></button>
+      <div class="lvl-pill">Mon jardin</div>
+      <div class="sb-slots" id="sbSlots"></div>
+      <button class="ibtn" id="btnSbPlay" aria-label="Jouer dans mon jardin" style="background:#DDF4E7;color:var(--go-edge)"></button>
+    </div>
+    <button class="bubble" id="sbBubble">
+      <span class="mini" id="miniBip2"></span><span class="msg" id="sbMsg" aria-live="polite"></span>
+    </button>
+    <div class="board-wrap" id="sbBoardWrap"><div class="board" id="sbBoard"></div></div>
+    <div class="sb-slots" id="sbTools" style="justify-content:center"></div>
+    <div class="sandbox-tray" id="sbTray" aria-label="Éléments du jardin"></div>
+  </section>
 </main>
 
 <div class="hand" id="hand" hidden aria-hidden="true">
   <svg viewBox="0 0 64 64"><path d="M22 6c3.3 0 6 2.7 6 6v17.5l2.4-.8c3-.9 5.9.8 6.6 3.5l.3 1.3 2.3-.5c3-.6 5.6 1.4 6 4.3l.1.9 1.6-.2c3.2-.3 5.7 2.2 5.7 5.4V52c0 6.6-5.4 12-12 12h-9.5c-4.4 0-8.4-2.4-10.5-6.3L9.8 44c-1.6-2.9-.6-6.5 2.3-7.9 2.4-1.2 5.3-.5 6.9 1.6L16 33.7V12c0-3.3 2.7-6 6-6z" fill="#FFFFFF" stroke="#2C3A4C" stroke-width="3" stroke-linejoin="round" transform="translate(0 -2)"/></svg>
+</div>
+
+<div class="overlay" id="story" hidden>
+  <div class="story-card" role="dialog" aria-labelledby="storyWho">
+    <div class="story-art" id="storyArt"></div>
+    <div class="story-who" id="storyWho"></div>
+    <p class="story-line" id="storyLine"></p>
+    <div class="story-dots" id="storyDots"></div>
+    <div class="btns"><button class="btn go" id="btnStoryNext"><span>Suite</span><span id="icoStoryNext"></span></button></div>
+  </div>
 </div>
 
 <div class="overlay" id="win" hidden>
@@ -461,44 +754,57 @@ svg { display: block; }
   </div>
 </div>
 
+<div class="overlay" id="album" hidden>
+  <div class="album-card" role="dialog" aria-labelledby="albumTitle">
+    <button class="ibtn close" id="btnAlbumClose" aria-label="Fermer"></button>
+    <h2 id="albumTitle">L'album de Zoé</h2>
+    <p>Chaque jolie journée mérite une image. Gagne-les toutes !</p>
+    <div class="album-grid" id="albumGrid"></div>
+  </div>
+</div>
+
 <div class="overlay sheet" id="sheet" hidden>
   <div class="sheet-card" role="dialog" aria-labelledby="sheetTitle">
     <button class="ibtn close" id="btnClose" aria-label="Fermer"></button>
     <h2 id="sheetTitle">Pour les adultes</h2>
-    <p>Bip initie les enfants de 5 à 7 ans à la pensée algorithmique : prévoir une suite d'instructions, la lancer, observer ce qui se passe, puis corriger.</p>
+    <p>Bip initie les enfants de 5 à 7 ans à la pensée algorithmique et aux premières machines : prévoir une suite d'instructions, la lancer, observer, corriger — puis construire un petit système qui fonctionne.</p>
     <h3>Ce que l'enfant travaille</h3>
     <ul>
-      <li>Se repérer sur un quadrillage et coder un déplacement avec des flèches, comme dans le programme du cycle 2.</li>
-      <li>Ranger des instructions dans le bon ordre : une séquence.</li>
-      <li>Trouver son erreur et la corriger. Le bloc qui pose problème devient orange.</li>
-      <li>Découvrir la boucle avec le bloc Répéter, au chapitre 5.</li>
+      <li>Se repérer sur un quadrillage, coder un déplacement (flèches, puis repère relatif au chapitre 5).</li>
+      <li>Séquence, boucle (Répéter, chapitre 4), boucle conditionnelle (Jusqu'à, chapitre 7), condition (Si… sinon, chapitre 8), fonction (bloc magique, chapitre 9), débogage (chapitre 14).</li>
+      <li><b>Nouveauté v2 — l'état des machines</b> : les champignons ouvrent les barrières (chapitre 10) et les caisses se déplacent ou deviennent des ponts (chapitre 11). L'enfant découvre qu'une action modifie le monde pour la suite du programme.</li>
+      <li><b>Nouveauté v2 — programmer autrement</b> : au chapitre 13, on ne programme plus le robot mais le lieu (les toboggans de Ballon) : une première rencontre avec les systèmes et les programmes comme données.</li>
+      <li><b>Créer</b> : le mode « Mon jardin » permet d'inventer ses propres niveaux et de les faire résoudre par Bip.</li>
     </ul>
-    <h3>Chapitres 6 à 10 : pour aller plus loin</h3>
-    <p>Ces chapitres visent plutôt la fin du CP et le CE1. Accompagnez davantage l'enfant au début de chacun.</p>
+    <h3>Le parcours (4 mondes, 16 chapitres, 80 niveaux)</h3>
     <ul>
-      <li><b>Tourner</b> : Bip avance là où il regarde et pivote à gauche ou à droite. L'enfant doit se mettre à la place du robot (repère relatif).</li>
-      <li><b>Répéter jusqu'à</b> : une boucle qui s'arrête toute seule, devant un obstacle ou quand tous les jouets sont ramassés.</li>
-      <li><b>Si… sinon</b> : Bip regarde devant lui et choisit la ligne verte ou la ligne grise. Ces niveaux ont trois jardins : le même programme doit réussir partout. C'est tout l'intérêt d'une condition.</li>
-      <li><b>Le bloc magique</b> : on range une suite de blocs dans la ligne étoile pour la réutiliser. C'est une fonction.</li>
-      <li><b>Détective</b> : le programme est déjà écrit mais contient une erreur à trouver et corriger (débogage).</li>
+      <li><b>Le jardin de Bip</b> (1-4) : flèches, obstacles, saut, boucle Répéter.</li>
+      <li><b>La grande promenade</b> (5-9) : repère relatif, nénuphars qui coulent (on ne revient pas en arrière), Jusqu'à, Si… sinon, bloc magique.</li>
+      <li><b>Les ateliers de Grand-Papa</b> (10-14) : champignons et barrières, caisses-ponts, pollen doré, toboggans de Ballon, détective.</li>
+      <li><b>Le jardin de nuit</b> (15-16) : tout ce qui précède, sous les étoiles, jusqu'au grand final du pique-nique.</li>
+    </ul>
+    <h3>Rituels et récompenses</h3>
+    <ul>
+      <li>Le <b>défi de Zoé</b> : un petit niveau inédit chaque jour de la semaine (fonctionne hors connexion). Sept points à allumer.</li>
+      <li>L'<b>album de Zoé</b> : une image par chapitre, une par monde terminé, et quelques surprises. Uniquement décoratif.</li>
+      <li>Trois étoiles récompensent le programme le plus court ; réussir compte davantage que performer.</li>
     </ul>
     <h3>Comment l'accompagner</h3>
     <ul>
       <li>Avant de programmer, demandez-lui de tracer le chemin avec le doigt sur l'écran.</li>
-      <li>Laissez-le se tromper : chaque essai lui apprend quelque chose.</li>
-      <li>Le bouton sous le bouton vert fait avancer Bip d'un seul bloc. Pratique pour chercher l'erreur ensemble.</li>
-      <li>L'ampoule montre le chemin en pointillés numérotés. L'enfant doit alors le traduire en flèches.</li>
-      <li>Sans écran : un enfant joue le robot, l'autre lui donne les flèches à voix haute.</li>
+      <li>Laissez-le se tromper : chaque essai lui apprend quelque chose, et le jeu montre toujours quel bloc pose problème.</li>
+      <li>Le bouton sous le bouton vert fait avancer Bip d'un seul bloc : parfait pour chercher une erreur ensemble.</li>
+      <li>L'ampoule montre le chemin en pointillés numérotés à traduire en blocs.</li>
+      <li>Sans écran : un enfant joue le robot, l'autre lui donne les instructions à voix haute.</li>
     </ul>
     <h3>Les gestes</h3>
     <ul>
-      <li>Toucher un bloc l'ajoute à la fin du programme. On peut aussi le glisser à l'endroit voulu.</li>
-      <li>Toucher un bloc du programme l'enlève. Le glisser hors du programme aussi.</li>
-      <li>Toucher le rond blanc d'un bloc Répéter, Jusqu'à ou Si change son réglage (nombre de fois, condition). Toucher la case pointillée choisit où vont les nouveaux blocs.</li>
-      <li>Trois étoiles récompensent le programme le plus court. Réussir compte davantage.</li>
+      <li>Toucher un bloc l'ajoute au programme ; le glisser le déplace ; toucher un bloc du programme l'enlève.</li>
+      <li>Le rond blanc des blocs Répéter, Jusqu'à et Si change leur réglage.</li>
+      <li>Aux toboggans : toucher l'herbe pose une flèche, toucher encore la fait tourner, la gomme l'enlève.</li>
     </ul>
     <h3>Installer sur Android</h3>
-    <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application » (ou « Ajouter à l'écran d'accueil »). Bip fonctionne ensuite sans connexion, en plein écran.</p>
+    <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application ». Bip fonctionne ensuite sans connexion, en plein écran.</p>
     <h3>Réglages</h3>
     <div class="toggles">
       <button class="tg" id="tgVoice" role="switch"><span>Voix qui lit les consignes</span><span class="sw"></span></button>
@@ -512,6 +818,7 @@ svg { display: block; }
 
 <script>
 /*@ENGINE@*/
+/*@BALL@*/
 /*@LEVELS@*/
 /*@APP@*/
 </script>

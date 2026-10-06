@@ -14,8 +14,8 @@ function parseBallMap(lv, v) {
       if (ch === '#') kind = 'bush';
       else if (ch === 'o') kind = 'rock';
       else if (ch === '~') kind = 'puddle';
+      else if (ch === 'N') { kind = 'nest'; nest = [x, y]; }
       else if (ch === 'S') start = [x, y];
-      else if (ch === 'N') nest = [x, y];
       cells.push(kind);
     }
   }

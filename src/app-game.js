@@ -1,206 +1,59 @@
-/* ===================== Bip le robot — application ===================== */
-(function () {
-'use strict';
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const T = RM ? 0.4 : 1; // échelle des durées
-
-/* ---------- Icônes ---------- */
-const S = (d, w = 12) => `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="${d}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const I = {
-  arrow: S('M20 50H74M52 28l22 22-22 22', 13),
-  fwd: S('M50 84V22M28 44l22-22 22 22', 13),
-  tl: S('M68 86V56a22 22 0 0 0-22-22H22M40 14L20 34l20 20', 12),
-  tr: S('M32 86V56a22 22 0 0 1 22-22h24M60 14l20 20-20 20', 12),
-  jump: `<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="82" rx="15" ry="6" fill="currentColor" opacity=".5"/><path d="M17 76C23 30 66 22 80 62" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round"/><path d="M63 57L81 66L89 47" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  loop: S('M76 52a26 26 0 1 1-8-21M70 13v21H49', 11),
-  until: S('M12 50H58M40 30l20 20-20 20M80 20v60', 12),
-  fork: S('M50 86V56M50 56L24 26M50 56l26-30M18 36V20h16M82 36V20H66', 11),
-  magic: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 10L61 37L90 39L68 58L75 87L50 71L25 87L32 58L10 39L39 37Z" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>`,
-  check: S('M22 54l18 18 38-42', 14),
-  cross: S('M28 28l44 44M72 28L28 72', 14),
-  play: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 18L82 50L30 82Z" fill="currentColor" stroke="currentColor" stroke-width="10" stroke-linejoin="round"/></svg>`,
-  stop: `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="22" width="56" height="56" rx="10" fill="currentColor"/></svg>`,
-  step: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 22L62 50L22 78Z" fill="currentColor" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/><rect x="70" y="20" width="12" height="60" rx="6" fill="currentColor"/></svg>`,
-  home: S('M16 48L50 18L84 48M26 40V82H74V40M42 82V60H58V82', 9),
-  bulb: S('M36 70h28M40 84h20M50 12c-18 0-28 13-28 27 0 12 9 18 12 27h32c3-9 12-15 12-27 0-14-10-27-28-27z', 8),
-  speaker: S('M18 40v20h16l20 16V24L34 40zM68 36c6 7 6 21 0 28M78 26c12 13 12 35 0 48', 8),
-  trash: S('M18 28h64M40 28V18h20v10M26 28l5 56h38l5-56M42 44v26M58 44v26', 8),
-  close: S('M26 26L74 74M74 26L26 74', 11),
-  replay: S('M24 50a26 26 0 1 0 8-19M30 14v20h20', 10),
-  next: S('M20 50H76M54 26l24 24-24 24', 12),
-  lens: S('M42 42m-24 0a24 24 0 1 0 48 0a24 24 0 1 0-48 0M60 60l24 24', 11),
-  lock: `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="44" width="56" height="42" rx="10" fill="currentColor"/><path d="M34 46V34a16 16 0 0 1 32 0v12" fill="none" stroke="currentColor" stroke-width="9"/></svg>`,
-  info: S('M50 46v26M50 30v1', 11),
-  bush: `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="30" cy="60" r="20" fill="currentColor"/><circle cx="70" cy="60" r="20" fill="currentColor"/><circle cx="50" cy="42" r="24" fill="currentColor"/></svg>`,
-  drop: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 12C50 12 24 44 24 62a26 26 0 0 0 52 0C76 44 50 12 50 12Z" fill="currentColor"/></svg>`,
-  star: on => `<svg viewBox="0 0 100 100" aria-hidden="true" class="${on ? 'on' : ''}"><use href="#star" width="100" height="100" fill="${on ? 'var(--star)' : 'var(--paper-2)'}" stroke="${on ? '#E9A923' : 'var(--line)'}"/></svg>`,
-  bonk: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6L58 38L92 30L64 52L86 80L52 64L40 96L36 62L6 70L30 46L10 18L42 34Z" fill="#FFD36B" stroke="#E9A923" stroke-width="5" stroke-linejoin="round"/></svg>`,
-};
-const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
-const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
-const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d: 'descendre', f: 'avancer', tl: 'tourner à gauche', tr: 'tourner à droite', j: 'sauter', loop: 'répéter', while: 'répéter jusqu’à', if: 'si', star: 'bloc magique' };
-const CTR = ['loop', 'while', 'if'];
-const isCtr = t => CTR.includes(t);
-const LOOP_NS = [2, 3, 4, 5, 6, 8];
-
-function robotSVG() {
-  return `<svg viewBox="0 0 100 100" class="bipsvg" aria-hidden="true">
-  <ellipse class="shadow" cx="50" cy="93" rx="25" ry="5"/>
-  <line x1="50" y1="27" x2="50" y2="14" stroke="var(--bip-dark)" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="50" cy="12" r="6.5" fill="var(--apricot)"/>
-  <rect x="12" y="54" width="11" height="18" rx="5.5" fill="var(--bip-dark)"/>
-  <rect x="77" y="54" width="11" height="18" rx="5.5" fill="var(--bip-dark)"/>
-  <rect x="28" y="80" width="16" height="11" rx="5.5" fill="var(--ink-soft)"/>
-  <rect x="56" y="80" width="16" height="11" rx="5.5" fill="var(--ink-soft)"/>
-  <rect x="18" y="26" width="64" height="58" rx="21" fill="var(--bip)"/>
-  <path d="M24 42C25 33 33 30 43 30" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none" opacity=".45"/>
-  <rect x="28" y="36" width="44" height="30" rx="12" fill="var(--screen)"/>
-  <g class="eyes"><ellipse cx="41" cy="51" rx="4.6" ry="6.2"/><ellipse cx="59" cy="51" rx="4.6" ry="6.2"/></g>
-  <g class="eyes-happy"><path d="M35 54Q41 45 47 54"/><path d="M53 54Q59 45 65 54"/></g>
-  <g class="eyes-oops"><path d="M37 47L45 55M45 47L37 55"/><path d="M55 47L63 55M63 47L55 55"/></g>
-  <circle cx="31" cy="74" r="4" fill="var(--blush)"/><circle cx="69" cy="74" r="4" fill="var(--blush)"/>
-  <rect x="44" y="72" width="12" height="4.5" rx="2.25" fill="var(--bip-dark)" opacity=".45"/>
-  <g class="drops"><path d="M88 22C88 22 81 31 81 36a7 7 0 0 0 14 0C95 31 88 22 88 22Z" fill="var(--water)"/><path d="M12 30C12 30 7 36 7 39a5 5 0 0 0 10 0C17 36 12 30 12 30Z" fill="var(--water)"/></g>
-  <g class="qm"><circle cx="86" cy="20" r="11" fill="#FFFFFF" stroke="var(--line)" stroke-width="2"/><path d="M82 17c0-3 2-5 4.5-5s4.5 2 4.5 4.2c0 3.6-4.5 3.6-4.5 6.6" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><circle cx="86.5" cy="27" r="1.8" fill="var(--ink)"/></g>
-  </svg>`;
-}
-const toyUse = k => `<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#toy-${k}" width="100" height="100"/></svg>`;
-const symUse = k => `<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#${k}" width="100" height="100"/></svg>`;
-const TOY_NAME = { b: 'le ballon', n: 'le nounours', c: 'le canard', t: 'la toupie', a: 'le cube' };
-
-/* ---------- Sauvegarde (facultative) ---------- */
-const KEY = 'bip-robot-v1';
-function loadSave() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-const save = Object.assign({ stars: {}, voice: true, sound: true, all: false }, loadSave());
-function persist() { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) { /* stockage indisponible */ } }
-
-/* ---------- Sons doux ---------- */
-let ac = null;
-function audio() {
-  if (!save.sound) return null;
-  try {
-    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
-    if (ac.state === 'suspended') ac.resume();
-  } catch (e) { return null; }
-  return ac;
-}
-function tone(f1, f2, dur, type = 'sine', vol = .08, delay = 0) {
-  const a = audio(); if (!a) return;
-  const t = a.currentTime + delay, o = a.createOscillator(), g = a.createGain();
-  o.type = type; o.frequency.setValueAtTime(f1, t);
-  if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
-  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-  o.connect(g).connect(a.destination); o.start(t); o.stop(t + dur + .05);
-}
-function noise(dur, vol = .1) {
-  const a = audio(); if (!a) return;
-  const b = a.createBuffer(1, Math.floor(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length) ** 2;
-  const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
-  s.buffer = b; f.type = 'lowpass'; f.frequency.value = 1400; g.gain.value = vol;
-  s.connect(f).connect(g).connect(a.destination); s.start();
-}
-const SFX = {
-  add: () => tone(520, 820, .12, 'sine', .08),
-  del: () => tone(560, 240, .14, 'sine', .07),
-  tap: () => tone(760, 0, .05, 'sine', .04),
-  step: () => tone(392, 0, .08, 'triangle', .05),
-  turn: () => tone(440, 560, .12, 'sine', .05),
-  look: ok => tone(ok ? 700 : 420, 0, .09, 'sine', .05),
-  jump: () => tone(300, 760, .3, 'sine', .07),
-  collect: () => { tone(660, 0, .1, 'sine', .07); tone(880, 0, .1, 'sine', .07, .08); tone(1175, 0, .18, 'sine', .07, .16); },
-  bump: () => { tone(240, 120, .28, 'triangle', .1); },
-  splash: () => noise(.45, .12),
-  nope: () => tone(320, 250, .18, 'triangle', .06),
-  win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0, .26, 'triangle', .07, i * .13)),
-};
-function buzz(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* ignoré */ } }
-
-/* ---------- Voix ---------- */
-let frVoice = null;
-function pickVoice() {
-  try {
-    const vs = speechSynthesis.getVoices();
-    frVoice = vs.find(v => /^fr[-_]FR/i.test(v.lang) && /google|natural|premium/i.test(v.name)) || vs.find(v => /^fr[-_]FR/i.test(v.lang)) || vs.find(v => /^fr/i.test(v.lang)) || null;
-  } catch (e) { /* pas de synthèse vocale */ }
-}
-if ('speechSynthesis' in window) { pickVoice(); try { speechSynthesis.onvoiceschanged = pickVoice; } catch (e) { /* */ } }
-function speak(text) {
-  if (!save.voice || !('speechSynthesis' in window)) return;
-  try {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text.replace(/…/g, '.').replace(/ :/g, ','));
-    u.lang = 'fr-FR'; if (frVoice) u.voice = frVoice; u.rate = .92; u.pitch = 1.12;
-    speechSynthesis.speak(u);
-  } catch (e) { /* */ }
-}
-function stopVoice() { try { speechSynthesis.cancel(); } catch (e) { /* */ } }
-
-/* ---------- Données de niveau ---------- */
-LEVELS.forEach(lv => {
-  lv.refFn = lv.fn ? parseProg(lv.fn) : [];
-  lv.ref = lv.sol ? parseProg(lv.sol) : (solve(lv, lv.pal) || []).map((t, i) => ({ t, id: 'h' + i }));
-  lv.par = countBlocks(lv.ref) + countBlocks(lv.refFn);
-  lv.nv = lv.variants ? lv.variants.length : 1;
-});
-const TONES = { sky: 'var(--move)', leaf: 'var(--leaf)', water: '#5DB6DE', lilac: 'var(--jump)', sun: '#F5B83A', teal: 'var(--rel)', coral: '#F58A70', pink: '#E585B4', peach: '#F7A55E', slate: '#7286A6' };
-const CH_ICON = [I.arrow, I.bush, I.drop, I.jump, I.loop, I.tr, I.until, I.fork, I.magic, I.lens];
-const unlocked = i => save.all || i === 0 || (save.stars[LEVELS[i - 1].id] || 0) > 0;
-const nextIndex = () => { const i = LEVELS.findIndex(l => !(save.stars[l.id] > 0)); return i < 0 ? LEVELS.length - 1 : i; };
-
-/* ---------- Écrans ---------- */
-const STANDALONE = matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
-function show(id) {
-  $('#home').hidden = id !== 'home';
-  $('#game').hidden = id !== 'game';
-  if (id === 'home') { renderHome(); hideHand(); stopVoice(); }
-}
-
-function renderHome() {
-  const wrap = $('#chapters');
-  const nx = nextIndex();
-  wrap.innerHTML = CHAPTERS.map((c, ci) => {
-    const lvls = LEVELS.map((l, i) => [l, i]).filter(([l]) => l.ch === ci);
-    const sep = ci === 5 ? '<div class="chap-sep">Pour aller plus loin</div>' : '';
-    return `${sep}<article class="chap" data-tone="${c.tone}">
-      <div class="chap-head"><span class="chap-num">${ci + 1}</span><div><h2>${c.name}</h2><p>${c.hint}</p></div><span class="chap-ico">${CH_ICON[ci] || ''}</span></div>
-      <div class="lvls">${lvls.map(([l, i]) => {
-        const st = save.stars[l.id] || 0, open = unlocked(i);
-        return `<button class="lvl${i === nx && open ? ' next' : ''}" data-i="${i}" ${open ? '' : 'disabled'} aria-label="Niveau ${l.id}${open ? (st ? ', ' + st + ' étoiles' : '') : ', fermé'}">
-          <span class="n">${open ? l.id : I.lock}</span><span class="st">${open ? [1, 2, 3].map(k => I.star(k <= st)).join('') : ''}</span></button>`;
-      }).join('')}</div></article>`;
-  }).join('');
-  $$('.lvl', wrap).forEach(b => b.addEventListener('click', () => { audio(); openLevel(+b.dataset.i); }));
-}
-
 /* ---------- État du jeu ---------- */
 let UID = 1;
 const newId = () => 'k' + (UID++);
-const G = { i: 0, lv: null, P: null, v: 0, prog: [], fn: [], target: 'main', busy: false, abort: false, step: null, fails: 0, dirty: false, last: null, hintT: 0, spd: 1, told: {} };
+const G = { i: -1, lv: null, P: null, v: 0, prog: [], fn: [], target: 'main', busy: false, abort: false, step: null,
+  fails: 0, dirty: false, last: null, hintT: 0, spd: 1, told: {}, mode: 'classic', sandbox: false, daily: false,
+  tiles: {}, tool: 'r', cellPx: 64, sb: { rows: [], tool: 'R', cur: 0 }, sbCellPx: 64 };
 const hasFn = () => G.lv.pal.includes('star');
 const totalBlocks = () => countBlocks(G.prog) + countBlocks(G.fn);
 
-function openLevel(i) {
-  if (!unlocked(i)) return;
-  G.i = i; G.lv = LEVELS[i];
-  G.prog = G.lv.start ? parseProg(G.lv.start, newId) : [];
-  G.fn = G.lv.startFn ? parseProg(G.lv.startFn, newId) : [];
+const WORLD_WHO = ['zoe', 'zoe', 'papi', 'noctule'];
+function storyForLevel(lv) {
+  if (lv.daily || lv.sandbox || lv.ch == null || lv.ch < 0) return null;
+  const lines = [];
+  const w = CHAPTERS[lv.ch].w;
+  const firstOfWorld = CHAPTERS.find(c => c.w === w) === CHAPTERS[lv.ch];
+  if (firstOfWorld && !save.seen.w[w]) {
+    save.seen.w[w] = true;
+    WORLDS[w].intro.forEach(l => lines.push({ who: WORLD_WHO[w], line: l, title: 'Monde ' + (w + 1) + ' : ' + WORLDS[w].name }));
+  }
+  if (!save.seen.c[lv.ch]) {
+    save.seen.c[lv.ch] = true;
+    lines.push({ who: CHAPTERS[lv.ch].who, line: CHAPTERS[lv.ch].intro, title: 'Chapitre ' + (lv.ch + 1) });
+  }
+  persist();
+  return lines.length ? lines : null;
+}
+
+function openLevel(i) { openLevelObj(LEVELS[i], { index: i }); }
+function openLevelObj(lv, opts = {}) {
+  G.mode = lv.mode === 'ball' ? 'ball' : 'classic';
+  G.sandbox = !!opts.sandbox;
+  G.i = opts.index != null ? opts.index : LEVELS.indexOf(lv);
+  G.lv = lv;
+  G.tiles = {};
+  G.tool = 'r';
+  G.prog = lv.start ? parseProg(lv.start, newId) : [];
+  G.fn = lv.startFn ? parseProg(lv.startFn, newId) : [];
   G.target = 'main'; G.fails = 0; G.step = null; G.abort = true; G.busy = false; G.dirty = false; G.last = null; G.told = {};
   $('#win').hidden = true;
   show('game');
   setRunning(false);
-  const tone = TONES[CHAPTERS[G.lv.ch].tone];
-  $('#lvlPill').innerHTML = `<i style="background:${tone}"></i>Niveau ${G.lv.id}`;
+  const tone = TONES[CHAPTERS[lv.ch] ? CHAPTERS[lv.ch].tone : 'sky'];
+  $('#lvlPill').innerHTML = `<i style="background:${tone}"></i>${lv.daily ? 'Défi de ' + DAILY_NAMES[DAILY_IDX] : lv.sandbox ? 'Mon jardin' : 'Niveau ' + lv.id}`;
   $('#btnHint').classList.remove('glow'); $('#btnStep').classList.remove('glow');
-  $('#fnRow').hidden = !hasFn();
+  $('#fnRow').hidden = !hasFn() || G.mode === 'ball';
+  $('#seqScroll').hidden = G.mode === 'ball';
+  $('#btnStep').hidden = G.mode === 'ball';
   buildVars();
   setVariant(0);
-  buildPalette(); renderProg();
-  say(G.lv.text);
-  if (STANDALONE) { try { history.pushState({ g: 1 }, ''); } catch (e) { /* */ } }
+  const start = () => {
+    buildPalette(); renderProg();
+    say(lv.text);
+    if (STANDALONE) { try { history.pushState({ g: 1 }, ''); } catch (e) { /* */ } }
+  };
+  const story = storyForLevel(lv);
+  if (story) playStory(story, start); else start();
 }
 
 function say(text, quiet) {
@@ -222,8 +75,10 @@ function buildVars() {
   }));
 }
 function setVariant(v) {
-  G.v = v; G.P = parseLevel(G.lv, v);
+  G.v = v;
+  G.P = G.mode === 'ball' ? parseBallMap(G.lv, v) : parseLevel(G.lv, v);
   buildBoard(); buildTray();
+  if (G.mode === 'ball') renderTiles();
   $$('#vars button').forEach(b => b.classList.toggle('on', +b.dataset.v === v));
 }
 function varMark(v, cls) { const b = $(`#vars button[data-v="${v}"]`); if (b) { b.classList.remove('pass', 'fail'); b.classList.add(cls); } }
@@ -231,17 +86,24 @@ function varMark(v, cls) { const b = $(`#vars button[data-v="${v}"]`); if (b) { 
 /* ---------- Plateau ---------- */
 function buildBoard() {
   const P = G.P, b = $('#board');
+  b.classList.toggle('night', !!(G.lv.ch >= 0 && CHAPTERS[G.lv.ch] && CHAPTERS[G.lv.ch].night));
   b.style.setProperty('--cols', P.w); b.style.setProperty('--rows', P.h);
   let h = '';
   P.cells.forEach((k, idx) => {
     if (k === 'grass') return;
     const x = idx % P.w, y = (idx / P.w) | 0;
-    h += `<div class="it ${k}" style="--x:${x};--y:${y}">${symUse(k)}</div>`;
+    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switchc: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest' }[k];
+    h += `<div class="it ${k}" data-idx="${idx}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
   });
-  P.toys.forEach((t, i) => { h += `<div class="it toy" data-i="${i}" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
+  P.crates.forEach((c, i) => { h += `<div class="it crate" data-ci="${i}" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
+  P.toys.forEach((t, i) => { h += `<div class="it toy toy-${t.k}" data-i="${i}" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
   h += `<div class="fx" id="fx"></div>`;
-  const facing = G.lv.pal.some(t => ['j', 'f', 'tl', 'tr'].includes(t));
-  h += `<div class="it robot" id="robot" data-face="${P.face}" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div>${facing ? '<i class="facing"></i>' : ''}</div>`;
+  if (G.mode === 'ball') {
+    h += `<div class="ball-sprite" id="ballSprite" style="--x:${P.start[0]};--y:${P.start[1]}">${symUse('ball')}</div>`;
+  } else {
+    const facing = G.lv.pal.some(t => ['j', 'f', 'tl', 'tr'].includes(t));
+    h += `<div class="it robot" id="robot" data-face="${P.face}" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div>${facing ? '<i class="facing"></i>' : ''}</div>`;
+  }
   b.innerHTML = h;
   G.dirty = false;
   fitBoard();
@@ -253,18 +115,12 @@ function fitBoard() {
   const vars = $('#vars'), vh = vars.hidden ? 0 : vars.offsetHeight + 8;
   const cell = Math.max(24, Math.floor(Math.min((r.width - 16) / G.P.w, (r.height - vh - 16) / G.P.h, 112)));
   $('#board').style.setProperty('--cell', cell + 'px');
+  G.cellPx = cell;
   placeHand();
 }
 function resetBoard() {
-  const R = $('#robot'); if (!R) return;
-  R.classList.add('instant'); R.classList.remove('happy', 'oops', 'wet', 'puzzled', 'jumping');
-  R.style.setProperty('--x', G.P.start[0]); R.style.setProperty('--y', G.P.start[1]); R.dataset.face = G.P.face;
-  R.style.transitionDuration = '';
-  void R.offsetWidth; R.classList.remove('instant');
-  $$('.it.toy').forEach(t => t.classList.remove('got'));
-  $$('#tray .tt').forEach(t => t.classList.remove('got'));
-  $('#fx').innerHTML = '';
-  G.dirty = false;
+  buildBoard(); buildTray();
+  if (G.mode === 'ball') renderTiles();
 }
 function buildTray() {
   const P = G.P;
@@ -317,11 +173,24 @@ function blockHTML(t, id, inPal) {
 }
 function buildPalette() {
   const p = $('#palette');
+  if (G.mode === 'ball') {
+    p.innerHTML = BALL_DIRS.map(d => blockHTML(d, null, true)).join('') +
+      `<div class="blk eraser${G.tool === 'erase' ? ' in' : ''}" data-t="erase" role="button" tabindex="0" aria-label="Gomme">${I.eraser}</div>`;
+    $$('.blk', p).forEach(el => el.addEventListener('pointerdown', e => { e.preventDefault(); selectTool(el.dataset.t); }));
+    $$('.blk', p).forEach(el => { if (el.dataset.t === G.tool) el.classList.add('in'); });
+    return;
+  }
   p.innerHTML = G.lv.pal.map(t => blockHTML(t, null, true)).join('');
   $$('.blk', p).forEach(el => {
     el.addEventListener('pointerdown', e => press(e, { from: 'pal', t: el.dataset.t }, el));
     el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); addBlock(el.dataset.t); } });
   });
+}
+function selectTool(t) {
+  G.tool = t;
+  $$('#palette .blk').forEach(el => el.classList.toggle('in', el.dataset.t === t));
+  SFX.tap();
+  say(t === 'erase' ? 'La gomme ! Touche une flèche posée pour l\'enlever.' : 'Touche l\'herbe pour poser la flèche.', true);
 }
 const slotHTML = cid => `<div class="slot${G.target === cid ? ' on' : ''}" data-cid="${cid}" role="button" aria-label="Ajouter ici">+</div>`;
 const seqHTML = (list, cid) => list.map(itemHTML).join('') + slotHTML(cid);
@@ -329,7 +198,7 @@ const itemHTML = it => isCtr(it.t) ? ctrHTML(it) : blockHTML(it.t, it.id);
 function pillHTML(it) {
   if (it.t === 'loop') return '×' + it.n;
   if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : symUse('bush');
-  return it.c === 'puddle' ? symUse('puddle') : symUse('bush');
+  return it.c === 'puddle' ? symUse('puddle') : symUse('gate');
 }
 function pillLabel(it) {
   if (it.t === 'loop') return `Répéter ${it.n} fois`;
@@ -349,6 +218,7 @@ function ctrHTML(it) {
   return `<div class="${cls}" data-id="${it.id}">${head}<div class="seq ctr-body" data-cid="${it.id}">${seqHTML(it.body, it.id)}</div></div>`;
 }
 function renderProg() {
+  if (G.mode === 'ball') { updateBatt(); return; }
   if (G.target !== 'main' && !locate(G.target)) G.target = 'main';
   $('#main').innerHTML = seqHTML(G.prog, 'main');
   if (hasFn()) { $('#fnSeq').innerHTML = seqHTML(G.fn, 'fn'); $('#fnRow').classList.toggle('target', G.target === 'fn'); }
@@ -372,6 +242,12 @@ function bindProg(root) {
 }
 function updateBatt() {
   const b = $('#batts');
+  if (G.mode === 'ball') {
+    b.hidden = false;
+    const n = Object.keys(G.tiles).length;
+    b.innerHTML = `<span class="bl" style="margin:0">${n} flèche${n > 1 ? 's' : ''} posée${n > 1 ? 's' : ''}</span>`;
+    return;
+  }
   if (!G.lv.max) { b.hidden = true; return; }
   const left = Math.max(0, G.lv.max - totalBlocks());
   b.hidden = false;
@@ -575,12 +451,12 @@ function poofAt(el, x, y) {
   document.body.append(p); setTimeout(() => p.remove(), 500);
 }
 
-/* ---------- Exécution ---------- */
+/* ---------- Exécution (Bip) ---------- */
 function setRunning(on) {
   $('#game').classList.toggle('running', !!on);
   const b = $('#btnRun');
   b.innerHTML = on === true ? I.stop : I.play;
-  b.setAttribute('aria-label', on === true ? 'Arrêter Bip' : 'Lancer le programme');
+  b.setAttribute('aria-label', on === true ? 'Arrêter' : 'Lancer le programme');
   if (on) hideHand(); else requestAnimationFrame(placeHand);
 }
 function emptyNudge() {
@@ -590,6 +466,7 @@ function emptyNudge() {
 }
 const speedFor = sim => { const n = sim.steps.length; return n > 40 ? .5 : n > 24 ? .65 : n > 14 ? .8 : 1; };
 async function runAll() {
+  if (G.mode === 'ball') return runBall();
   if (G.busy) { G.abort = true; return; }
   if (!totalBlocks() || !G.prog.length) { emptyNudge(); return; }
   stopVoice(); G.step = null; clearMarks(); hideHint();
@@ -622,7 +499,7 @@ const CHECK_SAY = {
   'while-toys': ok => ok ? 'Il manque des jouets : Bip continue.' : 'Tous les jouets sont là : la boucle s’arrête.',
 };
 async function stepOnce() {
-  if (G.busy) return;
+  if (G.busy || G.mode === 'ball') return;
   if (!G.prog.length) { emptyNudge(); return; }
   if (!G.step) { stopVoice(); resetBoard(); clearMarks(); hideHint(); G.step = { sim: simulate(G.lv, G.prog, G.fn, G.v), i: 0 }; G.dirty = true; G.spd = 1; }
   const { sim } = G.step, st = sim.steps[G.step.i];
@@ -646,6 +523,7 @@ function finishStep(sim) {
   finish(sim, G.lv.nv > 1 ? G.v : null);
 }
 function mark(ins) {
+  if (!ins) return;
   clearNow();
   const b = $(`#progCard [data-id="${ins.id}"]`);
   if (b) b.classList.add('now');
@@ -659,9 +537,22 @@ function mark(ins) {
   $('#fnRow').classList.toggle('now', ins.path.some(p => p.call));
   if (b) b.scrollIntoView({ block: 'nearest', behavior: RM ? 'auto' : 'smooth' });
 }
+function crateEl(from) {
+  return $$('#board .it.crate').find(c => c.style.getPropertyValue('--x') == from[0] && c.style.getPropertyValue('--y') == from[1]);
+}
 async function doStep(st, keep) {
-  const R = $('#robot'), spr = $('.sprite', R);
+  const R = $('#robot'), spr = R ? $('.sprite', R) : null;
   const k = T * G.spd;
+  const fx = $('#fx');
+  if (st.kind === 'gate') {
+    mark(st.ins);
+    $$('#board .it.gate').forEach(g => g.classList.add('open'));
+    $$('#board .it.switchc').forEach(s => s.classList.add('pressed'));
+    SFX.gate();
+    await sleep(700 * k);
+    return;
+  }
+  if (!R) return;
   R.style.transitionDuration = Math.round((st.kind === 'jump' ? 520 : 380) * k) + 'ms';
   mark(st.ins);
   const [dx, dy] = DIRS[st.face];
@@ -674,7 +565,7 @@ async function doStep(st, keep) {
       s.className = 'sense' + (st.ok ? ' yes' : '');
       s.style.cssText = `--x:${st.from[0] + dx};--y:${st.from[1] + dy}`;
       s.innerHTML = '<i></i>';
-      $('#fx').append(s);
+      fx.append(s);
       setTimeout(() => s.remove(), 520 * k);
     }
     await sleep((keep ? 600 : 420) * k);
@@ -688,7 +579,7 @@ async function doStep(st, keep) {
     await sleep(360 * k);
     return;
   }
-  if (st.fail === 'out' || st.fail === 'bush' || st.fail === 'rock') {
+  if (st.fail === 'out' || st.fail === 'bush' || st.fail === 'rock' || st.fail === 'crate' || st.fail === 'gate') {
     const far = st.kind === 'jump' ? 70 : 34;
     st.kind === 'jump' ? SFX.jump() : SFX.step();
     await spr.animate([
@@ -700,7 +591,7 @@ async function doStep(st, keep) {
     SFX.bump(); buzz(60);
     R.classList.add('oops');
     const bx = st.from[0] + dx * (st.kind === 'jump' ? 1.5 : .5), by = st.from[1] + dy * (st.kind === 'jump' ? 1.5 : .5);
-    const kk = document.createElement('div'); kk.className = 'bonk'; kk.style.cssText = `--x:${bx};--y:${by}`; kk.innerHTML = I.bonk; $('#fx').append(kk);
+    const kk = document.createElement('div'); kk.className = 'bonk'; kk.style.cssText = `--x:${bx};--y:${by}`; kk.innerHTML = I.bonk; fx.append(kk);
     await sleep(300 * T);
     return;
   }
@@ -716,10 +607,50 @@ async function doStep(st, keep) {
     R.style.setProperty('--x', st.to[0]); R.style.setProperty('--y', st.to[1]);
     await sleep(400 * k);
   }
+  if (st.sink) {
+    SFX.pad();
+    const idx = st.sink[1] * G.P.w + st.sink[0];
+    const pad = $(`#board .it.pad[data-idx="${idx}"]`);
+    if (pad) {
+      const w = document.createElement('div');
+      w.className = 'it water'; w.style.cssText = `--x:${st.sink[0]};--y:${st.sink[1]}`;
+      w.innerHTML = symUse('water');
+      $('#board').insertBefore(w, pad);
+      pad.classList.add('sunk');
+      setTimeout(() => pad.remove(), 700 * T);
+    }
+  }
+  if (st.crate) {
+    SFX.push();
+    const ce = crateEl(st.crate.from);
+    if (ce) {
+      ce.style.setProperty('--x', st.crate.to[0]); ce.style.setProperty('--y', st.crate.to[1]);
+      if (st.crate.plank) {
+        await sleep(320 * k);
+        ce.remove();
+        const pl = document.createElement('div');
+        pl.className = 'it plank'; pl.style.cssText = `--x:${st.crate.to[0]};--y:${st.crate.to[1]}`;
+        pl.innerHTML = symUse('plank');
+        $('#board').appendChild(pl);
+        SFX.plank();
+        const sp = document.createElement('div'); sp.className = 'splash'; sp.style.cssText = `--x:${st.crate.to[0]};--y:${st.crate.to[1]}`;
+        sp.innerHTML = '<i></i><i></i>'; fx.append(sp);
+      }
+    }
+  }
+  if (st.paint) {
+    SFX.paint();
+    const p = document.createElement('div');
+    p.className = 'paint'; p.style.cssText = `--x:${st.paint[0]};--y:${st.paint[1]}`;
+    p.innerHTML = '<i></i>'; fx.append(p);
+    const idx = st.paint[1] * G.P.w + st.paint[0];
+    const fl = $(`#board .it.flower[data-idx="${idx}"]`);
+    if (fl) fl.classList.add('painted');
+  }
   if (st.fail === 'puddle') {
     SFX.splash(); buzz(40);
     R.classList.add('wet');
-    const s = document.createElement('div'); s.className = 'splash'; s.style.cssText = `--x:${st.to[0]};--y:${st.to[1]}`; s.innerHTML = '<i></i><i></i>'; $('#fx').append(s);
+    const s = document.createElement('div'); s.className = 'splash'; s.style.cssText = `--x:${st.to[0]};--y:${st.to[1]}`; s.innerHTML = '<i></i><i></i>'; fx.append(s);
     spr.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(8%) scale(1.04,.9)' }, { transform: 'translateY(0)' }], { duration: 400 * T });
     await sleep(500 * T);
     return;
@@ -741,15 +672,18 @@ function finish(sim, v) {
   G.fails++;
   let msg = '';
   if (sim.result === 'bump') {
-    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : 'Aïe ! Bip s’est cogné dans un buisson.';
+    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : 'Aïe ! Bip s’est cogné dans un buisson.';
     msg += ' Le bloc orange pose problème.';
     badMark(last.ins);
   } else if (sim.result === 'splash') {
-    msg = 'Plouf ! Bip a marché dans une flaque. Le bloc orange pose problème.';
+    msg = 'Plouf ! Bip a marché dans l’eau. Le bloc orange pose problème.';
     badMark(last.ins);
   } else if (sim.result === 'tired') {
     R.classList.add('puzzled');
     msg = 'Bip est fatigué : son programme ne s’arrête jamais ! Regarde tes boucles.';
+  } else if (sim.result === 'unpainted') {
+    R.classList.add('puzzled');
+    msg = sim.left > 1 ? `Il reste ${sim.left} fleurs sans pollen. Marche dessus !` : 'Il reste une fleur sans pollen. Marche dessus !';
   } else if (sim.result === 'missing') {
     R.classList.add('puzzled');
     const starUnused = hasFn() && !G.fn.length && G.prog.some(containsStar);
@@ -773,20 +707,25 @@ function badMark(ins) {
 /* ---------- Réussite ---------- */
 function win() {
   const R = $('#robot');
-  R.classList.add('happy');
+  if (R) R.classList.add('happy');
   clearNow();
   const n = totalBlocks(), par = G.lv.par;
-  const stars = n <= par ? 3 : n <= par + 2 ? 2 : 1;
-  const prev = save.stars[G.lv.id] || 0;
-  save.stars[G.lv.id] = Math.max(prev, stars); persist();
+  let stars = n <= par ? 3 : n <= par + 2 ? 2 : 1;
+  if (G.sandbox) { stars = 3; }
+  else if (!G.daily) {
+    const prev = save.stars[G.lv.id] || 0;
+    save.stars[G.lv.id] = Math.max(prev, stars); persist();
+  }
+  checkStickers();
+  if (G.daily) { save.daily[DAILY_IDX] = true; persist(); award('daily1'); }
   SFX.win(); buzz([30, 60, 30]);
   confetti();
   $('#btnHint').classList.remove('glow'); $('#btnStep').classList.remove('glow');
   setTimeout(() => showWin(stars, n, par), RM ? 300 : 1000);
 }
 function showWin(stars, n, par) {
-  const lastLevel = G.i === LEVELS.length - 1;
-  const chapterEnd = !lastLevel && LEVELS[G.i + 1].ch !== G.lv.ch;
+  const lastLevel = !G.sandbox && !G.daily && G.i === LEVELS.length - 1;
+  const chapterEnd = !lastLevel && !G.sandbox && !G.daily && G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
   $('#winBip').innerHTML = robotSVG();
   $('#winStars').innerHTML = [1, 2, 3].map(k => I.star(k <= stars)).join('');
   $$('#winStars svg.on').forEach((s, k) => { s.style.animationDelay = (k * 0.18) + 's'; });
@@ -794,8 +733,9 @@ function showWin(stars, n, par) {
   let text = stars === 3
     ? `Programme parfait : ${n} bloc${n > 1 ? 's' : ''}, c’est le plus court.`
     : `Ton programme a ${n} blocs. On peut réussir avec ${par}. Tu essaies ?`;
+  if (G.sandbox) { title = 'Quel jardin !'; text = 'Bip a fini TON jardin. Tu peux le modifier, ou en créer un autre !'; }
   if (G.lv.nv > 1 && stars === 3) text = `Ton programme marche dans les ${G.lv.nv} jardins, avec ${n} blocs seulement !`;
-  if (lastLevel) { title = 'Champion !'; text = 'Tu as fini toute l’aventure de Bip. Tu sais programmer un robot !'; }
+  if (lastLevel) { title = 'Champion !'; text = 'Tu as fini toute l’aventure de Bip. Tu sais vraiment programmer un robot !'; }
   else if (chapterEnd && stars === 3) text += ` Prochain chapitre : ${CHAPTERS[G.lv.ch + 1].name.toLowerCase()}.`;
   $('#winTitle').textContent = title;
   $('#winText').textContent = text;
@@ -805,10 +745,30 @@ function showWin(stars, n, par) {
   speak(title + ' ' + text);
   setTimeout(() => $('#btnNext').focus({ preventScroll: true }), 50);
 }
+function afterWinNext() {
+  $('#win').hidden = true;
+  if (G.sandbox) { openSandbox(); return; }
+  if (G.daily) { show('home'); return; }
+  const lastLevel = G.i === LEVELS.length - 1;
+  if (lastLevel) {
+    playStory([
+      { who: 'zoe', line: 'Regarde qui arrive… tout le monde est là, et le panier est plein !' },
+      { who: 'tous', title: 'Le grand pique-nique', line: 'Merci champion ! Tu as retrouvé tous les jouets et préparé le plus beau pique-nique du monde. Bip est très fier de toi !' },
+    ], () => show('home'));
+    return;
+  }
+  const chapterEnd = G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
+  const next = () => openLevel(G.i + 1);
+  if (chapterEnd && !save.seen.ce[G.lv.ch]) {
+    save.seen.ce[G.lv.ch] = true; persist();
+    playStory(CHAPTERS[G.lv.ch].end, next);
+  } else next();
+}
 
 /* ---------- Aide : le chemin en pointillés ---------- */
 function showHint() {
   if (G.busy) return;
+  if (G.mode === 'ball') { hintTiles(); return; }
   hideHint();
   if (G.dirty) resetBoard();
   const sim = simulate(G.lv, G.lv.ref, G.lv.refFn, G.v);
@@ -830,21 +790,21 @@ function showHint() {
   clearTimeout(G.hintT);
   G.hintT = setTimeout(hideHint, 9000 + k * 200);
 }
-function hideHint() { clearTimeout(G.hintT); $$('#fx .hint').forEach(d => d.remove()); }
+function hideHint() { clearTimeout(G.hintT); $$('#fx .hint').forEach(d => d.remove()); $$('#board .tilemark.hint').forEach(t => t.remove()); }
 
 /* ---------- Main qui montre (niveaux d'initiation) ---------- */
 function coachTarget() {
-  if ($('#game').hidden || G.busy || !$('#win').hidden || !$('#sheet').hidden || D) return null;
+  if ($('#game').hidden || G.busy || !$('#win').hidden || !$('#sheet').hidden || !$('#story').hidden || D || G.mode === 'ball') return null;
   const id = G.lv.id;
   if (id === 1 && !save.stars[1]) return G.prog.length ? $('#btnRun') : $('#palette .blk');
-  if (id === 17 && !save.stars[17]) {
+  if (id === 16 && !save.stars[16]) {
     const lp = G.prog.find(x => x.t === 'loop');
     if (!lp) return $('#palette .blk[data-t="loop"]');
     if (!lp.body.length) return G.target === lp.id ? $('#palette .blk[data-t="r"]') : $(`.ctr[data-id="${lp.id}"] .slot`);
     if (lp.n < 5) return $(`.ctr[data-id="${lp.id}"] > .ctr-head .ctr-p`);
     return $('#btnRun');
   }
-  if (id === 33 && !save.stars[33]) {
+  if (id === 36 && !save.stars[36]) {
     if (!G.fn.length) return G.target === 'fn' ? $('#palette .blk[data-t="f"]') : $('#fnSeq .slot');
     return null;
   }
@@ -886,82 +846,3 @@ function confetti() {
     if (el < 1800) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); c.hidden = true; }
   })(t0);
 }
-
-/* ---------- Feuille adultes ---------- */
-function syncToggles() {
-  $('#tgVoice').setAttribute('aria-checked', String(!!save.voice));
-  $('#tgSound').setAttribute('aria-checked', String(!!save.sound));
-  $('#tgAll').setAttribute('aria-checked', String(!!save.all));
-}
-let resetArm = 0;
-function openSheet() { syncToggles(); $('#sheet').hidden = false; hideHand(); stopVoice(); }
-function closeSheet() { $('#sheet').hidden = true; if (!$('#home').hidden) renderHome(); else placeHand(); }
-
-/* ---------- Câblage ---------- */
-function wire() {
-  $('#heroArt').innerHTML = robotSVG() + `<span class="float f1">${toyUse('b')}</span><span class="float f2">${toyUse('c')}</span>`;
-  $('#icoPlayBig').innerHTML = I.play;
-  $('#icoInfo').innerHTML = I.info;
-  $('#btnHome').innerHTML = I.home;
-  $('#btnHint').innerHTML = I.bulb;
-  $('#miniBip').innerHTML = robotSVG();
-  $('#icoSpk').innerHTML = I.speaker;
-  $('#icoProg').innerHTML = `<span style="display:block;width:22px;height:22px">${robotSVG()}</span>`;
-  $('#fnLab').innerHTML = `${I.magic}<span>=</span>`;
-  $('#btnTrash').innerHTML = I.trash;
-  $('#btnStep').innerHTML = I.step;
-  $('#btnClose').innerHTML = I.close;
-  setRunning(false);
-
-  $('#btnPlay').addEventListener('click', () => { audio(); openLevel(nextIndex()); });
-  $('#btnHome').addEventListener('click', () => { G.abort = true; show('home'); });
-  $('#btnHint').addEventListener('click', showHint);
-  $('#bubble').addEventListener('click', () => speak($('#msg').textContent));
-  $('#btnRun').addEventListener('click', () => { audio(); runAll(); });
-  $('#btnStep').addEventListener('click', () => { audio(); stepOnce(); });
-  $('#fnRow').addEventListener('click', e => { if (e.target.closest('.blk, .ctr, .slot')) return; setTarget('fn'); });
-  let trashT = 0;
-  $('#btnTrash').addEventListener('click', e => {
-    const b = e.currentTarget;
-    if (G.busy || !totalBlocks()) return;
-    if (!b.classList.contains('arm')) {
-      b.classList.add('arm'); b.setAttribute('aria-label', 'Toucher encore pour tout effacer'); SFX.tap();
-      clearTimeout(trashT); trashT = setTimeout(() => { b.classList.remove('arm'); b.setAttribute('aria-label', 'Tout effacer'); }, 2500);
-      return;
-    }
-    clearTimeout(trashT); b.classList.remove('arm'); b.setAttribute('aria-label', 'Tout effacer');
-    poofAt($('#main'));
-    G.prog = []; G.fn = []; G.target = 'main'; SFX.del(); edited();
-    say('Programme effacé. On recommence !', true);
-  });
-  $('#btnAgain').addEventListener('click', () => { $('#win').hidden = true; setVariant(0); clearMarks(); $$('#vars button').forEach(b => b.classList.remove('pass', 'fail')); say(G.lv.text); });
-  $('#btnNext').addEventListener('click', () => { $('#win').hidden = true; if (G.i < LEVELS.length - 1) openLevel(G.i + 1); else show('home'); });
-  $('#btnAdults').addEventListener('click', openSheet);
-  $('#btnClose').addEventListener('click', closeSheet);
-  $('#sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
-  $('#tgVoice').addEventListener('click', () => { save.voice = !save.voice; if (!save.voice) stopVoice(); persist(); syncToggles(); });
-  $('#tgSound').addEventListener('click', () => { save.sound = !save.sound; persist(); syncToggles(); });
-  $('#tgAll').addEventListener('click', () => { save.all = !save.all; persist(); syncToggles(); });
-  $('#btnReset').addEventListener('click', e => {
-    const b = e.currentTarget;
-    if (!b.classList.contains('arm')) {
-      b.classList.add('arm'); $('#resetLabel').textContent = 'Toucher encore pour tout effacer';
-      clearTimeout(resetArm); resetArm = setTimeout(() => { b.classList.remove('arm'); $('#resetLabel').textContent = 'Effacer la progression'; }, 3000);
-      return;
-    }
-    clearTimeout(resetArm); b.classList.remove('arm');
-    save.stars = {}; save.all = false; persist(); syncToggles();
-    $('#resetLabel').textContent = 'Progression effacée';
-    setTimeout(() => { $('#resetLabel').textContent = 'Effacer la progression'; }, 2000);
-  });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#sheet').hidden) closeSheet(); } });
-  document.addEventListener('contextmenu', e => { if (e.target.closest('.blk, .ctr, .board')) e.preventDefault(); });
-  new ResizeObserver(fitBoard).observe($('#boardWrap'));
-  window.addEventListener('resize', placeHand);
-  $('#seqScroll').addEventListener('scroll', placeHand, { passive: true });
-  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden) { G.abort = true; show('home'); } });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stopVoice(); });
-  show('home');
-}
-wire();
-})();
