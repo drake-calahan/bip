@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#EAF3F3">
-<meta name="description" content="Bip le robot : un jeu pour initier les enfants de 5 à 7 ans à la programmation et aux petites machines, avec des blocs.">
+<meta name="description" content="Bip V3 : programme, expérimente et découvre la physique et les mathématiques dans le jardin des possibles. Dès 5 ans, sans pression.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Bip">
@@ -14,7 +14,7 @@
 <style>:root{color-scheme:light;padding-block:env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Bip le robot</title>
+<title>Bip V3 - Le jardin des possibles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Grandstander:wght@600;800&display=swap">
@@ -206,6 +206,7 @@ svg { display: block; }
 .dot.jumpdot b { border-color: var(--jump-edge); color: var(--jump-edge); }
 .paint { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; pointer-events: none; }
 .paint i { width: 46%; height: 46%; border-radius: 46% 54% 52% 48%; background: var(--pollen); opacity: .85; animation: pop .3s ease-out; box-shadow: 0 0 0 3px rgba(255, 211, 107, .25); }
+.paint.tr i { width: 26%; height: 26%; opacity: .4; box-shadow: none; }
 .splash { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); }
 .splash i { position: absolute; inset: 18%; border-radius: 50%; border: 4px solid #fff; opacity: 0; animation: ripple .9s ease-out forwards; }
 .splash i:nth-child(2) { animation-delay: .18s; }
@@ -440,6 +441,208 @@ svg { display: block; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .05s !important; }
 }
+/* V3 workbenches share the original characters, voice and touch targets. */
+#home { background: #F5FAF7; padding: 16px 20px 28px; }
+.home-in { max-width: 1120px; gap: 22px; }
+.hero { background: none; border-radius: 0; padding: 4px 12px 8px; column-gap: 28px; grid-template-columns: 170px 1fr; }
+.hero-art { width: 156px; }
+.hero h1 { font-size: 62px; line-height: 1.1; letter-spacing: 0; }
+.hero h1 small { display: inline-block; font-family: var(--text); font-size: 14px; vertical-align: middle; background: #DFF1E8; color: #287358; padding: 5px 9px; border-radius: 6px; }
+.hero .sub { font-size: 22px; color: #4C6470; }
+.hero .big-go { font-size: 18px; min-height: 44px; padding: 10px 18px; border-radius: 8px; background: #327C64; box-shadow: 0 3px 0 #24614D; }
+.hero .big-go svg { width: 21px; height: 21px; }
+.hero .big-go { max-width: 100%; text-align: left; }
+.hero .big-go > span:first-child { flex: none; }
+.lab-options small { font-size: 12px; }
+.home-tabs { display: flex; gap: 24px; border-bottom: 2px solid #D9E5DF; }
+.home-tabs button { min-height: 50px; display: flex; align-items: center; gap: 8px; padding: 8px 0 12px; font-weight: 700; color: #62756E; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+.home-tabs button.on { color: #245E4E; border-bottom-color: #327C64; }
+.home-tabs button span { font-size: 12px; background: #DFF1E8; padding: 3px 7px; border-radius: 5px; }
+.lab-hub-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.lab-hub-heading .avatar { width: 56px; height: 56px; flex: none; }
+.lab-hub-heading h2 { font-family: var(--display); font-size: 26px; margin: 0 0 3px; }
+.lab-hub-heading p { font-size: 16px; color: #61746A; margin: 0; }
+.lab-families { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.lab-family { --accent: #327C64; background: white; border: 1px solid #DCE6E0; border-radius: 8px; overflow: hidden; position: relative; }
+.family-open { display: block; text-align: left; width: 100%; }
+.family-art { height: 146px; display: block; background: var(--wash); border-bottom: 1px solid #E4EBE6; overflow: hidden; }
+.family-art svg { width: 100%; height: 100%; }
+.family-open h3 { font-family: var(--display); font-size: 21px; padding: 16px 16px 3px; margin: 0; color: var(--accent); }
+.family-open p { font-size: 14px; color: #697870; padding: 0 16px; margin: 0; min-height: 40px; }
+.family-bottom { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 14px; gap: 6px; }
+.family-levels { display: flex; gap: 4px; }
+.family-levels button { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 6px; background: #F0F4F2; font-weight: 700; font-size: 15px; }
+.family-levels button.solved { color: var(--accent); background: var(--wash); }
+.family-levels svg { width: 19px; height: 19px; }
+.family-invent { font-size: 13px; color: var(--accent); text-decoration: underline; text-underline-offset: 4px; min-height: 44px; padding: 3px; }
+.lab-home-inventions { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.lab-home-inventions h3 { font-family: var(--display); font-size: 18px; margin: 0 8px 0 0; }
+.lab-home-inventions button { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #CEDDD3; border-radius: 6px; padding: 8px 12px; background: white; min-height: 44px; font-size: 14px; }
+.lab-home-inventions button svg { width: 20px; height: 20px; }
+#journey { max-width: 760px; width: 100%; align-self: center; }
+#journey .chap { margin-top: 16px; }
+.extra-row { border-top: 1px solid #DBE5DF; padding-top: 20px; justify-content: flex-start; }
+.extra { font-size: 15px; border-radius: 8px; box-shadow: none; border: 1px solid #DCE6E0; }
+.extra.daily { box-shadow: none; border-color: #EDDDAE; }
+#lab { height: 100%; overflow-y: auto; overflow-x: hidden; padding: 16px 24px 28px; background: #F5FAF7; --accent: #327C64; --wash: #E6F5EC; }
+.lab-top, .lab-mission, .lab-workbench { max-width: 1120px; margin-inline: auto; }
+.lab-top { display: flex; align-items: center; gap: 16px; padding: 0 0 16px; }
+.lab-heading { flex: 1; min-width: 0; }
+.lab-heading > span { font-size: 13px; color: var(--accent); font-weight: 700; }
+.lab-heading h1 { font-family: var(--display); font-size: 25px; line-height: 1.15; margin: 3px 0 0; overflow-wrap: break-word; }
+.lab-levels { display: flex; gap: 6px; flex: none; }
+.lab-levels button { width: 44px; height: 44px; font-weight: 700; border-bottom: 3px solid #CFDDD5; color: #63766A; }
+.lab-levels button.on { border-bottom-color: var(--accent); color: var(--accent); background: var(--wash); }
+.lab-levels button svg { width: 21px; height: 21px; margin: auto; }
+.lab-mission { width: 100%; text-align: left; display: flex; align-items: center; gap: 16px; padding: 14px 0 18px; border-top: 1px solid #D8E4DB; font-size: 18px; }
+.lab-mission > span:first-child { width: 50px; height: 50px; flex: none; }
+.lab-mission > span:last-child { max-width: 720px; }
+.lab-workbench { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(280px, 1fr); align-items: start; gap: 28px; }
+.lab-experiment { min-width: 0; }
+.lab-scene { width: 100%; aspect-ratio: 760 / 430; background: var(--wash); overflow: hidden; border-radius: 8px; border: 1px solid #D9E4DC; position: relative; }
+.lab-scene > svg { width: 100%; height: 100%; }
+.lab-scene [data-lab-key] { cursor: pointer; }
+.lab-scene [data-lab-key]:hover { filter: brightness(.94); }
+.lab-scene [data-lab-key]:focus-visible { outline: none; stroke: #253C32; stroke-width: 4px; }
+.lab-console { border-left: 1px solid #D8E4DB; padding-left: 24px; min-width: 0; }
+.lab-control { border: 0; padding: 0; margin: 0 0 18px; min-width: 0; }
+.lab-control legend { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.lab-control legend i { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; display: inline-block; }
+.lab-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-options button { min-width: 44px; height: 44px; padding: 6px 10px; border: 1px solid #D1DED5; background: white; border-radius: 6px; font-size: 15px; font-weight: 700; }
+.lab-options button[aria-pressed="true"] { background: var(--accent); color: white; border-color: var(--accent); }
+.lab-options button svg { width: 26px; height: 26px; }
+.lab-predict { padding: 14px 0 0; margin: 2px 0 18px; border: 0; border-top: 1px solid #D8E4DB; }
+.lab-predict legend { font-size: 15px; font-weight: 700; padding: 0 8px 0 0; }
+#labPredictions { display: flex; gap: 6px; }
+.prediction { flex: 1; min-height: 64px; padding: 7px 4px; background: white; border: 1px solid #D1DED5; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; }
+.prediction svg { width: 26px; height: 26px; }
+.prediction[aria-pressed="true"] { border-color: var(--accent); background: var(--wash); color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.lab-actions { display: flex; align-items: center; gap: 8px; }
+.lab-run { background: #327C64; color: white; display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: 9px; min-height: 52px; padding: 10px 16px; border-radius: 8px; box-shadow: 0 3px 0 #24614D; font-family: var(--display); font-weight: 800; font-size: 19px; }
+.lab-run svg { width: 22px; height: 22px; }
+.lab-actions .ibtn { width: 44px; height: 44px; box-shadow: none; border: 1px solid #D1DED5; border-radius: 8px; background: white; }
+.lab-run:disabled { opacity: .65; cursor: wait; }
+.lab-feedback { min-height: 85px; padding: 18px 0 8px; font-size: 16px; line-height: 1.5; }
+.lab-feedback b { font-family: var(--display); color: var(--accent); font-size: 20px; display: block; margin-bottom: 5px; }
+.lab-feedback small { display: block; color: #63776A; font-size: 13px; margin-top: 6px; }
+.lab-follow { display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding-top: 6px; }
+.lab-next { display: flex; align-items: center; justify-content: space-between; min-height: 44px; border-top: 1px solid #D8E4DB; font-size: 15px; font-weight: 700; color: var(--accent); gap: 10px; padding: 12px 0 4px; }
+.lab-next svg { width: 22px; height: 22px; }
+.lab-invent { min-height: 44px; font-size: 14px; text-align: left; color: #64766A; }
+.lab-readings { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; min-height: 64px; align-items: center; border-bottom: 1px solid #D8E4DB; padding: 12px 0; }
+.lab-reading { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #65776A; }
+.lab-reading strong { color: var(--accent); font-size: 21px; font-family: var(--display); }
+.lab-compare { padding: 16px 0; font-size: 14px; color: #5D7265; }
+.lab-compare h3 { font-size: 14px; margin: 0 0 9px; }
+.lab-compare .compare-pair { display: grid; grid-template-columns: 1fr 28px 1fr; gap: 8px; align-items: center; }
+.lab-compare .compare-pair > div { border-left: 3px solid #D1DED5; padding-left: 10px; }
+.lab-compare .compare-pair > div:last-child { border-left-color: var(--accent); }
+.lab-compare svg { width: 20px; height: 20px; }
+.lab-compare small { display: block; font-size: 12px; color: #78877D; }
+.lab-saved { display: flex; align-items: flex-start; flex-direction: column; gap: 8px; }
+.lab-saved button { display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; font-weight: 700; color: var(--accent); }
+.lab-saved button svg { width: 21px; height: 21px; }
+.lab-saved span { font-size: 13px; color: #65776A; }
+.note-heading { display: flex; align-items: center; gap: 18px; margin: 0 0 24px; }
+.note-heading > span { width: 70px; height: 70px; }
+.note-heading h2 { font-family: var(--display); font-size: 26px; margin: 0 0 4px; }
+.note-heading p { margin: 0; color: #61746A; font-size: 15px; }
+.note-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.discovery { background: white; border: 1px solid #DCE6E0; border-radius: 8px; padding: 18px; }
+.discovery.locked { background: #EDF3EF; }
+.discovery .note-icon { color: var(--accent); width: 32px; height: 32px; margin-bottom: 12px; }
+.discovery h3 { font-family: var(--display); font-size: 19px; margin: 0 0 8px; }
+.discovery p { margin: 0; color: #61746A; font-size: 15px; min-height: 64px; line-height: 1.45; }
+.discovery button { min-height: 44px; margin-top: 12px; display: flex; align-items: center; gap: 8px; color: var(--accent); font-size: 14px; font-weight: 700; }
+.discovery button svg { width: 18px; height: 18px; }
+.lab-ray { stroke-dasharray: 1200; stroke-dashoffset: 0; }
+.lab-testing .lab-ray { animation: ray-arrive 1.2s ease-out both; }
+.lab-gear { rotate: var(--spin, 0deg); transform-box: fill-box; transform-origin: center; }
+.lab-testing .lab-gear { animation: lab-spin var(--duration, 2s) linear both; transform-box: fill-box; transform-origin: center; }
+.lab-testing .lab-beam { animation: lab-tilt 1s ease-in-out both; }
+.lab-testing .rhythm-now { animation: rhythm-pulse .45s ease-out; }
+.rhythm-scroll { height: 100%; width: 100%; overflow-x: auto; padding: 20px 14px; background: #EFF3FB; }
+.rhythm-grid { display: grid; grid-template-columns: 82px repeat(var(--ticks), minmax(30px, 1fr)); min-width: calc(82px + var(--ticks) * 30px); height: 100%; grid-template-rows: 30px repeat(3, minmax(45px, 1fr)) 36px; align-items: stretch; }
+.rhythm-label { display: flex; gap: 4px; align-items: center; justify-content: center; flex-direction: column; font-size: 12px; position: sticky; left: 0; background: #EFF3FB; z-index: 1; }
+.rhythm-label span { width: 32px; height: 32px; }
+.rhythm-label b { font-size: 12px; }
+.rhythm-label small { font-size: 10px; color: #667998; }
+.rhythm-tick { text-align: center; font-size: 12px; padding: 5px 0; color: #6A7E9E; }
+.rhythm-cell { display: grid; place-items: center; border-top: 1px solid #D9E2F0; border-left: 1px solid #E0E8F3; }
+.rhythm-cell i { display: grid; place-items: center; font-style: normal; width: 19px; height: 19px; border-radius: 50%; border: 1px solid #D5DEEB; font-size: 20px; color: var(--friend); }
+.rhythm-cell i.active { border: 0; }
+.rhythm-goal { background: #DCE8C9; }
+.rhythm-now { background: #FBF2C8; }
+.rhythm-bottom { color: #567D50; }
+.rhythm-bottom svg { width: 20px; height: 20px; }
+.rhythm-all { font-size: 11px; font-weight: 700; }
+@keyframes ray-arrive { from { stroke-dashoffset: 1200; } }
+@keyframes lab-spin { from { rotate: 0deg; } to { rotate: var(--spin, 360deg); } }
+@keyframes lab-tilt { from { transform: rotate(0deg); } to { transform: rotate(var(--tilt)); } }
+@keyframes rhythm-pulse { 50% { opacity: .6; } }
+@media (max-width: 950px) {
+  .lab-families { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .family-art { height: 160px; }
+  .lab-workbench { gap: 18px; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); }
+  .lab-console { padding-left: 18px; }
+  .note-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 690px) {
+  #home { padding: 12px 16px 24px; }
+  .home-in { gap: 18px; }
+  .hero { grid-template-columns: 112px minmax(0, 1fr); gap: 3px 14px; padding: 0 2px 4px; }
+  .hero-art { width: 102px; }
+  .hero h1 { font-size: 48px; }
+  .hero .sub { font-size: 18px; }
+  .hero .garden { min-height: 10px; }
+  .hero .big-go { font-size: 15px; padding: 10px 12px; margin-top: 4px; }
+  .home-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .home-tabs button { display: block; min-width: 0; min-height: 56px; font-size: 13px; text-align: left; }
+  .home-tabs button span { font-size: 10px; padding: 2px 4px; }
+  .lab-hub-heading { gap: 10px; }
+  .lab-hub-heading .avatar { width: 46px; height: 46px; }
+  .lab-hub-heading h2 { font-size: 23px; }
+  .lab-hub-heading p { font-size: 14px; }
+  .lab-families { gap: 12px; }
+  .family-art { height: 116px; }
+  .family-open h3 { font-size: 19px; padding: 12px 12px 4px; }
+  .family-open p { padding-inline: 12px; font-size: 12px; }
+  .family-bottom { flex-wrap: wrap; padding: 6px 8px 8px; }
+  .family-invent { min-height: 44px; }
+  #lab { padding: 10px 16px 24px; }
+  .lab-top { gap: 10px; flex-wrap: wrap; padding-bottom: 10px; }
+  .lab-heading h1 { font-size: 21px; }
+  .lab-heading > span { font-size: 12px; }
+  .lab-top > .ibtn { width: 44px; height: 44px; }
+  .lab-levels { order: 4; width: 100%; justify-content: center; }
+  .lab-levels button { height: 44px; }
+  .lab-mission { font-size: 16px; padding-block: 10px 14px; gap: 10px; }
+  .lab-mission > span:first-child { width: 38px; height: 38px; }
+  .lab-workbench { display: flex; flex-direction: column; gap: 12px; }
+  .lab-experiment, .lab-console { width: 100%; }
+  .lab-console { border-left: 0; padding-left: 0; }
+  .lab-control { margin-bottom: 14px; }
+  .lab-options button { padding-inline: 8px; }
+  .lab-readings { min-height: 54px; gap: 10px; }
+  .lab-reading { font-size: 12px; }
+  .lab-reading strong { font-size: 18px; }
+  .lab-feedback { min-height: 0; padding-top: 16px; }
+  .note-grid { grid-template-columns: 1fr; }
+  .discovery p { min-height: 0; }
+  .extra-row { gap: 8px; }
+  .extra { padding: 10px 12px; font-size: 14px; flex: 1 1 140px; }
+  .lab-compare { padding-block: 10px; }
+  .rhythm-scroll { padding: 12px 8px; }
+  .lab-scene:has(.rhythm-scroll) { aspect-ratio: auto; height: 280px; }
+}
+@media (max-width: 370px) {
+  .home-tabs { gap: 10px; }
+  .home-tabs button { font-size: 12px; }
+  .hero .sub { font-size: 16px; }
+}
+@media (max-width: 350px) { .lab-families { grid-template-columns: 1fr; } }
+
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -686,12 +889,19 @@ svg { display: block; }
     <div class="home-in">
       <header class="hero">
         <div class="hero-art" id="heroArt"></div>
-        <h1>Bip</h1>
-        <p class="sub">Programme le petit robot, construis des machines et prépare le grand pique-nique !</p>
+        <h1>Bip <small>V3</small></h1>
+        <p class="sub">Le jardin des possibles</p>
         <div class="garden" id="garden" aria-label="Jardin fleuri"></div>
         <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Continuer</span></button>
       </header>
-      <div id="journey"></div>
+      <nav class="home-tabs" aria-label="Les jardins de Bip">
+        <button id="tabLabs" aria-selected="true" class="on">Les ateliers <span id="labTotal">0/12</span></button>
+        <button id="tabJourney" aria-selected="false">L'aventure</button>
+        <button id="tabNotebook" aria-selected="false">Mes découvertes</button>
+      </nav>
+      <div id="labHub"></div>
+      <div id="journey" hidden></div>
+      <div id="notebook" hidden></div>
       <div class="extra-row">
         <button class="extra daily" id="btnDaily"><span class="eico" id="icoDaily"></span>
           <span>Le défi de Zoé<small id="dailyLabel"></small><span class="daily-dots" id="dailyDots"></span></span></button>
@@ -699,6 +909,38 @@ svg { display: block; }
         <button class="extra" id="btnAlbum"><span class="eico" id="icoAlbum"></span><span>L'album de Zoé<small id="albumCount"></small></span></button>
         <button class="extra" id="btnAdults"><span id="icoInfo"></span><span>Pour les adultes</span></button>
       </div>
+    </div>
+  </section>
+
+  <section id="lab" hidden aria-label="Atelier des possibles">
+    <header class="lab-top">
+      <button class="ibtn" id="btnLabHome" aria-label="Retour aux ateliers" title="Retour aux ateliers"></button>
+      <div class="lab-heading"><span id="labFamily"></span><h1 id="labTitle"></h1></div>
+      <div id="labLevels" class="lab-levels" aria-label="Expériences"></div>
+      <button class="ibtn" id="btnLabVoice" aria-label="Réécouter la mission" title="Réécouter la mission"></button>
+    </header>
+    <button class="lab-mission" id="labMission" aria-label="Réécouter la mission"><span id="labGuide"></span><span id="labText"></span></button>
+    <div class="lab-workbench">
+      <div class="lab-experiment">
+        <div class="lab-scene" id="labScene"></div>
+        <div id="labReadings" class="lab-readings" aria-live="polite"></div>
+        <div id="labCompare" class="lab-compare" hidden></div>
+      </div>
+      <aside class="lab-console" aria-label="Réglages de l'expérience">
+        <div id="labControls"></div>
+        <fieldset class="lab-predict"><legend>Je pense que…</legend><div id="labPredictions"></div></fieldset>
+        <div class="lab-actions">
+          <button id="btnLabRun" class="lab-run"></button>
+          <button id="btnLabReset" class="ibtn" aria-label="Recommencer l'expérience" title="Recommencer l'expérience"></button>
+          <button id="btnLabHint" class="ibtn" aria-label="Un petit indice" title="Un petit indice"></button>
+        </div>
+        <div class="lab-feedback" id="labFeedback" aria-live="polite"></div>
+        <div class="lab-follow" id="labFollow" hidden>
+          <button class="lab-next" id="btnLabNext"></button>
+          <button class="lab-invent" id="btnLabInvent">Mon invention</button>
+        </div>
+        <div id="labSaved" class="lab-saved" hidden><button id="btnLabSave"></button><span id="labSaveStatus" aria-live="polite"></span></div>
+      </aside>
     </div>
   </section>
 
@@ -784,9 +1026,11 @@ svg { display: block; }
   <div class="sheet-card" role="dialog" aria-labelledby="sheetTitle">
     <button class="ibtn close" id="btnClose" aria-label="Fermer"></button>
     <h2 id="sheetTitle">Pour les adultes</h2>
-    <p>Bip initie les enfants de 5 à 7 ans à la pensée algorithmique et aux premières machines : prévoir une suite d'instructions, la lancer, observer, corriger — puis construire un petit système qui fonctionne.</p>
+    <p>Bip accompagne les 5–7 ans dans la programmation, la physique et les mathématiques. Dans les ateliers V3, l'enfant prévoit un résultat, teste son idée et compare ses essais. Les prédictions restent facultatives et chaque essai est bienvenu.</p>
     <h3>Ce que l'enfant travaille</h3>
     <ul>
+      <li><b>V3 — Le jardin des possibles</b> : 12 expériences d'équilibre, de lumière, d'engrenages et de rythmes. Chaque famille se prolonge en exploration libre et les découvertes sont conservées sur cet appareil.</li>
+      <li><b>Des modèles simples</b> : équilibre idéal sans frottements, lumière sur quadrillage, roues dentées idéales et rythmes à pas fixes. Les formules restent dans le document de conception pour l'adulte.</li>
       <li>Se repérer sur un quadrillage, coder un déplacement (flèches, puis repère relatif au chapitre 5).</li>
       <li>Séquence, boucle (Répéter, chapitre 4), boucle conditionnelle (Jusqu'à, chapitre 7), condition (Si… sinon, chapitre 8), fonction (bloc magique, chapitre 9), débogage (chapitre 14).</li>
       <li><b>Nouveauté v2 — l'état des machines</b> : les champignons ouvrent les barrières (chapitre 10) et les caisses se déplacent ou deviennent des ponts (chapitre 11). L'enfant découvre qu'une action modifie le monde pour la suite du programme.</li>
@@ -1300,14 +1544,14 @@ const LEVELS = [
   // Chapitre 5 — Le chemin de Zoé (repère relatif)
   { ch: 4, pal: REL, face: 'u', map: ['..b..', '.....', '.....', '..R..'],
     text: 'Nouveaux blocs ! Avance fait aller Bip tout droit, là où il regarde. Ici, il regarde vers le haut.' },
-  { ch: 4, pal: REL, face: 'r', map: ['....n', '.....', 'R....'],
-    text: 'Tourner fait pivoter Bip sur place, sans avancer. Tourne-le, puis avance.' },
+  { ch: 4, pal: REL, face: 'r', map: ['..n..', '.....', '..R..'],
+    text: 'Nouveau bloc : Tourner. Bip pivote sur place, sans avancer. Le nounours est juste au-dessus !' },
+  { ch: 4, pal: REL, face: 'r', map: ['.n...', '..R..', '.....'],
+    text: 'Deux virages ! Tourne, avance, tourne encore et avance jusqu\'au nounours.' },
   { ch: 4, pal: [...REL, 'j'], face: 'd', map: ['..b..', '..~..', '..R..', '.....'],
     text: 'Le ballon est derrière Bip ! Demi-tour, puis saute la flaque.' },
   { ch: 4, pal: REL, face: 'r', map: ['R.##.', '#.#..', '#t..b'],
-    text: 'Un chemin en zigzag. Imagine que tu es Bip : à gauche ou à droite ?' },
-  { ch: 4, pal: REL, face: 'u', map: ['..t..', '.#.#.', '.~R~.', '.#.#.', '..n..'],
-    text: 'Sors de la mare et ramasse les deux jouets. Imagine que tu es Bip !' },
+    text: 'Le grand zigzag du buisson : imagine que tu es Bip, à gauche ou à droite ?' },
   // Chapitre 6 — La mare de Lulu (nénuphars)
   { ch: 5, pal: ARROWS, map: ['R--b.'],
     text: 'Bienvenue chez Lulu ! Les nénuphars coulent quand Bip les quitte. Va chercher le ballon.' },
@@ -1318,7 +1562,7 @@ const LEVELS = [
   { ch: 5, pal: ARROWS, sol: 'r r r r d d l l', map: ['R---b', '~~~~.', '..K..'],
     text: 'La grande traversée : les nénuphars sont le seul chemin. Au coffre !' },
   { ch: 5, pal: [...ARROWS, 'loop'], max: 7, sol: 'N5(r) d d l l', map: ['R--.-b', '~~~...', '...K..'],
-    text: 'Que de nénuphars ! Un bloc Répéter et Bip saute de feuille en feuille.' },
+    text: 'Que de nénuphars ! Le bloc Répéter fait traverser Bip feuille à feuille.' },
   // Chapitre 7 — Jusqu'au bout (boucle conditionnelle)
   { ch: 6, pal: [...REL, 'while'], max: 2, sol: 'Wo(f)', map: ['.......', 'R.....b', '.......'],
     text: 'Nouveau : Répéter jusqu\'à. Bip répète jusqu\'à ce qu\'un obstacle soit devant lui. Ici, le bord du jardin.' },
@@ -1421,7 +1665,7 @@ const LEVELS = [
   { ch: 10, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.n.'],
     text: 'Pousse la caisse sur le champignon : elle reste appuyée dessus et la barrière s\'ouvre !' },
   { ch: 10, pal: ARROWS, sol: 'r r r r r', map: ['RC~.bK', '#....#', '......'],
-    text: 'Le grand pont ! Pousse la caisse dans l\'eau, traverse, ramasse tout et range au coffre.' },
+    text: 'Le grand pont ! Pousse la caisse dans l\'eau : elle flotte. Ramasse tout et range au coffre.' },
   // Chapitre 12 — Le pollen doré (peinture)
   { ch: 11, pal: ARROWS, map: ['R***'],
     text: 'Regarde : Bip laisse du pollen doré là où il marche ! Couvre toutes les fleurs.' },
@@ -1430,7 +1674,7 @@ const LEVELS = [
   { ch: 11, pal: ARROWS, map: ['R.*b.', '*....'],
     text: 'Jouet et fleurs : ramasse le ballon et couvre toutes les fleurs.' },
   { ch: 11, pal: ARROWS, map: ['..#..', '*.#.*', '.....', 'R.#..'],
-    text: 'Le miroir : deux fleurs jumelles, une de chaque côté du mur !' },
+    text: 'Deux fleurs, une de chaque côté du grand mur : fais le tour pour tout peindre !' },
   { ch: 11, pal: ['r', 'loop'], max: 2, sol: 'N7(r)', map: ['R*******'],
     text: 'Une allée de fleurs et une seule pile ! Le bloc Répéter peint tout.' },
   // Chapitre 13 — Les toboggans de Ballon (mode toboggan)
@@ -1440,13 +1684,13 @@ const LEVELS = [
     text: 'Deux flèches pour contourner le buisson.' },
   { ch: 12, mode: 'ball', face: 'd', map: ['S##..', '...#.', '..N..'], tiles: ['0,1,r', '1,1,d', '1,2,r'],
     text: 'Un vrai petit labyrinthe pour Ballon.' },
-  { ch: 12, mode: 'ball', face: 'r', map: ['S.#..', '...#.', '.N...'], tiles: ['1,0,d', '1,1,r', '2,1,d', '2,2,l'],
-    text: 'Quatre flèches ! Vérifie bien chaque virage avant de lancer.' },
   { ch: 12, mode: 'ball', face: 'r', map: ['S....', '###.#', '..N..'], tiles: ['3,0,d', '3,1,d', '3,2,l'],
-    text: 'Le grand toboggan de Ballon : descends jusqu\'au nid !' },
+    text: 'Le grand toboggan : descends jusqu\'au nid !' },
+  { ch: 12, mode: 'ball', face: 'r', map: ['S.#..', '...#.', '.N...'], tiles: ['1,0,d', '1,1,r', '2,1,d', '2,2,l'],
+    text: 'Le grand défi de Ballon : quatre flèches pour trouver le nid !' },
   // Chapitre 14 — L'atelier de Pilou (détective)
-  { ch: 13, pal: ARROWS, sol: 'r d d r r r u', start: 'd r r r r u', map: ['R.#..', '..#.a', '.....', 'o....'],
-    text: 'Pilou a mélangé un programme ! Lance-le, regarde où ça coince, puis corrige-le.' },
+  { ch: 13, pal: ARROWS, sol: 'd r', start: 'r r d', map: ['R#.', '.a.', '...'],
+    text: 'Pilou a mélangé un programme ! Lance-le, regarde où Bip se cogne, puis corrige-le.' },
   { ch: 13, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', start: 'N3(r) N4(d)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', '....n'],
     text: 'Ce programme s\'arrête trop tôt. Quel nombre faut-il changer ?' },
   { ch: 13, pal: [...REL, 'j', 'while', 'if'], max: 4, sol: 'Wo(Ip(j|f))', start: 'Wo(Ip(f|j))',
@@ -1459,7 +1703,7 @@ const LEVELS = [
   { ch: 13, pal: ARROWS, sol: 'r r r r', start: 'r r d d', map: ['RC.~b', '##.##'],
     text: 'Pilou a poussé trop loin : Bip est bloqué ! Enlève ce qui dépasse.' },
   { ch: 13, pal: [...ARROWS, 'j'], sol: 'r r r', start: 'j r', map: ['R*.*'],
-    text: 'Pilou a remplacé des flèches par un saut : la première fleur reste blanche !' },
+    text: 'Pilou a remplacé des flèches par un saut : la première fleur reste blanche ! Répare le programme.' },
 
   /* ============ Monde 4 — Le jardin de nuit ============ */
   // Chapitre 15 — Les lucioles de Noctule (récapitulatif de nuit)
@@ -1488,9 +1732,9 @@ const LEVELS = [
       ['R..#.', '##.#.', '##.#.', 'e..#.', '####.'],
       ['R....', '####.', '...#.', '.#.#.', '#e...'],
     ],
-    text: 'L\'escargot de nuit : répète jusqu\'à avoir toutes les lucioles.' },
-  { ch: 15, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.n.'],
-    text: 'Un pont, une barrière, une luciole : l\'atelier de Grand-Papa pour de vrai.' },
+    text: 'L\'escargot de nuit : répète jusqu\'à avoir la luciole.' },
+  { ch: 15, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.e.'],
+    text: 'Une caisse, un champignon, une barrière et une luciole : l\'atelier de Grand-Papa pour de vrai.' },
   { ch: 15, pal: [...REL, 'j', 'while', 'if', 'star'], max: 8, sol: 'Wo(*) tr Wo(*)', fn: 'Ip(j|f)',
     variants: [
       ['R..~.e', '......', '.....~', '.....t'],
@@ -1504,8 +1748,8 @@ const LEVELS = [
     text: 'LE GRAND FINAL ! Ramasse tout et range dans le coffre. Tous tes blocs sont là. Bon courage, champion !' },
 
   /* ============ Les défis de Zoé (un par jour de la semaine) ============ */
-  { ch: -1, daily: true, pal: ARROWS, map: ['.....', 'b.R.c', '.....'],
-    text: 'Défi de Zoé : un jouet de chaque côté, lequel d\'abord ?' },
+  { ch: -1, daily: true, pal: ARROWS, map: ['bRc.'],
+    text: 'Défi de Zoé : un jouet de chaque côté. Lequel ramasses-tu en premier ?' },
   { ch: -1, daily: true, pal: [...ARROWS, 'j'], map: ['..R..', '.....', '~~~~~', '.....', '..t..'],
     text: 'Défi de Zoé : fais d\'abord regarder Bip vers le bas, puis saute la rivière.' },
   { ch: -1, daily: true, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', map: ['R...n', '.~~~.', '.~o~.', '.~~~.', '....a'],
@@ -1527,9 +1771,335 @@ const LEVELS = [
 LEVELS.forEach((l, i) => { l.id = i + 1; });
 
 
+/* Bip v3: small, exact models for experimenting before naming the rule.
+   Balance: torque = mass * distance. Mirrors: angle in = angle out on a grid.
+   Meshing gears: tooth counts * turns agree, and directions alternate.
+   Cycles: a friend acts when tick % period equals its phase. */
+const LAB_FAMILIES = [
+  { id: 'balance', name: 'Les équilibres', subtitle: 'Le poids et la distance', who: 'papi', accent: '#3f8b78', icon: 'scale' },
+  { id: 'light', name: 'Les chemins de lumière', subtitle: 'Des miroirs et des surprises', who: 'noctule', accent: '#d69b25', icon: 'sun' },
+  { id: 'gears', name: 'Les roues complices', subtitle: 'Tourner, ralentir, transmettre', who: 'papi', accent: '#cf745f', icon: 'cog' },
+  { id: 'rhythm', name: 'Le rendez-vous', subtitle: 'Des rythmes qui se rencontrent', who: 'zoe', accent: '#667bb7', icon: 'music' }
+];
+
+function labOptions(values, label) {
+  return values.map(value => ({ value, label: label(value) }));
+}
+
+const LAB_LEVELS = [
+  {
+    id: 'balance-1', family: 'balance', title: 'Les deux paniers', difficulty: 1,
+    text: 'Le gros panier penche ! Trouve la place du petit panier pour équilibrer la planche.',
+    discovery: 'Un petit poids, plus loin du centre, peut équilibrer un gros poids.',
+    controls: [{ key: 'small', label: 'Petit panier', options: labOptions([1, 2, 3], n => 'Case ' + n + ' à droite') }],
+    initial: { small: 1 }, solution: { small: 2 }, solutionCount: 1,
+    scene: { positions: [-4, -3, -2, -1, 1, 2, 3, 4], weights: [{ id: 'big', mass: 2, position: -1 }, { id: 'small', mass: 1, control: 'small' }] },
+    goal: { balance: true }
+  },
+  {
+    id: 'balance-2', family: 'balance', title: 'Près ou loin ?', difficulty: 2,
+    text: 'Le petit panier est tout au bout. Où placer le gros panier pour tenir la planche droite ?',
+    discovery: 'Deux fois plus lourd et deux fois plus près : les deux côtés tirent autant.',
+    controls: [{ key: 'big', label: 'Gros panier', options: labOptions([1, 2, 3], n => 'Case ' + n + ' à droite') }],
+    initial: { big: 3 }, solution: { big: 2 }, solutionCount: 1,
+    scene: { positions: [-4, -3, -2, -1, 1, 2, 3, 4], weights: [{ id: 'small', mass: 1, position: -4 }, { id: 'big', mass: 2, control: 'big' }] },
+    goal: { balance: true }
+  },
+  {
+    id: 'balance-3', family: 'balance', title: 'Deux amis sur la planche', difficulty: 3,
+    text: 'Deux petits paniers à gauche, un gros à droite. Trouve leur rendez-vous en équilibre.',
+    discovery: 'Les poids du même côté s\'additionnent, avec leur distance au centre.',
+    controls: [
+      { key: 'left', label: 'Petit panier mobile', options: labOptions([-2, -3, -4], n => 'Case ' + Math.abs(n) + ' à gauche') },
+      { key: 'right', label: 'Gros panier mobile', options: labOptions([1, 2, 3], n => 'Case ' + n + ' à droite') }
+    ],
+    initial: { left: -2, right: 1 }, solution: { left: -3, right: 2 }, solutionCount: 1,
+    scene: { positions: [-4, -3, -2, -1, 1, 2, 3, 4], weights: [{ id: 'fixed', mass: 1, position: -1 }, { id: 'left', mass: 1, control: 'left' }, { id: 'right', mass: 2, control: 'right' }] },
+    goal: { balance: true }
+  },
+  {
+    id: 'light-1', family: 'light', title: 'Un rayon qui tourne', difficulty: 1,
+    text: 'La lumière veut rejoindre la luciole. Tourne le miroir pour lui ouvrir le chemin.',
+    discovery: 'Le miroir change le chemin de la lumière.',
+    controls: [{ key: 'mirror', label: 'Miroir', options: [{ value: '/', label: 'Miroir /' }, { value: '\\', label: 'Miroir \\' }] }],
+    initial: { mirror: '\\' }, solution: { mirror: '/' }, solutionCount: 1,
+    scene: { width: 5, height: 5, source: { x: 0, y: 2, dir: 'r' }, mirrors: [{ x: 2, y: 2, control: 'mirror' }], splitters: [], targets: [{ id: 'firefly', x: 2, y: 0 }], walls: [] },
+    goal: { targets: ['firefly'] }
+  },
+  {
+    id: 'light-2', family: 'light', title: 'Le détour lumineux', difficulty: 2,
+    text: 'La luciole attend après deux virages. Fais voyager le rayon jusqu\'à elle.',
+    discovery: 'Deux petits virages peuvent faire un grand détour.',
+    controls: [
+      { key: 'first', label: 'Premier miroir', options: [{ value: '/', label: 'Miroir /' }, { value: '\\', label: 'Miroir \\' }] },
+      { key: 'second', label: 'Deuxième miroir', options: [{ value: '/', label: 'Miroir /' }, { value: '\\', label: 'Miroir \\' }] }
+    ],
+    initial: { first: '\\', second: '/' }, solution: { first: '/', second: '/' }, solutionCount: 1,
+    scene: { width: 6, height: 5, source: { x: 0, y: 3, dir: 'r' }, mirrors: [{ x: 2, y: 3, control: 'first' }, { x: 2, y: 1, control: 'second' }], splitters: [], targets: [{ id: 'firefly', x: 5, y: 1 }], walls: [] },
+    goal: { targets: ['firefly'] }
+  },
+  {
+    id: 'light-3', family: 'light', title: 'Un rayon, deux invitations', difficulty: 3,
+    text: 'Le cristal partage la lumière. Guide les deux rayons vers les deux lucioles.',
+    discovery: 'Un chemin peut se partager en deux chemins : chaque miroir compte.',
+    controls: [
+      { key: 'top', label: 'Miroir du haut', options: [{ value: '/', label: 'Miroir /' }, { value: '\\', label: 'Miroir \\' }] },
+      { key: 'bottom', label: 'Miroir du bas', options: [{ value: '/', label: 'Miroir /' }, { value: '\\', label: 'Miroir \\' }] }
+    ],
+    initial: { top: '\\', bottom: '\\' }, solution: { top: '/', bottom: '\\' }, solutionCount: 1,
+    scene: { width: 6, height: 5, source: { x: 0, y: 2, dir: 'r' }, mirrors: [{ x: 2, y: 0, control: 'top' }, { x: 2, y: 4, control: 'bottom' }], splitters: [{ x: 2, y: 2 }], targets: [{ id: 'top', x: 5, y: 0 }, { id: 'bottom', x: 5, y: 4 }], walls: [] },
+    goal: { targets: ['top', 'bottom'] }
+  },
+  {
+    id: 'gears-1', family: 'gears', title: 'Les roues se repondent', difficulty: 1,
+    text: 'Bip fait un tour. Choisis la roue qui fait aussi un tour, dans l\'autre sens.',
+    discovery: 'Deux roues qui se touchent tournent en sens contraire.',
+    controls: [{ key: 'output', label: 'Roue de Zoé', options: labOptions([6, 12, 24], n => n + ' dents') }],
+    initial: { output: 24 }, solution: { output: 12 }, solutionCount: 1,
+    scene: { input: { id: 'bip', teeth: 12, turns: 1, direction: 1 }, gears: [{ id: 'zoe', control: 'output' }] },
+    goal: { turns: { numerator: 1, denominator: 1 }, direction: -1 }
+  },
+  {
+    id: 'gears-2', family: 'gears', title: 'La petite roue pressée', difficulty: 2,
+    text: 'Bip fait un tour, Zoé en veut deux. Quelle roue lui donner ?',
+    discovery: 'Une roue deux fois plus petite tourne deux fois plus vite.',
+    controls: [{ key: 'output', label: 'Roue de Zoé', options: labOptions([6, 12, 24], n => n + ' dents') }],
+    initial: { output: 12 }, solution: { output: 6 }, solutionCount: 1,
+    scene: { input: { id: 'bip', teeth: 12, turns: 1, direction: 1 }, gears: [{ id: 'zoe', control: 'output' }] },
+    goal: { turns: { numerator: 2, denominator: 1 }, direction: -1 }
+  },
+  {
+    id: 'gears-3', family: 'gears', title: 'La roue messagère', difficulty: 3,
+    text: 'Une roue fait le lien entre Bip et Zoé. Fais-leur faire un tour dans le même sens.',
+    discovery: 'La roue du milieu change le sens, mais pas la vitesse finale. Essaie une autre taille !',
+    controls: [
+      { key: 'middle', label: 'Roue messagère', options: labOptions([6, 12, 24], n => n + ' dents') },
+      { key: 'output', label: 'Roue de Zoé', options: labOptions([6, 12, 24], n => n + ' dents') }
+    ],
+    initial: { middle: 12, output: 24 }, solution: { middle: 6, output: 12 }, solutionCount: 3,
+    scene: { input: { id: 'bip', teeth: 12, turns: 1, direction: 1 }, gears: [{ id: 'message', control: 'middle' }, { id: 'zoe', control: 'output' }] },
+    goal: { turns: { numerator: 1, denominator: 1 }, direction: 1 }
+  },
+  {
+    id: 'rhythm-1', family: 'rhythm', title: 'Main dans la main', difficulty: 1,
+    text: 'Bip et Zoé font coucou tous les trois pas. Aide-les à le faire ensemble au pas 3.',
+    discovery: 'Deux rythmes pareils se rencontrent quand ils partent ensemble.',
+    controls: [{ key: 'zoe', label: 'Départ de Zoé', options: labOptions([0, 1, 2], n => 'Pas ' + n) }],
+    initial: { zoe: 1 }, solution: { zoe: 0 }, solutionCount: 1,
+    scene: { cycles: [{ id: 'bip', period: 3, phase: 0 }, { id: 'zoe', period: 3, control: 'zoe' }], horizon: 6 },
+    goal: { targetTicks: [0, 3, 6], focusTick: 3 }
+  },
+  {
+    id: 'rhythm-2', family: 'rhythm', title: 'Deux pas, trois pas', difficulty: 2,
+    text: 'Bip salue tous les deux pas, Zoé tous les trois. Prépare leur coucou ensemble au pas 4.',
+    discovery: 'Deux pas et trois pas se retrouvent tous les six pas.',
+    controls: [{ key: 'zoe', label: 'Départ de Zoé', options: labOptions([0, 1, 2], n => 'Pas ' + n) }],
+    initial: { zoe: 0 }, solution: { zoe: 1 }, solutionCount: 1,
+    scene: { cycles: [{ id: 'bip', period: 2, phase: 0 }, { id: 'zoe', period: 3, control: 'zoe' }], horizon: 12 },
+    goal: { targetTicks: [4, 10], focusTick: 4 }
+  },
+  {
+    id: 'rhythm-3', family: 'rhythm', title: 'Le trio du pique-nique', difficulty: 3,
+    text: 'Trois amis suivent trois rythmes. Fais-les se retrouver au pas 6 pour le pique-nique.',
+    discovery: 'Deux, trois et quatre pas retrouvent le même rendez-vous tous les douze pas.',
+    controls: [
+      { key: 'zoe', label: 'Départ de Zoé', options: labOptions([0, 1, 2, 3], n => 'Pas ' + n) },
+      { key: 'lulu', label: 'Départ de Lulu', options: labOptions([0, 1], n => 'Pas ' + n) }
+    ],
+    initial: { zoe: 0, lulu: 1 }, solution: { zoe: 2, lulu: 0 }, solutionCount: 1,
+    scene: { cycles: [{ id: 'bip', period: 3, phase: 0 }, { id: 'zoe', period: 4, control: 'zoe' }, { id: 'lulu', period: 2, control: 'lulu' }], horizon: 18 },
+    goal: { targetTicks: [6, 18], focusTick: 6 }
+  }
+];
+
+function labGcd(a, b) {
+  while (b) { const next = a % b; a = b; b = next; }
+  return a;
+}
+
+function labFraction(numerator, denominator) {
+  const divisor = labGcd(Math.abs(numerator), Math.abs(denominator));
+  return { numerator: numerator / divisor, denominator: denominator / divisor };
+}
+
+function normalizeLabSetup(level, setup) {
+  const normalized = {};
+  for (const control of level.controls || []) {
+    const value = setup && Object.prototype.hasOwnProperty.call(setup, control.key) ? setup[control.key] : level.initial[control.key];
+    if (!control.options.some(option => option.value === value)) return null;
+    normalized[control.key] = value;
+  }
+  return normalized;
+}
+
+function labBalance(level, setup) {
+  const weights = level.scene.weights.map(weight => ({ id: weight.id, mass: weight.mass, position: weight.control ? setup[weight.control] : weight.position }));
+  if (weights.some(weight => !Number.isSafeInteger(weight.mass) || weight.mass <= 0 || !Number.isSafeInteger(weight.position) || weight.position === 0)) throw new Error('Invalid balance model');
+  const leftTorque = weights.reduce((sum, weight) => sum + (weight.position < 0 ? weight.mass * -weight.position : 0), 0);
+  const rightTorque = weights.reduce((sum, weight) => sum + (weight.position > 0 ? weight.mass * weight.position : 0), 0);
+  const outcome = leftTorque === rightTorque ? 'balanced' : leftTorque > rightTorque ? 'left' : 'right';
+  const success = outcome === 'balanced';
+  return {
+    success,
+    feedback: success ? 'La planche est en équilibre !' : 'La planche penche à ' + (outcome === 'left' ? 'gauche.' : 'droite.'),
+    observations: [success ? level.discovery : 'Observe le poids et sa distance au centre.'],
+    steps: weights.map(weight => ({ kind: 'weight', id: weight.id, mass: weight.mass, position: weight.position, torque: weight.mass * Math.abs(weight.position) })),
+    metrics: { outcome, weights, leftTorque, rightTorque, delta: rightTorque - leftTorque }
+  };
+}
+
+const LAB_RAY_DIRECTIONS = { r: [1, 0], d: [0, 1], l: [-1, 0], u: [0, -1] };
+const LAB_REFLECTIONS = { '/': { r: 'u', u: 'r', l: 'd', d: 'l' }, '\\': { r: 'd', d: 'r', l: 'u', u: 'l' } };
+const LAB_RAY_LEFT = { r: 'u', u: 'l', l: 'd', d: 'r' };
+const LAB_RAY_RIGHT = { r: 'd', d: 'l', l: 'u', u: 'r' };
+
+function labLight(level, setup) {
+  const scene = level.scene;
+  if (!Number.isSafeInteger(scene.width) || !Number.isSafeInteger(scene.height) || scene.width < 1 || scene.height < 1 || scene.width > 8 || scene.height > 6 || !LAB_RAY_DIRECTIONS[scene.source.dir]) throw new Error('Invalid light model');
+  const cellKey = cell => cell.x + ',' + cell.y;
+  const occupied = new Set();
+  for (const cell of [scene.source, ...(scene.mirrors || []), ...(scene.splitters || []), ...(scene.targets || []), ...(scene.walls || [])]) {
+    if (!Number.isSafeInteger(cell.x) || !Number.isSafeInteger(cell.y) || cell.x < 0 || cell.y < 0 || cell.x >= scene.width || cell.y >= scene.height || occupied.has(cellKey(cell))) throw new Error('Invalid light cell');
+    occupied.add(cellKey(cell));
+  }
+  const mirrors = new Map((scene.mirrors || []).map(mirror => [cellKey(mirror), mirror.control ? setup[mirror.control] : mirror.orientation]));
+  if ([...mirrors.values()].some(value => !LAB_REFLECTIONS[value])) throw new Error('Invalid mirror');
+  const splitters = new Set((scene.splitters || []).map(cellKey));
+  const walls = new Set((scene.walls || []).map(cellKey));
+  const targets = new Map((scene.targets || []).map(target => [cellKey(target), target.id]));
+  const queue = [{ x: scene.source.x, y: scene.source.y, dir: scene.source.dir, branch: 0 }];
+  const visited = new Set(), hits = new Set(), trace = [], steps = [], edges = new Map();
+  let nextBranch = 1, merges = 0;
+  // Identical directed rays have identical futures. Merging them bounds the
+  // search to four states per cell even when a crystal feeds another crystal.
+  for (let cursor = 0; cursor < queue.length; cursor++) {
+    const ray = queue[cursor];
+    const state = ray.x + ',' + ray.y + ',' + ray.dir;
+    if (visited.has(state)) { merges++; steps.push({ kind: 'merge', at: [ray.x, ray.y], branch: ray.branch }); continue; }
+    visited.add(state);
+    edges.set(state, []);
+    const [dx, dy] = LAB_RAY_DIRECTIONS[ray.dir];
+    const x = ray.x + dx, y = ray.y + dy;
+    const outside = x < 0 || y < 0 || x >= scene.width || y >= scene.height;
+    const segment = { from: [ray.x, ray.y], to: [x, y], dir: ray.dir, branch: ray.branch, outside };
+    trace.push(segment);
+    steps.push({ kind: 'ray', ...segment });
+    if (outside) continue;
+    const key = x + ',' + y;
+    if (walls.has(key)) { steps.push({ kind: 'blocked', at: [x, y], branch: ray.branch }); continue; }
+    if (targets.has(key)) { hits.add(targets.get(key)); steps.push({ kind: 'light', id: targets.get(key), at: [x, y], branch: ray.branch }); continue; }
+    if (splitters.has(key)) {
+      steps.push({ kind: 'split', at: [x, y], branch: ray.branch });
+      const children = [{ x, y, dir: LAB_RAY_LEFT[ray.dir], branch: nextBranch++ }, { x, y, dir: LAB_RAY_RIGHT[ray.dir], branch: nextBranch++ }];
+      edges.set(state, children.map(child => child.x + ',' + child.y + ',' + child.dir));
+      queue.push(...children);
+    } else {
+      const dir = mirrors.has(key) ? LAB_REFLECTIONS[mirrors.get(key)][ray.dir] : ray.dir;
+      if (mirrors.has(key)) steps.push({ kind: 'reflect', at: [x, y], fromDir: ray.dir, dir, branch: ray.branch });
+      edges.set(state, [x + ',' + y + ',' + dir]);
+      queue.push({ x, y, dir, branch: ray.branch });
+    }
+  }
+  const hitTargets = (scene.targets || []).map(target => target.id).filter(id => hits.has(id));
+  const wanted = level.goal.targets || (scene.targets || []).map(target => target.id);
+  const success = wanted.every(id => hits.has(id));
+  const outcome = success ? 'all' : hitTargets.length ? 'some' : 'none';
+  const complete = new Set(), visiting = new Set();
+  let loops = 0;
+  const findCycles = state => {
+    if (visiting.has(state)) { loops++; return; }
+    if (complete.has(state)) return;
+    visiting.add(state);
+    for (const next of edges.get(state) || []) findCycles(next);
+    visiting.delete(state);
+    complete.add(state);
+  };
+  for (const state of edges.keys()) findCycles(state);
+  return {
+    success,
+    feedback: success ? 'Toutes les lucioles brillent !' : hitTargets.length ? 'Une partie des lucioles brillent déjà.' : 'Le rayon cherche encore les lucioles.',
+    observations: [success ? level.discovery : 'Suis le rayon jusqu\'au premier virage.'],
+    steps,
+    metrics: { outcome, trace, segments: trace, hitTargets, loops, merges, mirrors: (scene.mirrors || []).map(mirror => ({ ...mirror, orientation: mirrors.get(cellKey(mirror)) })) }
+  };
+}
+
+function labGears(level, setup) {
+  const input = level.scene.input;
+  if (!Number.isSafeInteger(input.teeth) || input.teeth <= 0 || !Number.isSafeInteger(input.turns) || input.turns < 1 || ![1, -1].includes(input.direction)) throw new Error('Invalid input gear');
+  const gears = [{ id: input.id, teeth: input.teeth, turns: input.turns, signedTurns: input.turns * input.direction, direction: input.direction, fraction: { numerator: input.turns, denominator: 1 } }];
+  for (const gear of level.scene.gears) {
+    const teeth = gear.control ? setup[gear.control] : gear.teeth;
+    if (!Number.isSafeInteger(teeth) || teeth <= 0) throw new Error('Invalid gear teeth');
+    const previous = gears[gears.length - 1];
+    const fraction = labFraction(previous.fraction.numerator * previous.teeth, previous.fraction.denominator * teeth);
+    const turns = fraction.numerator / fraction.denominator;
+    gears.push({ id: gear.id, teeth, turns, signedTurns: turns * -previous.direction, direction: -previous.direction, fraction });
+  }
+  const output = gears[gears.length - 1];
+  const goal = level.goal.turns;
+  if (!Number.isSafeInteger(goal.numerator) || goal.numerator < 0 || !Number.isSafeInteger(goal.denominator) || goal.denominator < 1 || ![1, -1].includes(level.goal.direction)) throw new Error('Invalid gear goal');
+  const success = output.fraction.numerator * goal.denominator === goal.numerator * output.fraction.denominator && output.direction === level.goal.direction;
+  const outcome = output.fraction.numerator === input.turns * output.fraction.denominator ? 'same' : output.fraction.numerator > input.turns * output.fraction.denominator ? 'fast' : 'slow';
+  return {
+    success,
+    feedback: success ? 'Les roues ont trouvé leur rythme !' : outcome === 'fast' ? 'La dernière roue va plus vite que Bip.' : outcome === 'slow' ? 'La dernière roue va plus lentement que Bip.' : 'La dernière roue va aussi vite que Bip.',
+    observations: [success ? level.discovery : 'Compte ses tours, puis regarde dans quel sens elle tourne.'],
+    steps: gears.map(gear => ({ kind: 'gear', ...gear })),
+    metrics: { outcome, gears, outputTurns: output.turns, signedOutputTurns: output.signedTurns, direction: output.direction, outputFraction: output.fraction }
+  };
+}
+
+function labRhythm(level, setup) {
+  const cycles = level.scene.cycles.map(cycle => ({ id: cycle.id, period: cycle.period, phase: cycle.control ? setup[cycle.control] : cycle.phase }));
+  if (!cycles.length || !Number.isSafeInteger(level.scene.horizon) || level.scene.horizon < 0 || level.scene.horizon > 256 || cycles.some(cycle => !Number.isSafeInteger(cycle.period) || cycle.period <= 0 || !Number.isSafeInteger(cycle.phase) || cycle.phase < 0 || cycle.phase >= cycle.period)) throw new Error('Invalid rhythm model');
+  const timeline = [];
+  for (let tick = 0; tick <= level.scene.horizon; tick++) {
+    const active = cycles.filter(cycle => tick % cycle.period === cycle.phase).map(cycle => cycle.id);
+    timeline.push({ tick, active, together: active.length === cycles.length });
+  }
+  const togetherTicks = timeline.filter(frame => frame.together).map(frame => frame.tick);
+  const targetTicks = level.goal.targetTicks;
+  const success = togetherTicks.length === targetTicks.length && togetherTicks.every((tick, index) => tick === targetTicks[index]);
+  const focusTick = level.goal.focusTick == null ? targetTicks[0] : level.goal.focusTick;
+  const outcome = togetherTicks.includes(focusTick) ? 'together' : 'apart';
+  const repeatEvery = cycles.reduce((repeat, cycle) => repeat * cycle.period / labGcd(repeat, cycle.period), 1);
+  return {
+    success,
+    feedback: success ? 'Tout le monde se retrouve au bon moment !' : 'Les amis cherchent encore leur rendez-vous.',
+    observations: [success ? level.discovery : 'Regarde les pas ou chaque ami fait coucou.'],
+    steps: timeline.map(frame => ({ kind: 'tick', ...frame })),
+    metrics: { outcome, cycles, timeline, togetherTicks, targetTicks: targetTicks.slice(), focusTick, repeatEvery, anyTogether: togetherTicks.length > 0 }
+  };
+}
+
+function evaluateLab(level, setup) {
+  if (!level || !['balance', 'light', 'gears', 'rhythm'].includes(level.family)) throw new Error('Unknown lab family');
+  const normalized = normalizeLabSetup(level, setup);
+  if (!normalized) return { result: 'invalid', success: false, feedback: 'Choisis une des propositions de l\'atelier.', observations: [], steps: [], metrics: {}, setup: null };
+  const model = { balance: labBalance, light: labLight, gears: labGears, rhythm: labRhythm }[level.family];
+  const evaluated = model(level, normalized);
+  return { ...evaluated, result: evaluated.success ? 'win' : 'try', setup: normalized };
+}
+
+function enumerateLabSetups(level) {
+  let setups = [{}];
+  for (const control of level.controls || []) {
+    const next = [];
+    for (const setup of setups) for (const option of control.options) next.push({ ...setup, [control.key]: option.value });
+    setups = next;
+  }
+  return setups;
+}
+
+function solveLab(level) {
+  return enumerateLabSetups(level).filter(setup => evaluateLab(level, setup).success);
+}
+
+
 (function () {
 'use strict';
-/* ===================== Bip le robot — v2 « Le grand pique-nique » ===================== */
+/* ===================== Bip V3 - Le jardin des possibles ===================== */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -1757,7 +2327,7 @@ function checkStickers() {
     const lvls = LEVELS.filter(l => l.ch >= 0 && CHAPTERS[l.ch].w === wi);
     if (lvls.length && lvls.every(l => (save.stars[l.id] || 0) === 3)) award('w' + (wi + 1));
   });
-  if (LEVELS.every(l => (save.stars[l.id] || 0) === 3)) award('allstars');
+  if (LEVELS.filter(l => l.ch >= 0).every(l => (save.stars[l.id] || 0) === 3)) award('allstars');
 }
 
 /* ---------- Données de niveau ---------- */
@@ -1769,7 +2339,8 @@ I.crate = `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="18" y="20" wid
 I.flower = `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 58V84" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="40" r="13" fill="currentColor"/><circle cx="33" cy="52" r="13" fill="currentColor"/><circle cx="67" cy="52" r="13" fill="currentColor"/><circle cx="40" cy="66" r="11" fill="currentColor"/><circle cx="60" cy="66" r="11" fill="currentColor"/></svg>`;
 I.pad2 = `<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="54" rx="36" ry="24" fill="currentColor"/><path d="M50 34V72M50 48C42 44 34 42 27 45" stroke="var(--card)" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
 I.firefly = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="52" r="30" fill="currentColor" opacity=".4"/><path d="M50 28C40 28 35 38 37 50C39 62 44 72 50 72C56 72 61 62 63 50C65 38 60 28 50 28Z" fill="currentColor"/></svg>`;
-const CH_ICON = [I.arrow, I.bush, I.drop, I.jump, I.loop, I.tr, I.until, I.fork, I.magic, I.mushroom, I.crate, I.flower, symUse('ball').replace('viewBox', 'width="100%" height="100%" viewBox'), I.lens, I.firefly, I.star(true)];
+I.ball = `<svg viewBox="0 0 100 100" aria-hidden="true" width="100%" height="100%"><use href="#ball" width="100" height="100"/></svg>`;
+const CH_ICON = [I.arrow, I.bush, I.jump, I.loop, I.tr, I.pad2, I.until, I.fork, I.magic, I.mushroom, I.crate, I.flower, I.ball, I.lens, I.firefly, I.star(true)];
 const DAILY_IDX = (d => (d.getDay() + 6) % 7)(new Date());
 const DAILY_NAMES = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 const DAILY_LEVELS = LEVELS.filter(l => l.daily);
@@ -1789,15 +2360,20 @@ LEVELS.forEach(lv => {
 /* ---------- Écrans ---------- */
 const STANDALONE = matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
 function show(id) {
+  if (id !== 'game') { G.session++; G.abort = true; G.busy = false; G.step = null; setRunning(false); }
   $('#home').hidden = id !== 'home';
   $('#game').hidden = id !== 'game';
   $('#sandbox').hidden = id !== 'sandbox';
+  $('#lab').hidden = id !== 'lab';
+  $('#story').hidden = true;
+  $('#win').hidden = true;
+  if (typeof L !== 'undefined' && id !== 'lab') { L.token++; L.running = false; }
   if (id === 'home') { renderHome(); hideHand(); stopVoice(); }
 }
 
 /* ---------- Accueil : la grande promenade ---------- */
 const unlocked = i => save.all || i === 0 || (save.stars[LEVELS[i - 1].id] || 0) > 0;
-const nextIndex = () => { const i = LEVELS.findIndex(l => !(save.stars[l.id] > 0)); return i < 0 ? LEVELS.length - 1 : i; };
+const nextIndex = () => { const i = LEVELS.findIndex(l => l.ch >= 0 && !(save.stars[l.id] > 0)); return i < 0 ? LAST_STORY : i; };
 const chapterDone = ci => LEVELS.filter(l => l.ch === ci).every(l => (save.stars[l.id] || 0) > 0);
 const worldOf = ci => CHAPTERS[ci].w;
 
@@ -1808,6 +2384,8 @@ function renderHome() {
   $('#albumCount').textContent = `${save.stickers.length}/${STICKERS.length} images`;
   $('#dailyLabel').textContent = 'Aujourd\'hui : ' + DAILY_NAMES[DAILY_IDX];
   $('#dailyDots').innerHTML = DAILY_NAMES.map((_, k) => `<i class="${save.daily[k] ? 'on' : ''}"></i>`).join('');
+  $('#btnPlay').lastElementChild.textContent = Object.keys(save.stars).length ? 'Continuer' : 'L’aventure';
+  $('#btnPlay').setAttribute('aria-label', 'Continuer l’aventure de Bip');
 
   let h = '';
   let lastWorld = -1;
@@ -1829,6 +2407,7 @@ function renderHome() {
   // Le défi de Zoé n'est pas sur la carte : il vit dans sa carte tout en bas
   $('#journey').innerHTML = h;
   $$('.lvl', $('#journey')).forEach(b => b.addEventListener('click', () => { audio(); openLevel(+b.dataset.i); }));
+  renderLabHome();
 }
 
 /* ---------- Album ---------- */
@@ -1854,7 +2433,7 @@ let UID = 1;
 const newId = () => 'k' + (UID++);
 const G = { i: -1, lv: null, P: null, v: 0, prog: [], fn: [], target: 'main', busy: false, abort: false, step: null,
   fails: 0, dirty: false, last: null, hintT: 0, spd: 1, told: {}, mode: 'classic', sandbox: false, daily: false,
-  tiles: {}, tool: 'r', cellPx: 64, sb: { rows: [], tool: 'R', cur: 0 }, sbCellPx: 64 };
+  tiles: {}, tool: 'r', cellPx: 64, trail: new Set(), session: 0, sb: { rows: [], tool: 'R', cur: 0 }, sbCellPx: 64 };
 const hasFn = () => !!(G.lv.pal && G.lv.pal.includes('star'));
 const totalBlocks = () => countBlocks(G.prog) + countBlocks(G.fn);
 
@@ -1878,8 +2457,10 @@ function storyForLevel(lv) {
 
 function openLevel(i) { openLevelObj(LEVELS[i], { index: i }); }
 function openLevelObj(lv, opts = {}) {
+  G.session++;
   G.mode = lv.mode === 'ball' ? 'ball' : 'classic';
   G.sandbox = !!opts.sandbox;
+  G.daily = !!(opts.daily || lv.daily);
   G.i = opts.index != null ? opts.index : LEVELS.indexOf(lv);
   G.lv = lv;
   G.tiles = {};
@@ -1958,6 +2539,7 @@ function buildBoard() {
   }
   b.innerHTML = h;
   G.dirty = false;
+  G.trail = new Set();
   fitBoard();
 }
 function fitBoard() {
@@ -1977,6 +2559,13 @@ function resetBoard() {
 function buildTray() {
   const P = G.P;
   let h = P.toys.map((t, i) => `<span class="tt" data-i="${i}" title="${TOY_NAME[t.k]}">${toyUse(t.k)}</span>`).join('');
+  if (P.flowers && P.flowers.length) {
+    if (h) h += `<span class="to">${I.next}</span>`;
+    h += P.flowers.map((idx) => {
+      const x = idx % P.w, y = (idx / P.w) | 0;
+      return `<span class="tt ftt" data-fx="${x}" data-fy="${y}" title="Une fleur à peindre">${symUse('flower')}</span>`;
+    }).join('');
+  }
   if (P.box) h += `<span class="to">${I.next}</span><span class="tt box-t" style="filter:none">${symUse('box')}</span>`;
   $('#tray').innerHTML = h;
 }
@@ -2322,22 +2911,24 @@ async function runAll() {
   if (G.busy) { G.abort = true; return; }
   if (!totalBlocks() || !G.prog.length) { emptyNudge(); return; }
   stopVoice(); G.step = null; clearMarks(); hideHint();
+  const session = ++G.session;
   const nv = G.lv.nv;
   G.busy = true; G.abort = false; setRunning(true);
   $$('#vars button').forEach(b => b.classList.remove('pass', 'fail'));
   for (let v = 0; v < nv; v++) {
-    if (nv > 1) { setVariant(v); say(`Jardin ${v + 1}`, true); await sleep(500 * T); if (G.abort) break; }
+    if (nv > 1) { setVariant(v); say(`Jardin ${v + 1}`, true); await sleep(500 * T); if (G.session !== session) return; if (G.abort) break; }
     else { resetBoard(); say('C’est parti !', true); }
     clearMarks();
     const sim = simulate(G.lv, G.prog, G.fn, v);
     G.spd = speedFor(sim); G.dirty = true;
-    for (const st of sim.steps) { if (G.abort) break; await doStep(st); }
+    for (const st of sim.steps) { if (G.abort) break; await doStep(st, false, session); if (G.session !== session) return; }
     if (G.abort) break;
     if (sim.result !== 'win') { G.busy = false; setRunning(false); if (nv > 1) varMark(v, 'fail'); finish(sim, nv > 1 ? v : null); return; }
     if (nv > 1) {
       varMark(v, 'pass'); clearNow();
       $('#robot').classList.add('happy'); SFX.collect();
       await sleep(800 * T);
+      if (G.session !== session) return;
     }
   }
   const aborted = G.abort; G.busy = false; setRunning(false);
@@ -2353,16 +2944,19 @@ const CHECK_SAY = {
 async function stepOnce() {
   if (G.busy || G.mode === 'ball') return;
   if (!G.prog.length) { emptyNudge(); return; }
-  if (!G.step) { stopVoice(); resetBoard(); clearMarks(); hideHint(); G.step = { sim: simulate(G.lv, G.prog, G.fn, G.v), i: 0 }; G.dirty = true; G.spd = 1; }
-  const { sim } = G.step, st = sim.steps[G.step.i];
+  if (!G.step) { stopVoice(); resetBoard(); clearMarks(); hideHint(); G.session++; G.abort = false; G.step = { sim: simulate(G.lv, G.prog, G.fn, G.v), i: 0 }; G.dirty = true; G.spd = 1; }
+  const session = G.session, step = G.step;
+  const { sim } = step, st = sim.steps[step.i];
   if (!st) { const s = G.step; G.step = null; finishStep(s.sim); return; }
   G.busy = true; setRunning('step');
   $$('#progCard .blk.now').forEach(e => e.classList.add('done'));
-  await doStep(st, true);
+  await doStep(st, true, session);
+  if (G.session !== session || G.step !== step) return;
   G.busy = false; setRunning(false);
-  G.step.i++;
+  if (G.abort) { G.step = null; resetBoard(); clearMarks(); say('Stop ! Bip revient au départ.'); return; }
+  step.i++;
   if (st.kind === 'check') say(CHECK_SAY[`${st.ins.t}-${st.cond}`](st.ok));
-  if (G.step.i >= sim.steps.length) { const s = G.step; G.step = null; finishStep(s.sim); }
+  if (step.i >= sim.steps.length) { G.step = null; finishStep(sim); }
   else if (st.kind !== 'check') say(`Bloc fait. Touche encore pour la suite.`, true);
 }
 function finishStep(sim) {
@@ -2392,7 +2986,8 @@ function mark(ins) {
 function crateEl(from) {
   return $$('#board .it.crate').find(c => c.style.getPropertyValue('--x') == from[0] && c.style.getPropertyValue('--y') == from[1]);
 }
-async function doStep(st, keep) {
+async function doStep(st, keep, session = G.session) {
+  if (G.session !== session || G.abort) return;
   const R = $('#robot'), spr = R ? $('.sprite', R) : null;
   const k = T * G.spd;
   const fx = $('#fx');
@@ -2421,6 +3016,7 @@ async function doStep(st, keep) {
       setTimeout(() => s.remove(), 520 * k);
     }
     await sleep((keep ? 600 : 420) * k);
+    if (G.session !== session || G.abort) return;
     if (c) c.classList.remove('yes', 'no');
     return;
   }
@@ -2440,6 +3036,7 @@ async function doStep(st, keep) {
       { transform: `translate(${dx * far * .4}%, ${dy * far * .4}%)`, offset: .7 },
       { transform: 'translate(0,0)' },
     ], { duration: 560 * T, easing: 'ease-out' }).finished.catch(() => {});
+    if (G.session !== session || G.abort) return;
     SFX.bump(); buzz(60);
     R.classList.add('oops');
     const bx = st.from[0] + dx * (st.kind === 'jump' ? 1.5 : .5), by = st.from[1] + dy * (st.kind === 'jump' ? 1.5 : .5);
@@ -2453,11 +3050,13 @@ async function doStep(st, keep) {
     R.style.setProperty('--x', st.to[0]); R.style.setProperty('--y', st.to[1]);
     spr.animate([{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(-55%) scale(1.06)', offset: .5 }, { transform: 'translateY(0) scale(1,.92)', offset: .9 }, { transform: 'translateY(0) scale(1)' }], { duration: 560 * k, easing: 'ease-in-out' });
     await sleep(580 * k);
+    if (G.session !== session || G.abort) return;
     R.classList.remove('jumping');
   } else {
     SFX.step();
     R.style.setProperty('--x', st.to[0]); R.style.setProperty('--y', st.to[1]);
     await sleep(400 * k);
+    if (G.session !== session || G.abort) return;
   }
   if (st.sink) {
     SFX.pad();
@@ -2479,6 +3078,7 @@ async function doStep(st, keep) {
       ce.style.setProperty('--x', st.crate.to[0]); ce.style.setProperty('--y', st.crate.to[1]);
       if (st.crate.plank) {
         await sleep(320 * k);
+        if (G.session !== session || G.abort) return;
         ce.remove();
         const pl = document.createElement('div');
         pl.className = 'it plank'; pl.style.cssText = `--x:${st.crate.to[0]};--y:${st.crate.to[1]}`;
@@ -2498,6 +3098,16 @@ async function doStep(st, keep) {
     const idx = st.paint[1] * G.P.w + st.paint[0];
     const fl = $(`#board .it.flower[data-idx="${idx}"]`);
     if (fl) fl.classList.add('painted');
+    const tt = $(`#tray .ftt[data-fx="${st.paint[0]}"][data-fy="${st.paint[1]}"]`);
+    if (tt) tt.classList.add('got');
+  } else if (st.to) {
+    const key = st.to.join(',');
+    if (!G.trail.has(key)) {          // pollen doré là où Bip marche
+      G.trail.add(key);
+      const p = document.createElement('div');
+      p.className = 'paint tr'; p.style.cssText = `--x:${st.to[0]};--y:${st.to[1]}`;
+      p.innerHTML = '<i></i>'; fx.append(p);
+    }
   }
   if (st.fail === 'puddle') {
     SFX.splash(); buzz(40);
@@ -2512,6 +3122,7 @@ async function doStep(st, keep) {
     const toy = $(`.it.toy[data-i="${st.collect}"]`); if (toy) toy.classList.add('got');
     const tt = $(`#tray .tt[data-i="${st.collect}"]`); if (tt) tt.classList.add('got');
     await sleep(160 * k);
+    if (G.session !== session || G.abort) return;
   }
   await sleep((keep ? 40 : 110) * k);
 }
@@ -2574,7 +3185,8 @@ function win() {
   SFX.win(); buzz([30, 60, 30]);
   confetti();
   $('#btnHint').classList.remove('glow'); $('#btnStep').classList.remove('glow');
-  setTimeout(() => showWin(stars, n, par), RM ? 300 : 1000);
+  const wonLevel = G.lv, session = G.session;
+  setTimeout(() => { if (G.session === session && G.lv === wonLevel && !$('#game').hidden && !G.abort) showWin(stars, n, par); }, RM ? 300 : 1000);
 }
 function showWin(stars, n, par) {
   const lastLevel = G.i === LAST_STORY;
@@ -2587,16 +3199,18 @@ function showWin(stars, n, par) {
     ? `Programme parfait : ${n} bloc${n > 1 ? 's' : ''}, c’est le plus court.`
     : `Ton programme a ${n} blocs. On peut réussir avec ${par}. Tu essaies ?`;
   if (G.sandbox) { title = 'Quel jardin !'; text = 'Bip a fini TON jardin. Tu peux le modifier, ou en créer un autre !'; }
+  if (G.daily) { title = 'Joli défi !'; text = 'Une nouvelle idée pour la collection de Zoé !'; }
   if (G.lv.nv > 1 && stars === 3) text = `Ton programme marche dans les ${G.lv.nv} jardins, avec ${n} blocs seulement !`;
   if (lastLevel) { title = 'Champion !'; text = 'Tu as fini toute l’aventure de Bip. Tu sais vraiment programmer un robot !'; }
   else if (chapterEnd && stars === 3) text += ` Prochain chapitre : ${CHAPTERS[G.lv.ch + 1].name.toLowerCase()}.`;
   $('#winTitle').textContent = title;
   $('#winText').textContent = text;
   $('#btnAgain').innerHTML = `${I.replay}<span>Encore</span>`;
-  $('#btnNext').innerHTML = lastLevel ? `${I.home}<span>Carte</span>` : `<span>Suivant</span>${I.next}`;
+  $('#btnNext').innerHTML = lastLevel || G.daily ? `${I.home}<span>Carte</span>` : `<span>Suivant</span>${I.next}`;
   $('#win').hidden = false;
   speak(title + ' ' + text);
-  setTimeout(() => $('#btnNext').focus({ preventScroll: true }), 50);
+  const session = G.session;
+  setTimeout(() => { if (G.session === session && !$('#win').hidden) $('#btnNext').focus({ preventScroll: true }); }, 50);
 }
 function afterWinNext() {
   $('#win').hidden = true;
@@ -2767,12 +3381,14 @@ async function runBall() {
     return;
   }
   stopVoice(); G.busy = true; G.abort = false; setRunning(true);
+  const session = ++G.session;
   G.dirty = true;
   resetBoard(); renderTiles();
   say('C\'est parti, Ballon !', true);
   const res = rollBall(G.lv, tiles, G.v);
   const ball = $('#ballSprite');
   for (const st of res.steps) {
+    if (G.session !== session) return;
     if (G.abort) break;
     ball.style.setProperty('--x', st.to[0]); ball.style.setProperty('--y', st.to[1]);
     if (!RM) { ball.classList.remove('roll'); void ball.offsetWidth; ball.classList.add('roll'); }
@@ -2783,6 +3399,7 @@ async function runBall() {
       if (st.nd) { G.tiles[st.tile.join(',')] = st.nd; renderTiles(); }
     } else SFX.balltap();
     await sleep(240 * T);
+    if (G.session !== session) return;
   }
   const aborted = G.abort; G.busy = false; setRunning(false);
   if (aborted) { resetBoard(); renderTiles(); say('Stop ! Ballon s\'arrête.', true); return; }
@@ -2805,7 +3422,8 @@ function ballFinish(res, n) {
     $('#btnNext').innerHTML = `<span>Suivant</span>${I.next}`;
     $('#win').hidden = false;
     speak($('#winTitle').textContent + ' ' + $('#winText').textContent);
-    setTimeout(() => $('#btnNext').focus({ preventScroll: true }), 50);
+    const session = G.session;
+    setTimeout(() => { if (G.session === session && !$('#win').hidden) $('#btnNext').focus({ preventScroll: true }); }, 50);
     return;
   }
   G.fails++;
@@ -2896,7 +3514,7 @@ function renderSbBoard() {
   });
   P.crates.forEach(c => { h += `<div class="it crate" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
   P.toys.forEach((t, i) => { h += `<div class="it toy" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
-  h += `<div class="it robot" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div></div>`;
+  if (P.start) h += `<div class="it robot" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div></div>`;
   b.innerHTML = h;
   fitSbBoard();
 }
@@ -2928,6 +3546,7 @@ function onSbTap(e) {
   G.sb.rows = rows;
   persistSb();
   renderSbBoard();
+  if (!G.sb.P.start) sbSay('Il manque le départ de Bip. Pose le petit robot dans ton jardin !');
 }
 function playSandbox() {
   const P = parseLevel({ map: G.sb.rows });
@@ -2936,6 +3555,322 @@ function playSandbox() {
   if (!toysOrFlowers) { SFX.nope(); sbSay('Ton jardin est vide de mission : pose au moins un jouet ou une fleur !'); return; }
   const lv = { ch: -2, pal: FULL_PAL, map: G.sb.rows.slice(), face: 'r', sandbox: true, nv: 1, text: 'À toi de programmer Bip dans TON jardin !' };
   openLevelObj(lv, { sandbox: true });
+}
+
+/* ---------- V3: predict, experiment, compare, remember ---------- */
+const LAB_COLORS = {
+  balance: { accent: '#327C64', wash: '#E7F3EB', name: 'Les équilibres' },
+  light: { accent: '#967016', wash: '#FCF4D9', name: 'La lumière' },
+  gears: { accent: '#A75548', wash: '#F9ECE6', name: 'Les roues complices' },
+  rhythm: { accent: '#526EA1', wash: '#EAF0FA', name: 'Le rendez-vous' }
+};
+const L = { level: null, setup: {}, prediction: null, last: null, previous: null, running: false, token: 0, free: false, selected: null, tick: -1 };
+save.labs = Object.assign({ solved: {}, drafts: {}, inventions: [], attempts: {}, predictions: {} }, save.labs || {});
+const labCopy = value => JSON.parse(JSON.stringify(value));
+const labEscape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const labFamily = id => LAB_FAMILIES.find(f => f.id === id);
+const labSolved = id => !!save.labs.solved[id];
+const labColor = family => `--accent:${LAB_COLORS[family].accent};--wash:${LAB_COLORS[family].wash}`;
+const LAB_PREDICTIONS = {
+  balance: [{ value: 'left', label: 'À gauche', icon: () => `<span style="rotate:160deg">${I.arrow}</span>` }, { value: 'balanced', label: 'Tout droit', icon: () => I.until }, { value: 'right', label: 'À droite', icon: () => `<span style="rotate:20deg">${I.arrow}</span>` }],
+  light: [{ value: 'none', label: 'Aucune', icon: () => I.bulb }, { value: 'some', label: 'Une partie', icon: () => I.firefly }, { value: 'all', label: 'Toutes', icon: () => I.star(true) }],
+  gears: [{ value: 'slow', label: 'Moins vite', icon: () => I.step }, { value: 'same', label: 'Aussi vite', icon: () => I.replay }, { value: 'fast', label: 'Plus vite', icon: () => I.next }],
+  rhythm: [{ value: 'apart', label: 'Chacun', icon: () => I.fork }, { value: 'together', label: 'Ensemble', icon: () => I.check }]
+};
+
+function homeTab(name) {
+  ['Labs', 'Journey', 'Notebook'].forEach(key => {
+    const selected = key === name;
+    $('#tab' + key).classList.toggle('on', selected);
+    $('#tab' + key).setAttribute('aria-selected', String(selected));
+  });
+  $('#labHub').hidden = name !== 'Labs';
+  $('#journey').hidden = name !== 'Journey';
+  $('#notebook').hidden = name !== 'Notebook';
+  if (name === 'Notebook') renderNotebook();
+}
+
+function renderLabHome() {
+  const count = LAB_LEVELS.filter(level => labSolved(level.id)).length;
+  $('#labTotal').textContent = count + '/' + LAB_LEVELS.length;
+  $('#labHub').innerHTML = `<div class="lab-hub-heading"><span class="avatar">${symUse('avatar-papi')}</span><div><h2>Les ateliers des possibles</h2><p>Grand-Papa a quelques surprises pour toi.</p></div></div>
+    <div class="lab-families">${LAB_FAMILIES.map(family => {
+      const levels = LAB_LEVELS.filter(level => level.family === family.id);
+      const next = levels.find(level => !labSolved(level.id)) || levels[0];
+      return `<article class="lab-family" style="${labColor(family.id)}">
+        <button class="family-open" data-lab-open="${next.id}" aria-label="${labEscape(LAB_COLORS[family.id].name)}"><span class="family-art">${labDrawing(levels[levels.length - 1], levels[levels.length - 1].initial, null, true)}</span><h3>${LAB_COLORS[family.id].name}</h3><p>${labEscape(family.subtitle)}</p></button>
+        <div class="family-bottom"><div class="family-levels">${levels.map((level, i) => `<button class="${labSolved(level.id) ? 'solved' : ''}" data-lab-open="${level.id}" aria-label="Expérience ${i + 1} : ${labEscape(level.title)}${labSolved(level.id) ? ', découverte' : ''}">${labSolved(level.id) ? I.check : i + 1}</button>`).join('')}</div><button class="family-invent" data-lab-free="${levels[levels.length - 1].id}">Inventer</button></div>
+      </article>`;
+    }).join('')}</div>
+    ${save.labs.inventions.length ? `<div class="lab-home-inventions"><h3>Mes inventions</h3>${save.labs.inventions.map(recipe => `<button data-lab-recipe="${labEscape(recipe.family)}">${I.garden}<span>${LAB_COLORS[recipe.family].name}</span></button>`).join('')}</div>` : ''}`;
+  $$('[data-lab-open]', $('#labHub')).forEach(button => button.onclick = () => openLab(button.dataset.labOpen));
+  $$('[data-lab-free]', $('#labHub')).forEach(button => button.onclick = () => openLab(button.dataset.labFree, true));
+  $$('[data-lab-recipe]', $('#labHub')).forEach(button => button.onclick = () => {
+    const recipe = save.labs.inventions.find(item => item.family === button.dataset.labRecipe);
+    openLab(recipe.level, true, recipe.setup);
+  });
+  renderNotebook();
+}
+
+function renderNotebook() {
+  const solved = LAB_LEVELS.filter(level => labSolved(level.id)).length;
+  $('#notebook').innerHTML = `<div class="note-heading"><span>${robotSVG()}</span><div><h2>Mes découvertes</h2><p>${solved ? solved + ' idées ont poussé dans ton jardin.' : 'Ton jardin attend ses premières idées.'}</p></div></div><div class="note-grid">${LAB_LEVELS.map(level => {
+    const found = labSolved(level.id);
+    return `<article class="discovery ${found ? '' : 'locked'}" style="${labColor(level.family)}"><div class="note-icon">${found ? I.garden : I.bulb}</div><h3>${labEscape(level.title)}</h3><p>${labEscape(found ? level.discovery : 'Une idée à découvrir dans ' + LAB_COLORS[level.family].name.toLowerCase() + '.')}</p><button data-note="${level.id}">${found ? I.replay : I.play}<span>${found ? 'Revoir' : 'Découvrir'}</span></button></article>`;
+  }).join('')}</div>`;
+  $$('[data-note]', $('#notebook')).forEach(button => button.onclick = () => openLab(button.dataset.note));
+}
+
+function openLab(id, free = false, setup = null) {
+  const level = LAB_LEVELS.find(item => item.id === id);
+  if (!level) return;
+  L.token++; L.running = false; L.level = level; L.free = free;
+  const draft = setup || (free ? null : save.labs.drafts[id]);
+  L.setup = labCopy(normalizeLabSetup(level, draft) || level.initial);
+  if (!free && setup) { save.labs.drafts[id] = labCopy(L.setup); persist(); }
+  L.prediction = null; L.last = null; L.previous = null; L.selected = level.controls[0].key; L.tick = -1;
+  stopVoice(); hideHand(); show('lab'); audio();
+  $('#lab').style.cssText = labColor(level.family);
+  $('#labFamily').textContent = LAB_COLORS[level.family].name;
+  $('#labTitle').textContent = free ? 'Mon invention' : level.title;
+  $('#labText').textContent = free ? 'Et si tu changeais une petite chose ? Grand-Papa est curieux de voir ton idée.' : level.text;
+  $('#labGuide').innerHTML = symUse('avatar-' + labFamily(level.family).who);
+  const siblings = LAB_LEVELS.filter(item => item.family === level.family);
+  $('#labLevels').innerHTML = siblings.map((item, i) => `<button class="${item.id === id && !free ? 'on' : ''}" data-lab-switch="${item.id}" aria-label="Expérience ${i + 1} : ${labEscape(item.title)}">${labSolved(item.id) ? I.check : i + 1}</button>`).join('') + `<button class="${free ? 'on' : ''}" data-lab-invention="true" aria-label="Exploration libre" title="Exploration libre">${I.garden}</button>`;
+  $$('[data-lab-switch]').forEach(button => button.onclick = () => openLab(button.dataset.labSwitch));
+  $('[data-lab-invention]').onclick = () => openLab(siblings[siblings.length - 1].id, true);
+  $('#labFollow').hidden = true;
+  $('#labSaved').hidden = !free;
+  $('#labSaveStatus').textContent = '';
+  $('#labFeedback').textContent = '';
+  renderLabControls(); renderLabPredictions(); renderLabScene(); renderLabCompare(); updateLabActions();
+  speak($('#labText').textContent);
+  $('#lab').scrollTop = 0;
+}
+
+function renderLabControls() {
+  $('#labControls').innerHTML = L.level.controls.map(control => `<fieldset class="lab-control"><legend><i></i>${labEscape(control.label)}</legend><div class="lab-options">${control.options.map(option => {
+    const content = L.level.family === 'light' ? `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="${option.value === '/' ? 'M9 31L31 9' : 'M9 9L31 31'}" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>` : L.level.family === 'balance' ? Math.abs(option.value) : L.level.family === 'rhythm' ? option.value : option.value + '<small> dents</small>';
+    return `<button data-control="${labEscape(control.key)}" data-option="${control.options.indexOf(option)}" aria-pressed="${L.setup[control.key] === option.value}" aria-label="${labEscape(control.label + ' : ' + option.label)}" title="${labEscape(option.label)}">${content}</button>`;
+  }).join('')}</div></fieldset>`).join('');
+  $$('[data-control]').forEach(button => button.onclick = () => {
+    const control = L.level.controls.find(item => item.key === button.dataset.control);
+    setLabControl(control.key, control.options[+button.dataset.option].value);
+  });
+}
+
+function setLabControl(key, value) {
+  const control = L.level.controls.find(item => item.key === key);
+  if (!control || !control.options.some(item => item.value === value)) return;
+  L.token++; L.running = false; L.setup[key] = value; L.selected = key; L.tick = -1; L.prediction = null;
+  if (!L.free) { save.labs.drafts[L.level.id] = labCopy(L.setup); persist(); }
+  $('#labFeedback').textContent = '';
+  $('#labFollow').hidden = true;
+  $('#labSaveStatus').textContent = '';
+  renderLabControls(); renderLabPredictions(); renderLabScene(); updateLabActions(); SFX.tap();
+}
+
+function renderLabPredictions() {
+  let choices = LAB_PREDICTIONS[L.level.family];
+  if (L.level.family === 'light' && L.level.scene.targets.length === 1) choices = choices.filter(choice => choice.value !== 'some');
+  $('#labPredictions').innerHTML = choices.map(choice => `<button class="prediction" data-predict="${choice.value}" aria-pressed="${L.prediction === choice.value}">${choice.icon()}<span>${choice.label}</span></button>`).join('');
+  $$('[data-predict]').forEach(button => button.onclick = () => {
+    if (L.running) return;
+    L.prediction = L.prediction === button.dataset.predict ? null : button.dataset.predict;
+    renderLabPredictions(); SFX.tap();
+  });
+  $('.lab-predict legend').textContent = L.level.family === 'rhythm' ? 'Au pas ' + L.level.goal.focusTick + ', je pense…' : L.level.family === 'gears' ? 'La dernière roue ira…' : 'Je pense que…';
+}
+
+function updateLabActions() {
+  $('#btnLabRun').disabled = L.running;
+  $('#btnLabRun').innerHTML = `${L.running ? I.lens : I.play}<span>${L.running ? 'On observe…' : 'Essayer'}</span>`;
+  $('#btnLabReset').innerHTML = I.replay;
+  $('#btnLabHint').innerHTML = I.bulb;
+  $('#btnLabSave').innerHTML = `${I.garden}<span>Garder mon invention</span>`;
+}
+
+async function runLab() {
+  if (L.running || !L.level) return;
+  const token = ++L.token, level = L.level, setup = labCopy(L.setup), prediction = L.prediction;
+  const result = evaluateLab(level, setup);
+  if (result.result === 'invalid') return;
+  L.running = true; L.tick = -1;
+  $('#labFeedback').textContent = ''; $('#labFollow').hidden = true; updateLabActions();
+  renderLabScene(result);
+  $('#labScene').classList.add('lab-testing');
+  if (level.family === 'rhythm' && !RM) {
+    for (const frame of result.metrics.timeline) {
+      if (token !== L.token) return;
+      L.tick = frame.tick;
+      $$('[data-tick]', $('#labScene')).forEach(element => element.classList.toggle('rhythm-now', +element.dataset.tick === frame.tick));
+      const column = $(`.rhythm-tick[data-tick="${frame.tick}"]`, $('#labScene')), scroller = $('.rhythm-scroll', $('#labScene'));
+      if (column.offsetLeft > scroller.scrollLeft + scroller.clientWidth - 40) scroller.scrollLeft = column.offsetLeft - scroller.clientWidth + 70;
+      if (frame.together) SFX.collect(); else if (frame.active.length) SFX.step();
+      await sleep(180);
+    }
+  } else {
+    SFX.look(result.success);
+    await sleep(RM ? 80 : level.family === 'gears' ? 1900 : 1100);
+  }
+  if (token !== L.token || $('#lab').hidden) return;
+  L.running = false; L.previous = L.last; L.last = { setup, result }; L.tick = -1;
+  const old = save.labs.solved[level.id];
+  if (!L.free) {
+    save.labs.attempts[level.id] = (save.labs.attempts[level.id] || 0) + 1;
+    if (prediction) {
+      const tally = save.labs.predictions[level.id] || { tried: 0, matched: 0 };
+      tally.tried++; if (prediction === result.metrics.outcome) tally.matched++;
+      save.labs.predictions[level.id] = tally;
+    }
+    if (result.success) save.labs.solved[level.id] = { setup, discovered: level.discovery };
+    persist();
+  }
+  renderLabScene(result); updateLabActions(); renderLabCompare();
+  const matched = prediction === result.metrics.outcome;
+  const predictionCopy = prediction ? matched ? 'Tu avais prévu ce résultat.' : 'Une surprise ! Ton idée peut changer.' : '';
+  if (L.free) {
+    $('#labFeedback').innerHTML = `<b>Une nouvelle idée !</b>${labEscape(result.feedback)}${predictionCopy ? `<small>${predictionCopy}</small>` : ''}`;
+  } else if (result.success) {
+    $('#labFeedback').innerHTML = `<b>${old ? 'Tu as retrouvé l’équilibre !' : 'Une idée a poussé !'}</b>${labEscape(level.discovery)}${predictionCopy ? `<small>${predictionCopy}</small>` : ''}`;
+    if (level.family !== 'balance' && old) $('#labFeedback b').textContent = 'Tu as retrouvé ton idée !';
+    $('#labFollow').hidden = false;
+    const next = LAB_LEVELS[LAB_LEVELS.indexOf(level) + 1];
+    $('#btnLabNext').innerHTML = `<span>${next ? 'Expérience suivante' : 'Mes découvertes'}</span>${I.next}`;
+    if (!old) { SFX.win(); buzz([20, 40, 20]); }
+  } else {
+    $('#labFeedback').innerHTML = `<b>On cherche encore…</b>${labEscape(result.feedback)}${predictionCopy ? `<small>${predictionCopy}</small>` : ''}`;
+  }
+  speak($('#labFeedback').textContent);
+}
+
+function labSummary(level, result) {
+  const metrics = result.metrics;
+  if (level.family === 'balance') return metrics.outcome === 'balanced' ? 'En équilibre' : 'Penche à ' + (metrics.outcome === 'left' ? 'gauche' : 'droite');
+  if (level.family === 'light') return metrics.hitTargets.length + '/' + level.scene.targets.length + ' lucioles';
+  if (level.family === 'gears') return labNumber(metrics.outputTurns) + ' tour' + (metrics.outputTurns > 1 ? 's' : '') + ' · ' + (metrics.direction === level.scene.input.direction ? 'même sens' : 'sens contraire');
+  return metrics.togetherTicks.length ? 'Ensemble : ' + metrics.togetherTicks.join(', ') : 'Chacun son rythme';
+}
+
+function renderLabCompare() {
+  const box = $('#labCompare');
+  box.hidden = !(L.last && L.previous);
+  if (box.hidden) return;
+  const changed = L.level.controls.filter(control => L.last.setup[control.key] !== L.previous.setup[control.key]);
+  const description = changed.length === 0 ? 'Même réglage, même résultat.' : changed.length === 1 ? 'Une seule chose a changé : ' + changed[0].label.toLowerCase() + '.' : 'Deux réglages ont changé.';
+  box.innerHTML = `<h3>${labEscape(description)}</h3><div class="compare-pair"><div><small>Avant</small>${labEscape(labSummary(L.level, L.previous.result))}</div>${I.next}<div><small>Cette fois</small>${labEscape(labSummary(L.level, L.last.result))}</div></div>`;
+}
+
+function labNumber(number) { return Number.isInteger(number) ? String(number) : number === .5 ? '½' : String(Math.round(number * 100) / 100).replace('.', ','); }
+function renderLabScene(result = null) {
+  $('#labScene').classList.remove('lab-testing');
+  $('#labScene').innerHTML = labDrawing(L.level, L.setup, result);
+  const readings = $('#labReadings');
+  if (!result) { readings.innerHTML = `<span class="lab-reading">${L.level.family === 'balance' ? 'Chaque carré pèse autant.' : L.level.family === 'light' ? 'Les lucioles attendent la lumière.' : L.level.family === 'gears' ? 'Bip : 12 dents. Il fera un tour.' : 'Un coucou revient après le même nombre de pas.'}</span>`; return; }
+  const m = result.metrics;
+  if (L.level.family === 'balance') readings.innerHTML = `<span class="lab-reading">Effet à gauche <strong>${m.leftTorque}</strong></span><span class="lab-reading">${m.leftTorque === m.rightTorque ? '=' : m.leftTorque > m.rightTorque ? '>' : '&lt;'}</span><span class="lab-reading">Effet à droite <strong>${m.rightTorque}</strong></span>`;
+  else if (L.level.family === 'light') readings.innerHTML = `<span class="lab-reading">Lucioles allumées <strong>${m.hitTargets.length} / ${L.level.scene.targets.length}</strong></span>`;
+  else if (L.level.family === 'gears') readings.innerHTML = `<span class="lab-reading">Bip <strong>1 tour</strong></span><span class="lab-reading">Zoé <strong>${labNumber(m.outputTurns)} tour${m.outputTurns > 1 ? 's' : ''}</strong></span><span class="lab-reading">${m.direction === L.level.scene.input.direction ? 'Même sens' : 'Sens contraire'}</span>`;
+  else readings.innerHTML = `<span class="lab-reading">Ensemble au${m.togetherTicks.length > 1 ? 'x' : ''} pas <strong>${m.togetherTicks.length ? m.togetherTicks.join(' · ') : '—'}</strong></span>`;
+}
+
+function labDrawing(level, setup, result, preview = false) {
+  if (level.family === 'rhythm' && !preview) return labRhythmDrawing(level, setup, result);
+  const m = result ? result.metrics : evaluateLab(level, setup).metrics;
+  const accent = LAB_COLORS[level.family].accent;
+  let content = '';
+  if (level.family === 'balance') {
+    const angle = result ? Math.max(-12, Math.min(12, m.delta * 4)) : 0;
+    content = `<path d="M318 364L380 265L442 364Z" fill="#85B3A0"/><rect x="265" y="363" width="230" height="14" rx="7" fill="#B4CFBB"/><g class="lab-beam" style="--tilt:${angle}deg;transform:rotate(${angle}deg);transform-origin:380px 250px"><rect x="56" y="243" width="648" height="19" rx="9" fill="#D6B780"/><rect x="56" y="243" width="648" height="5" rx="2" fill="#F1D8AC"/>`;
+    for (const position of level.scene.positions) {
+      const x = 380 + position * 73;
+      const movable = level.controls.find(control => control.options.some(option => option.value === position) && (!L.level || level !== L.level || control.key === L.selected)) || level.controls.find(control => control.options.some(option => option.value === position));
+      content += `<circle cx="${x}" cy="253" r="${preview ? 5 : 10}" fill="${movable ? '#FFFDF8' : '#B3966F'}" ${!preview && movable ? `data-lab-key="${movable.key}" data-lab-value="${position}" tabindex="0" role="button" aria-label="${labEscape(movable.label)} : case ${Math.abs(position)}"` : ''}/>`;
+      if (!preview) content += `<text x="${x}" y="299" text-anchor="middle" fill="#668773" font-family="var(--text)" font-size="25">${Math.abs(position)}</text>`;
+    }
+    m.weights.forEach((weight, wi) => {
+      const x = 380 + weight.position * 73, mobile = !!level.scene.weights[wi].control;
+      const color = mobile ? accent : '#D78975';
+      for (let cube = 0; cube < weight.mass; cube++) content += `<rect x="${x - 23}" y="${200 - cube * 42}" width="46" height="40" rx="6" fill="${color}"/><circle cx="${x}" cy="${220 - cube * 42}" r="5" fill="white" opacity=".6"/>`;
+    });
+    content += `</g><circle cx="380" cy="253" r="11" fill="#568775"/>`;
+    if (!preview) content += `<text x="380" y="410" text-anchor="middle" fill="#557463" font-family="var(--text)" font-size="25">Le centre</text>`;
+  } else if (level.family === 'light') {
+    const scene = level.scene, unit = Math.min(630 / scene.width, 355 / scene.height), ox = (760 - scene.width * unit) / 2, oy = (430 - scene.height * unit) / 2;
+    const xy = ([x, y]) => [ox + (x + .5) * unit, oy + (y + .5) * unit];
+    for (let y = 0; y < scene.height; y++) for (let x = 0; x < scene.width; x++) content += `<rect x="${ox + x * unit}" y="${oy + y * unit}" width="${unit}" height="${unit}" rx="5" fill="${(x + y) % 2 ? '#FCF6E5' : '#FFFBF0'}" stroke="#E9DBB6" stroke-width="1"/>`;
+    if (result) content += m.trace.map(segment => { const from = xy(segment.from), to = xy(segment.to); return `<line class="lab-ray" x1="${from[0]}" y1="${from[1]}" x2="${to[0]}" y2="${to[1]}" stroke="${segment.branch ? '#F2B93B' : '#EFA933'}" stroke-width="7" stroke-linecap="round"/>`; }).join('');
+    const source = xy([scene.source.x, scene.source.y]);
+    content += `<circle cx="${source[0]}" cy="${source[1]}" r="24" fill="#EAAF35"/><circle cx="${source[0]}" cy="${source[1]}" r="12" fill="#FFFADE"/><path d="M${source[0] + 31} ${source[1] - 10}l14 10-14 10" fill="none" stroke="#EAAF35" stroke-width="4"/>`;
+    m.mirrors.forEach((mirror, i) => {
+      const [x, y] = xy([mirror.x, mirror.y]), slash = mirror.orientation === '/';
+      content += `<g ${preview ? '' : `data-lab-key="${mirror.control}" data-lab-cycle="true" tabindex="0" role="button" aria-label="Tourner ${labEscape(level.controls.find(control => control.key === mirror.control).label)}"`}><circle cx="${x}" cy="${y}" r="29" fill="#D7E8EF"/><path d="M${x - 20} ${y + (slash ? 20 : -20)}L${x + 20} ${y + (slash ? -20 : 20)}" stroke="#679AAA" stroke-width="9" stroke-linecap="round"/><path d="M${x - 17} ${y + (slash ? 17 : -17)}L${x + 17} ${y + (slash ? -17 : 17)}" stroke="#E7F7FF" stroke-width="3"/></g>`;
+      if (!preview && m.mirrors.length > 1) content += `<text x="${x + 29}" y="${y - 26}" font-family="var(--text)" font-size="24" fill="#788C92">${i + 1}</text>`;
+    });
+    scene.splitters.forEach(crystal => { const [x, y] = xy([crystal.x, crystal.y]); content += `<path d="M${x} ${y - 25}L${x + 22} ${y}L${x} ${y + 25}L${x - 22} ${y}Z" fill="#ADA1DE" stroke="#8579B8" stroke-width="3"/><path d="M${x} ${y - 20}V${y + 20}M${x - 17} ${y}H${x + 17}" stroke="#EAE4FF" stroke-width="3"/>`; });
+    scene.targets.forEach(target => {
+      const [x, y] = xy([target.x, target.y]), lit = result && m.hitTargets.includes(target.id);
+      content += `<circle cx="${x}" cy="${y}" r="${lit ? 31 : 25}" fill="${lit ? '#F7D365' : '#DFE7C9'}"/><ellipse cx="${x - 12}" cy="${y - 9}" rx="13" ry="8" fill="#FFFDF2" transform="rotate(-30 ${x - 12} ${y - 9})"/><ellipse cx="${x + 12}" cy="${y - 9}" rx="13" ry="8" fill="#FFFDF2" transform="rotate(30 ${x + 12} ${y - 9})"/><ellipse cx="${x}" cy="${y + 3}" rx="10" ry="18" fill="${lit ? '#A07F23' : '#819460'}"/><circle cx="${x}" cy="${y + 11}" r="7" fill="${lit ? '#FFF4B5' : '#CAD49A'}"/>`;
+    });
+  } else if (level.family === 'gears') {
+    const gears = m.gears, radii = gears.map(gear => gear.teeth * 5), total = radii.reduce((a, b) => a + b, 0) * 2;
+    const scale = Math.min(650 / total, 145 / Math.max(...radii)), scaled = radii.map(r => r * scale), span = scaled.reduce((a, b) => a + b, 0) * 2;
+    let cursor = (760 - span) / 2;
+    gears.forEach((gear, i) => {
+      const radius = scaled[i], x = cursor + radius, y = 190; cursor += 2 * radius;
+      const color = i === 0 ? '#71A9CA' : i === gears.length - 1 ? '#DB8A72' : '#B4AE8A';
+      const teeth = [];
+      for (let tooth = 0; tooth < gear.teeth * 4; tooth++) {
+        const angle = tooth / (gear.teeth * 4) * Math.PI * 2, rr = tooth % 4 === 0 || tooth % 4 === 3 ? radius - 7 : radius + 3;
+        teeth.push((x + Math.cos(angle) * rr) + ',' + (y + Math.sin(angle) * rr));
+      }
+      content += `<g class="lab-gear" style="--spin:${result ? gear.signedTurns * 360 : 0}deg;--duration:1.9s"><polygon points="${teeth.join(' ')}" fill="${color}" stroke="#FFFFFF" stroke-width="3"/><circle cx="${x}" cy="${y}" r="${radius * .62}" fill="none" stroke="white" stroke-width="3" opacity=".7"/><line x1="${x}" y1="${y}" x2="${x}" y2="${y - radius * .8}" stroke="white" stroke-width="8" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="12" fill="#FFF9F2"/></g>`;
+      if (!preview) content += `<text x="${x}" y="361" fill="#825E52" text-anchor="middle" font-family="var(--text)" font-size="27">${i === 0 ? 'Bip' : i === gears.length - 1 ? 'Zoé' : 'Lien'}</text><text x="${x}" y="399" fill="#A37766" text-anchor="middle" font-family="var(--text)" font-size="24">${gear.teeth}</text>`;
+    });
+  } else {
+    content = `<path d="M60 305H700" stroke="#C0CDE3" stroke-width="4"/>`;
+    for (let row = 0; row < 3; row++) for (let tick = 0; tick < 8; tick++) content += `<circle cx="${104 + tick * 78}" cy="${120 + row * 76}" r="20" fill="${tick % (row + 2) === 0 ? ['#70ABCD', '#DD9176', '#8FBF88'][row] : '#D9E3F3'}"/>`;
+  }
+  return `<svg viewBox="0 0 760 430" role="img" aria-label="${labEscape(level.title)}">${content}</svg>`;
+}
+
+function labRhythmDrawing(level, setup, result) {
+  const m = result ? result.metrics : evaluateLab(level, setup).metrics;
+  return `<div class="rhythm-scroll"><div class="rhythm-grid" style="--ticks:${m.timeline.length};grid-template-rows:30px repeat(${m.cycles.length},minmax(45px,1fr)) 36px"><div class="rhythm-label"></div>${m.timeline.map(frame => `<div class="rhythm-tick ${level.goal.focusTick === frame.tick ? 'rhythm-goal' : ''}" data-tick="${frame.tick}">${frame.tick}</div>`).join('')}${m.cycles.map((cycle, i) => `<div class="rhythm-label"><span>${cycle.id === 'bip' ? robotSVG() : symUse('avatar-' + cycle.id)}</span><b>${cycle.id === 'bip' ? 'Bip' : cycle.id === 'zoe' ? 'Zoé' : 'Lulu'}</b><small>${cycle.period} pas</small></div>${m.timeline.map(frame => `<div class="rhythm-cell ${level.goal.focusTick === frame.tick ? 'rhythm-goal' : ''}" data-tick="${frame.tick}"><i style="--friend:${['#68A2C4', '#CF806C', '#76A667'][i]}" class="${frame.active.includes(cycle.id) ? 'active' : ''}">${frame.active.includes(cycle.id) ? '●' : ''}</i></div>`).join('')}`).join('')}<div class="rhythm-label rhythm-all">Ensemble</div>${m.timeline.map(frame => `<div class="rhythm-cell rhythm-bottom" data-tick="${frame.tick}">${result && frame.together ? I.check : '<span>·</span>'}</div>`).join('')}</div></div>`;
+}
+
+function wireLabs() {
+  $('#btnLabHome').innerHTML = I.home;
+  $('#btnLabVoice').innerHTML = I.speaker;
+  $('#btnLabHome').onclick = () => { show('home'); homeTab('Labs'); };
+  $('#btnLabVoice').onclick = $('#labMission').onclick = () => speak($('#labText').textContent);
+  ['Labs', 'Journey', 'Notebook'].forEach(name => $('#tab' + name).onclick = () => { homeTab(name); SFX.tap(); });
+  $('#btnLabRun').onclick = runLab;
+  $('#btnLabReset').onclick = () => openLab(L.level.id, L.free, L.level.initial);
+  $('#btnLabHint').onclick = () => {
+    const hints = { balance: 'Un panier loin du centre tire plus fort. Essaie une case voisine.', light: 'Suis la lumière du doigt. Quel miroir change son premier virage ?', gears: 'Deux roues qui se touchent tournent en sens contraire. Regarde aussi leur taille.', rhythm: 'Cherche le pas du rendez-vous. Quels amis ne font pas encore coucou ?' };
+    $('#labFeedback').textContent = hints[L.level.family]; speak(hints[L.level.family]);
+  };
+  $('#btnLabNext').onclick = () => {
+    const next = LAB_LEVELS[LAB_LEVELS.indexOf(L.level) + 1];
+    if (next) openLab(next.id); else { show('home'); homeTab('Notebook'); }
+  };
+  $('#btnLabInvent').onclick = () => openLab(L.level.id, true, L.setup);
+  $('#btnLabSave').onclick = () => {
+    const recipe = { family: L.level.family, level: L.level.id, setup: labCopy(L.setup) };
+    save.labs.inventions = save.labs.inventions.filter(item => item.family !== recipe.family);
+    save.labs.inventions.push(recipe); persist();
+    $('#labSaveStatus').textContent = 'Ton invention t’attend dans le jardin.'; SFX.sticker();
+  };
+  const sceneAction = target => {
+    const element = target.closest('[data-lab-key]'); if (!element) return;
+    const control = L.level.controls.find(item => item.key === element.dataset.labKey); if (!control) return;
+    const next = element.dataset.labCycle ? control.options[(control.options.findIndex(item => item.value === L.setup[control.key]) + 1) % control.options.length].value : Number(element.dataset.labValue);
+    setLabControl(control.key, next);
+  };
+  $('#labScene').onclick = event => sceneAction(event.target);
+  $('#labScene').addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); sceneAction(event.target); } });
+  window.__bipLabs = { open: openLab, run: runLab, state: L, levels: LAB_LEVELS, evaluate: evaluateLab, set: setLabControl };
 }
 
 /* ---------- Câblage général ---------- */
@@ -3015,7 +3950,7 @@ function wire() {
       return;
     }
     clearTimeout(resetArm); b.classList.remove('arm');
-    save.stars = {}; save.all = false; save.stickers = []; save.daily = {}; save.seen = { w: {}, c: {}, ce: {} }; save.sandbox = [null, null, null];
+    save.stars = {}; save.all = false; save.stickers = []; save.daily = {}; save.seen = { w: {}, c: {}, ce: {} }; save.sandbox = [null, null, null]; save.labs = { solved: {}, drafts: {}, inventions: [], attempts: {}, predictions: {} };
     persist(); syncToggles(); renderHome();
     $('#resetLabel').textContent = 'Progression effacée';
     setTimeout(() => { $('#resetLabel').textContent = 'Effacer la progression'; }, 2000);
@@ -3035,8 +3970,9 @@ function wire() {
   new ResizeObserver(fitSbBoard).observe($('#sbBoardWrap'));
   window.addEventListener('resize', () => { placeHand(); });
   $('#seqScroll').addEventListener('scroll', placeHand, { passive: true });
-  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden || !$('#sandbox').hidden) { G.abort = true; show('home'); } });
+  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden || !$('#sandbox').hidden || !$('#lab').hidden) { G.abort = true; show('home'); } });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopVoice(); });
+  wireLabs();
   show('home');
 }
 wire();

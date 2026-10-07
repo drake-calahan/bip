@@ -75,7 +75,7 @@ function renderSbBoard() {
   });
   P.crates.forEach(c => { h += `<div class="it crate" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
   P.toys.forEach((t, i) => { h += `<div class="it toy" style="--x:${t.x};--y:${t.y}">${toyUse(t.k)}</div>`; });
-  h += `<div class="it robot" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div></div>`;
+  if (P.start) h += `<div class="it robot" style="--x:${P.start[0]};--y:${P.start[1]}"><div class="sprite">${robotSVG()}</div></div>`;
   b.innerHTML = h;
   fitSbBoard();
 }
@@ -107,6 +107,7 @@ function onSbTap(e) {
   G.sb.rows = rows;
   persistSb();
   renderSbBoard();
+  if (!G.sb.P.start) sbSay('Il manque le départ de Bip. Pose le petit robot dans ton jardin !');
 }
 function playSandbox() {
   const P = parseLevel({ map: G.sb.rows });

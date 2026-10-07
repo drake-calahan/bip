@@ -1,4 +1,4 @@
-<title>Bip le robot</title>
+<title>Bip V3 - Le jardin des possibles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Grandstander:wght@600;800&display=swap">
@@ -190,6 +190,7 @@ svg { display: block; }
 .dot.jumpdot b { border-color: var(--jump-edge); color: var(--jump-edge); }
 .paint { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); display: grid; place-items: center; pointer-events: none; }
 .paint i { width: 46%; height: 46%; border-radius: 46% 54% 52% 48%; background: var(--pollen); opacity: .85; animation: pop .3s ease-out; box-shadow: 0 0 0 3px rgba(255, 211, 107, .25); }
+.paint.tr i { width: 26%; height: 26%; opacity: .4; box-shadow: none; }
 .splash { position: absolute; left: 0; top: 0; width: var(--cell); height: var(--cell); transform: translate(calc(var(--x) * var(--cell)), calc(var(--y) * var(--cell))); }
 .splash i { position: absolute; inset: 18%; border-radius: 50%; border: 4px solid #fff; opacity: 0; animation: ripple .9s ease-out forwards; }
 .splash i:nth-child(2) { animation-delay: .18s; }
@@ -424,6 +425,7 @@ svg { display: block; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .05s !important; }
 }
+/*@LAB_STYLE@*/
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -670,12 +672,19 @@ svg { display: block; }
     <div class="home-in">
       <header class="hero">
         <div class="hero-art" id="heroArt"></div>
-        <h1>Bip</h1>
-        <p class="sub">Programme le petit robot, construis des machines et prépare le grand pique-nique !</p>
+        <h1>Bip <small>V3</small></h1>
+        <p class="sub">Le jardin des possibles</p>
         <div class="garden" id="garden" aria-label="Jardin fleuri"></div>
         <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Continuer</span></button>
       </header>
-      <div id="journey"></div>
+      <nav class="home-tabs" aria-label="Les jardins de Bip">
+        <button id="tabLabs" aria-selected="true" class="on">Les ateliers <span id="labTotal">0/12</span></button>
+        <button id="tabJourney" aria-selected="false">L'aventure</button>
+        <button id="tabNotebook" aria-selected="false">Mes découvertes</button>
+      </nav>
+      <div id="labHub"></div>
+      <div id="journey" hidden></div>
+      <div id="notebook" hidden></div>
       <div class="extra-row">
         <button class="extra daily" id="btnDaily"><span class="eico" id="icoDaily"></span>
           <span>Le défi de Zoé<small id="dailyLabel"></small><span class="daily-dots" id="dailyDots"></span></span></button>
@@ -683,6 +692,38 @@ svg { display: block; }
         <button class="extra" id="btnAlbum"><span class="eico" id="icoAlbum"></span><span>L'album de Zoé<small id="albumCount"></small></span></button>
         <button class="extra" id="btnAdults"><span id="icoInfo"></span><span>Pour les adultes</span></button>
       </div>
+    </div>
+  </section>
+
+  <section id="lab" hidden aria-label="Atelier des possibles">
+    <header class="lab-top">
+      <button class="ibtn" id="btnLabHome" aria-label="Retour aux ateliers" title="Retour aux ateliers"></button>
+      <div class="lab-heading"><span id="labFamily"></span><h1 id="labTitle"></h1></div>
+      <div id="labLevels" class="lab-levels" aria-label="Expériences"></div>
+      <button class="ibtn" id="btnLabVoice" aria-label="Réécouter la mission" title="Réécouter la mission"></button>
+    </header>
+    <button class="lab-mission" id="labMission" aria-label="Réécouter la mission"><span id="labGuide"></span><span id="labText"></span></button>
+    <div class="lab-workbench">
+      <div class="lab-experiment">
+        <div class="lab-scene" id="labScene"></div>
+        <div id="labReadings" class="lab-readings" aria-live="polite"></div>
+        <div id="labCompare" class="lab-compare" hidden></div>
+      </div>
+      <aside class="lab-console" aria-label="Réglages de l'expérience">
+        <div id="labControls"></div>
+        <fieldset class="lab-predict"><legend>Je pense que…</legend><div id="labPredictions"></div></fieldset>
+        <div class="lab-actions">
+          <button id="btnLabRun" class="lab-run"></button>
+          <button id="btnLabReset" class="ibtn" aria-label="Recommencer l'expérience" title="Recommencer l'expérience"></button>
+          <button id="btnLabHint" class="ibtn" aria-label="Un petit indice" title="Un petit indice"></button>
+        </div>
+        <div class="lab-feedback" id="labFeedback" aria-live="polite"></div>
+        <div class="lab-follow" id="labFollow" hidden>
+          <button class="lab-next" id="btnLabNext"></button>
+          <button class="lab-invent" id="btnLabInvent">Mon invention</button>
+        </div>
+        <div id="labSaved" class="lab-saved" hidden><button id="btnLabSave"></button><span id="labSaveStatus" aria-live="polite"></span></div>
+      </aside>
     </div>
   </section>
 
@@ -768,9 +809,11 @@ svg { display: block; }
   <div class="sheet-card" role="dialog" aria-labelledby="sheetTitle">
     <button class="ibtn close" id="btnClose" aria-label="Fermer"></button>
     <h2 id="sheetTitle">Pour les adultes</h2>
-    <p>Bip initie les enfants de 5 à 7 ans à la pensée algorithmique et aux premières machines : prévoir une suite d'instructions, la lancer, observer, corriger — puis construire un petit système qui fonctionne.</p>
+    <p>Bip accompagne les 5–7 ans dans la programmation, la physique et les mathématiques. Dans les ateliers V3, l'enfant prévoit un résultat, teste son idée et compare ses essais. Les prédictions restent facultatives et chaque essai est bienvenu.</p>
     <h3>Ce que l'enfant travaille</h3>
     <ul>
+      <li><b>V3 — Le jardin des possibles</b> : 12 expériences d'équilibre, de lumière, d'engrenages et de rythmes. Chaque famille se prolonge en exploration libre et les découvertes sont conservées sur cet appareil.</li>
+      <li><b>Des modèles simples</b> : équilibre idéal sans frottements, lumière sur quadrillage, roues dentées idéales et rythmes à pas fixes. Les formules restent dans le document de conception pour l'adulte.</li>
       <li>Se repérer sur un quadrillage, coder un déplacement (flèches, puis repère relatif au chapitre 5).</li>
       <li>Séquence, boucle (Répéter, chapitre 4), boucle conditionnelle (Jusqu'à, chapitre 7), condition (Si… sinon, chapitre 8), fonction (bloc magique, chapitre 9), débogage (chapitre 14).</li>
       <li><b>Nouveauté v2 — l'état des machines</b> : les champignons ouvrent les barrières (chapitre 10) et les caisses se déplacent ou deviennent des ponts (chapitre 11). L'enfant découvre qu'une action modifie le monde pour la suite du programme.</li>
@@ -821,5 +864,6 @@ svg { display: block; }
 /*@ENGINE@*/
 /*@BALL@*/
 /*@LEVELS@*/
+/*@LAB@*/
 /*@APP@*/
 </script>

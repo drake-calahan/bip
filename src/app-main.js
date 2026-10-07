@@ -75,7 +75,7 @@ function wire() {
       return;
     }
     clearTimeout(resetArm); b.classList.remove('arm');
-    save.stars = {}; save.all = false; save.stickers = []; save.daily = {}; save.seen = { w: {}, c: {}, ce: {} }; save.sandbox = [null, null, null];
+    save.stars = {}; save.all = false; save.stickers = []; save.daily = {}; save.seen = { w: {}, c: {}, ce: {} }; save.sandbox = [null, null, null]; save.labs = { solved: {}, drafts: {}, inventions: [], attempts: {}, predictions: {} };
     persist(); syncToggles(); renderHome();
     $('#resetLabel').textContent = 'Progression effacée';
     setTimeout(() => { $('#resetLabel').textContent = 'Effacer la progression'; }, 2000);
@@ -95,8 +95,9 @@ function wire() {
   new ResizeObserver(fitSbBoard).observe($('#sbBoardWrap'));
   window.addEventListener('resize', () => { placeHand(); });
   $('#seqScroll').addEventListener('scroll', placeHand, { passive: true });
-  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden || !$('#sandbox').hidden) { G.abort = true; show('home'); } });
+  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden || !$('#sandbox').hidden || !$('#lab').hidden) { G.abort = true; show('home'); } });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopVoice(); });
+  wireLabs();
   show('home');
 }
 wire();

@@ -3,7 +3,7 @@ let UID = 1;
 const newId = () => 'k' + (UID++);
 const G = { i: -1, lv: null, P: null, v: 0, prog: [], fn: [], target: 'main', busy: false, abort: false, step: null,
   fails: 0, dirty: false, last: null, hintT: 0, spd: 1, told: {}, mode: 'classic', sandbox: false, daily: false,
-  tiles: {}, tool: 'r', cellPx: 64, sb: { rows: [], tool: 'R', cur: 0 }, sbCellPx: 64 };
+  tiles: {}, tool: 'r', cellPx: 64, trail: new Set(), session: 0, sb: { rows: [], tool: 'R', cur: 0 }, sbCellPx: 64 };
 const hasFn = () => !!(G.lv.pal && G.lv.pal.includes('star'));
 const totalBlocks = () => countBlocks(G.prog) + countBlocks(G.fn);
 
@@ -27,8 +27,10 @@ function storyForLevel(lv) {
 
 function openLevel(i) { openLevelObj(LEVELS[i], { index: i }); }
 function openLevelObj(lv, opts = {}) {
+  G.session++;
   G.mode = lv.mode === 'ball' ? 'ball' : 'classic';
   G.sandbox = !!opts.sandbox;
+  G.daily = !!(opts.daily || lv.daily);
   G.i = opts.index != null ? opts.index : LEVELS.indexOf(lv);
   G.lv = lv;
   G.tiles = {};
@@ -107,6 +109,7 @@ function buildBoard() {
   }
   b.innerHTML = h;
   G.dirty = false;
+  G.trail = new Set();
   fitBoard();
 }
 function fitBoard() {
@@ -126,6 +129,13 @@ function resetBoard() {
 function buildTray() {
   const P = G.P;
   let h = P.toys.map((t, i) => `<span class="tt" data-i="${i}" title="${TOY_NAME[t.k]}">${toyUse(t.k)}</span>`).join('');
+  if (P.flowers && P.flowers.length) {
+    if (h) h += `<span class="to">${I.next}</span>`;
+    h += P.flowers.map((idx) => {
+      const x = idx % P.w, y = (idx / P.w) | 0;
+      return `<span class="tt ftt" data-fx="${x}" data-fy="${y}" title="Une fleur à peindre">${symUse('flower')}</span>`;
+    }).join('');
+  }
   if (P.box) h += `<span class="to">${I.next}</span><span class="tt box-t" style="filter:none">${symUse('box')}</span>`;
   $('#tray').innerHTML = h;
 }
@@ -471,22 +481,24 @@ async function runAll() {
   if (G.busy) { G.abort = true; return; }
   if (!totalBlocks() || !G.prog.length) { emptyNudge(); return; }
   stopVoice(); G.step = null; clearMarks(); hideHint();
+  const session = ++G.session;
   const nv = G.lv.nv;
   G.busy = true; G.abort = false; setRunning(true);
   $$('#vars button').forEach(b => b.classList.remove('pass', 'fail'));
   for (let v = 0; v < nv; v++) {
-    if (nv > 1) { setVariant(v); say(`Jardin ${v + 1}`, true); await sleep(500 * T); if (G.abort) break; }
+    if (nv > 1) { setVariant(v); say(`Jardin ${v + 1}`, true); await sleep(500 * T); if (G.session !== session) return; if (G.abort) break; }
     else { resetBoard(); say('C’est parti !', true); }
     clearMarks();
     const sim = simulate(G.lv, G.prog, G.fn, v);
     G.spd = speedFor(sim); G.dirty = true;
-    for (const st of sim.steps) { if (G.abort) break; await doStep(st); }
+    for (const st of sim.steps) { if (G.abort) break; await doStep(st, false, session); if (G.session !== session) return; }
     if (G.abort) break;
     if (sim.result !== 'win') { G.busy = false; setRunning(false); if (nv > 1) varMark(v, 'fail'); finish(sim, nv > 1 ? v : null); return; }
     if (nv > 1) {
       varMark(v, 'pass'); clearNow();
       $('#robot').classList.add('happy'); SFX.collect();
       await sleep(800 * T);
+      if (G.session !== session) return;
     }
   }
   const aborted = G.abort; G.busy = false; setRunning(false);
@@ -502,16 +514,19 @@ const CHECK_SAY = {
 async function stepOnce() {
   if (G.busy || G.mode === 'ball') return;
   if (!G.prog.length) { emptyNudge(); return; }
-  if (!G.step) { stopVoice(); resetBoard(); clearMarks(); hideHint(); G.step = { sim: simulate(G.lv, G.prog, G.fn, G.v), i: 0 }; G.dirty = true; G.spd = 1; }
-  const { sim } = G.step, st = sim.steps[G.step.i];
+  if (!G.step) { stopVoice(); resetBoard(); clearMarks(); hideHint(); G.session++; G.abort = false; G.step = { sim: simulate(G.lv, G.prog, G.fn, G.v), i: 0 }; G.dirty = true; G.spd = 1; }
+  const session = G.session, step = G.step;
+  const { sim } = step, st = sim.steps[step.i];
   if (!st) { const s = G.step; G.step = null; finishStep(s.sim); return; }
   G.busy = true; setRunning('step');
   $$('#progCard .blk.now').forEach(e => e.classList.add('done'));
-  await doStep(st, true);
+  await doStep(st, true, session);
+  if (G.session !== session || G.step !== step) return;
   G.busy = false; setRunning(false);
-  G.step.i++;
+  if (G.abort) { G.step = null; resetBoard(); clearMarks(); say('Stop ! Bip revient au départ.'); return; }
+  step.i++;
   if (st.kind === 'check') say(CHECK_SAY[`${st.ins.t}-${st.cond}`](st.ok));
-  if (G.step.i >= sim.steps.length) { const s = G.step; G.step = null; finishStep(s.sim); }
+  if (step.i >= sim.steps.length) { G.step = null; finishStep(sim); }
   else if (st.kind !== 'check') say(`Bloc fait. Touche encore pour la suite.`, true);
 }
 function finishStep(sim) {
@@ -541,7 +556,8 @@ function mark(ins) {
 function crateEl(from) {
   return $$('#board .it.crate').find(c => c.style.getPropertyValue('--x') == from[0] && c.style.getPropertyValue('--y') == from[1]);
 }
-async function doStep(st, keep) {
+async function doStep(st, keep, session = G.session) {
+  if (G.session !== session || G.abort) return;
   const R = $('#robot'), spr = R ? $('.sprite', R) : null;
   const k = T * G.spd;
   const fx = $('#fx');
@@ -570,6 +586,7 @@ async function doStep(st, keep) {
       setTimeout(() => s.remove(), 520 * k);
     }
     await sleep((keep ? 600 : 420) * k);
+    if (G.session !== session || G.abort) return;
     if (c) c.classList.remove('yes', 'no');
     return;
   }
@@ -589,6 +606,7 @@ async function doStep(st, keep) {
       { transform: `translate(${dx * far * .4}%, ${dy * far * .4}%)`, offset: .7 },
       { transform: 'translate(0,0)' },
     ], { duration: 560 * T, easing: 'ease-out' }).finished.catch(() => {});
+    if (G.session !== session || G.abort) return;
     SFX.bump(); buzz(60);
     R.classList.add('oops');
     const bx = st.from[0] + dx * (st.kind === 'jump' ? 1.5 : .5), by = st.from[1] + dy * (st.kind === 'jump' ? 1.5 : .5);
@@ -602,11 +620,13 @@ async function doStep(st, keep) {
     R.style.setProperty('--x', st.to[0]); R.style.setProperty('--y', st.to[1]);
     spr.animate([{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(-55%) scale(1.06)', offset: .5 }, { transform: 'translateY(0) scale(1,.92)', offset: .9 }, { transform: 'translateY(0) scale(1)' }], { duration: 560 * k, easing: 'ease-in-out' });
     await sleep(580 * k);
+    if (G.session !== session || G.abort) return;
     R.classList.remove('jumping');
   } else {
     SFX.step();
     R.style.setProperty('--x', st.to[0]); R.style.setProperty('--y', st.to[1]);
     await sleep(400 * k);
+    if (G.session !== session || G.abort) return;
   }
   if (st.sink) {
     SFX.pad();
@@ -628,6 +648,7 @@ async function doStep(st, keep) {
       ce.style.setProperty('--x', st.crate.to[0]); ce.style.setProperty('--y', st.crate.to[1]);
       if (st.crate.plank) {
         await sleep(320 * k);
+        if (G.session !== session || G.abort) return;
         ce.remove();
         const pl = document.createElement('div');
         pl.className = 'it plank'; pl.style.cssText = `--x:${st.crate.to[0]};--y:${st.crate.to[1]}`;
@@ -647,6 +668,16 @@ async function doStep(st, keep) {
     const idx = st.paint[1] * G.P.w + st.paint[0];
     const fl = $(`#board .it.flower[data-idx="${idx}"]`);
     if (fl) fl.classList.add('painted');
+    const tt = $(`#tray .ftt[data-fx="${st.paint[0]}"][data-fy="${st.paint[1]}"]`);
+    if (tt) tt.classList.add('got');
+  } else if (st.to) {
+    const key = st.to.join(',');
+    if (!G.trail.has(key)) {          // pollen doré là où Bip marche
+      G.trail.add(key);
+      const p = document.createElement('div');
+      p.className = 'paint tr'; p.style.cssText = `--x:${st.to[0]};--y:${st.to[1]}`;
+      p.innerHTML = '<i></i>'; fx.append(p);
+    }
   }
   if (st.fail === 'puddle') {
     SFX.splash(); buzz(40);
@@ -661,6 +692,7 @@ async function doStep(st, keep) {
     const toy = $(`.it.toy[data-i="${st.collect}"]`); if (toy) toy.classList.add('got');
     const tt = $(`#tray .tt[data-i="${st.collect}"]`); if (tt) tt.classList.add('got');
     await sleep(160 * k);
+    if (G.session !== session || G.abort) return;
   }
   await sleep((keep ? 40 : 110) * k);
 }
@@ -723,7 +755,8 @@ function win() {
   SFX.win(); buzz([30, 60, 30]);
   confetti();
   $('#btnHint').classList.remove('glow'); $('#btnStep').classList.remove('glow');
-  setTimeout(() => showWin(stars, n, par), RM ? 300 : 1000);
+  const wonLevel = G.lv, session = G.session;
+  setTimeout(() => { if (G.session === session && G.lv === wonLevel && !$('#game').hidden && !G.abort) showWin(stars, n, par); }, RM ? 300 : 1000);
 }
 function showWin(stars, n, par) {
   const lastLevel = G.i === LAST_STORY;
@@ -736,16 +769,18 @@ function showWin(stars, n, par) {
     ? `Programme parfait : ${n} bloc${n > 1 ? 's' : ''}, c’est le plus court.`
     : `Ton programme a ${n} blocs. On peut réussir avec ${par}. Tu essaies ?`;
   if (G.sandbox) { title = 'Quel jardin !'; text = 'Bip a fini TON jardin. Tu peux le modifier, ou en créer un autre !'; }
+  if (G.daily) { title = 'Joli défi !'; text = 'Une nouvelle idée pour la collection de Zoé !'; }
   if (G.lv.nv > 1 && stars === 3) text = `Ton programme marche dans les ${G.lv.nv} jardins, avec ${n} blocs seulement !`;
   if (lastLevel) { title = 'Champion !'; text = 'Tu as fini toute l’aventure de Bip. Tu sais vraiment programmer un robot !'; }
   else if (chapterEnd && stars === 3) text += ` Prochain chapitre : ${CHAPTERS[G.lv.ch + 1].name.toLowerCase()}.`;
   $('#winTitle').textContent = title;
   $('#winText').textContent = text;
   $('#btnAgain').innerHTML = `${I.replay}<span>Encore</span>`;
-  $('#btnNext').innerHTML = lastLevel ? `${I.home}<span>Carte</span>` : `<span>Suivant</span>${I.next}`;
+  $('#btnNext').innerHTML = lastLevel || G.daily ? `${I.home}<span>Carte</span>` : `<span>Suivant</span>${I.next}`;
   $('#win').hidden = false;
   speak(title + ' ' + text);
-  setTimeout(() => $('#btnNext').focus({ preventScroll: true }), 50);
+  const session = G.session;
+  setTimeout(() => { if (G.session === session && !$('#win').hidden) $('#btnNext').focus({ preventScroll: true }); }, 50);
 }
 function afterWinNext() {
   $('#win').hidden = true;

@@ -2,7 +2,7 @@
   "name": "Bip le robot",
   "short_name": "Bip",
   "lang": "fr",
-  "description": "Programme le petit robot Bip, construis des machines et prépare le grand pique-nique. Initiation à l'algorithmique pour les 5-7 ans.",
+  "description": "Bip V3 : le jardin des possibles. Programmation, équilibre, lumière, engrenages et rythmes pour les 5-7 ans.",
   "start_url": "./",
   "scope": "./",
   "id": "./",

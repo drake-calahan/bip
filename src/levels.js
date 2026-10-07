@@ -126,14 +126,14 @@ const LEVELS = [
   // Chapitre 5 — Le chemin de Zoé (repère relatif)
   { ch: 4, pal: REL, face: 'u', map: ['..b..', '.....', '.....', '..R..'],
     text: 'Nouveaux blocs ! Avance fait aller Bip tout droit, là où il regarde. Ici, il regarde vers le haut.' },
-  { ch: 4, pal: REL, face: 'r', map: ['....n', '.....', 'R....'],
-    text: 'Tourner fait pivoter Bip sur place, sans avancer. Tourne-le, puis avance.' },
+  { ch: 4, pal: REL, face: 'r', map: ['..n..', '.....', '..R..'],
+    text: 'Nouveau bloc : Tourner. Bip pivote sur place, sans avancer. Le nounours est juste au-dessus !' },
+  { ch: 4, pal: REL, face: 'r', map: ['.n...', '..R..', '.....'],
+    text: 'Deux virages ! Tourne, avance, tourne encore et avance jusqu\'au nounours.' },
   { ch: 4, pal: [...REL, 'j'], face: 'd', map: ['..b..', '..~..', '..R..', '.....'],
     text: 'Le ballon est derrière Bip ! Demi-tour, puis saute la flaque.' },
   { ch: 4, pal: REL, face: 'r', map: ['R.##.', '#.#..', '#t..b'],
-    text: 'Un chemin en zigzag. Imagine que tu es Bip : à gauche ou à droite ?' },
-  { ch: 4, pal: REL, face: 'u', map: ['..t..', '.#.#.', '.~R~.', '.#.#.', '..n..'],
-    text: 'Sors de la mare et ramasse les deux jouets. Imagine que tu es Bip !' },
+    text: 'Le grand zigzag du buisson : imagine que tu es Bip, à gauche ou à droite ?' },
   // Chapitre 6 — La mare de Lulu (nénuphars)
   { ch: 5, pal: ARROWS, map: ['R--b.'],
     text: 'Bienvenue chez Lulu ! Les nénuphars coulent quand Bip les quitte. Va chercher le ballon.' },
@@ -144,7 +144,7 @@ const LEVELS = [
   { ch: 5, pal: ARROWS, sol: 'r r r r d d l l', map: ['R---b', '~~~~.', '..K..'],
     text: 'La grande traversée : les nénuphars sont le seul chemin. Au coffre !' },
   { ch: 5, pal: [...ARROWS, 'loop'], max: 7, sol: 'N5(r) d d l l', map: ['R--.-b', '~~~...', '...K..'],
-    text: 'Que de nénuphars ! Un bloc Répéter et Bip saute de feuille en feuille.' },
+    text: 'Que de nénuphars ! Le bloc Répéter fait traverser Bip feuille à feuille.' },
   // Chapitre 7 — Jusqu'au bout (boucle conditionnelle)
   { ch: 6, pal: [...REL, 'while'], max: 2, sol: 'Wo(f)', map: ['.......', 'R.....b', '.......'],
     text: 'Nouveau : Répéter jusqu\'à. Bip répète jusqu\'à ce qu\'un obstacle soit devant lui. Ici, le bord du jardin.' },
@@ -247,7 +247,7 @@ const LEVELS = [
   { ch: 10, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.n.'],
     text: 'Pousse la caisse sur le champignon : elle reste appuyée dessus et la barrière s\'ouvre !' },
   { ch: 10, pal: ARROWS, sol: 'r r r r r', map: ['RC~.bK', '#....#', '......'],
-    text: 'Le grand pont ! Pousse la caisse dans l\'eau, traverse, ramasse tout et range au coffre.' },
+    text: 'Le grand pont ! Pousse la caisse dans l\'eau : elle flotte. Ramasse tout et range au coffre.' },
   // Chapitre 12 — Le pollen doré (peinture)
   { ch: 11, pal: ARROWS, map: ['R***'],
     text: 'Regarde : Bip laisse du pollen doré là où il marche ! Couvre toutes les fleurs.' },
@@ -256,7 +256,7 @@ const LEVELS = [
   { ch: 11, pal: ARROWS, map: ['R.*b.', '*....'],
     text: 'Jouet et fleurs : ramasse le ballon et couvre toutes les fleurs.' },
   { ch: 11, pal: ARROWS, map: ['..#..', '*.#.*', '.....', 'R.#..'],
-    text: 'Le miroir : deux fleurs jumelles, une de chaque côté du mur !' },
+    text: 'Deux fleurs, une de chaque côté du grand mur : fais le tour pour tout peindre !' },
   { ch: 11, pal: ['r', 'loop'], max: 2, sol: 'N7(r)', map: ['R*******'],
     text: 'Une allée de fleurs et une seule pile ! Le bloc Répéter peint tout.' },
   // Chapitre 13 — Les toboggans de Ballon (mode toboggan)
@@ -266,13 +266,13 @@ const LEVELS = [
     text: 'Deux flèches pour contourner le buisson.' },
   { ch: 12, mode: 'ball', face: 'd', map: ['S##..', '...#.', '..N..'], tiles: ['0,1,r', '1,1,d', '1,2,r'],
     text: 'Un vrai petit labyrinthe pour Ballon.' },
-  { ch: 12, mode: 'ball', face: 'r', map: ['S.#..', '...#.', '.N...'], tiles: ['1,0,d', '1,1,r', '2,1,d', '2,2,l'],
-    text: 'Quatre flèches ! Vérifie bien chaque virage avant de lancer.' },
   { ch: 12, mode: 'ball', face: 'r', map: ['S....', '###.#', '..N..'], tiles: ['3,0,d', '3,1,d', '3,2,l'],
-    text: 'Le grand toboggan de Ballon : descends jusqu\'au nid !' },
+    text: 'Le grand toboggan : descends jusqu\'au nid !' },
+  { ch: 12, mode: 'ball', face: 'r', map: ['S.#..', '...#.', '.N...'], tiles: ['1,0,d', '1,1,r', '2,1,d', '2,2,l'],
+    text: 'Le grand défi de Ballon : quatre flèches pour trouver le nid !' },
   // Chapitre 14 — L'atelier de Pilou (détective)
-  { ch: 13, pal: ARROWS, sol: 'r d d r r r u', start: 'd r r r r u', map: ['R.#..', '..#.a', '.....', 'o....'],
-    text: 'Pilou a mélangé un programme ! Lance-le, regarde où ça coince, puis corrige-le.' },
+  { ch: 13, pal: ARROWS, sol: 'd r', start: 'r r d', map: ['R#.', '.a.', '...'],
+    text: 'Pilou a mélangé un programme ! Lance-le, regarde où Bip se cogne, puis corrige-le.' },
   { ch: 13, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', start: 'N3(r) N4(d)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', '....n'],
     text: 'Ce programme s\'arrête trop tôt. Quel nombre faut-il changer ?' },
   { ch: 13, pal: [...REL, 'j', 'while', 'if'], max: 4, sol: 'Wo(Ip(j|f))', start: 'Wo(Ip(f|j))',
@@ -285,7 +285,7 @@ const LEVELS = [
   { ch: 13, pal: ARROWS, sol: 'r r r r', start: 'r r d d', map: ['RC.~b', '##.##'],
     text: 'Pilou a poussé trop loin : Bip est bloqué ! Enlève ce qui dépasse.' },
   { ch: 13, pal: [...ARROWS, 'j'], sol: 'r r r', start: 'j r', map: ['R*.*'],
-    text: 'Pilou a remplacé des flèches par un saut : la première fleur reste blanche !' },
+    text: 'Pilou a remplacé des flèches par un saut : la première fleur reste blanche ! Répare le programme.' },
 
   /* ============ Monde 4 — Le jardin de nuit ============ */
   // Chapitre 15 — Les lucioles de Noctule (récapitulatif de nuit)
@@ -314,9 +314,9 @@ const LEVELS = [
       ['R..#.', '##.#.', '##.#.', 'e..#.', '####.'],
       ['R....', '####.', '...#.', '.#.#.', '#e...'],
     ],
-    text: 'L\'escargot de nuit : répète jusqu\'à avoir toutes les lucioles.' },
-  { ch: 15, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.n.'],
-    text: 'Un pont, une barrière, une luciole : l\'atelier de Grand-Papa pour de vrai.' },
+    text: 'L\'escargot de nuit : répète jusqu\'à avoir la luciole.' },
+  { ch: 15, pal: ARROWS, sol: 'r r r d d', map: ['RC.s.', '###G.', '##.e.'],
+    text: 'Une caisse, un champignon, une barrière et une luciole : l\'atelier de Grand-Papa pour de vrai.' },
   { ch: 15, pal: [...REL, 'j', 'while', 'if', 'star'], max: 8, sol: 'Wo(*) tr Wo(*)', fn: 'Ip(j|f)',
     variants: [
       ['R..~.e', '......', '.....~', '.....t'],
@@ -330,8 +330,8 @@ const LEVELS = [
     text: 'LE GRAND FINAL ! Ramasse tout et range dans le coffre. Tous tes blocs sont là. Bon courage, champion !' },
 
   /* ============ Les défis de Zoé (un par jour de la semaine) ============ */
-  { ch: -1, daily: true, pal: ARROWS, map: ['.....', 'b.R.c', '.....'],
-    text: 'Défi de Zoé : un jouet de chaque côté, lequel d\'abord ?' },
+  { ch: -1, daily: true, pal: ARROWS, map: ['bRc.'],
+    text: 'Défi de Zoé : un jouet de chaque côté. Lequel ramasses-tu en premier ?' },
   { ch: -1, daily: true, pal: [...ARROWS, 'j'], map: ['..R..', '.....', '~~~~~', '.....', '..t..'],
     text: 'Défi de Zoé : fais d\'abord regarder Bip vers le bas, puis saute la rivière.' },
   { ch: -1, daily: true, pal: [...ARROWS, 'loop'], max: 4, sol: 'N4(r) N4(d)', map: ['R...n', '.~~~.', '.~o~.', '.~~~.', '....a'],

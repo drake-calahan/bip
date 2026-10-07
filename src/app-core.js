@@ -1,4 +1,4 @@
-/* ===================== Bip le robot — v2 « Le grand pique-nique » ===================== */
+/* ===================== Bip V3 - Le jardin des possibles ===================== */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -226,7 +226,7 @@ function checkStickers() {
     const lvls = LEVELS.filter(l => l.ch >= 0 && CHAPTERS[l.ch].w === wi);
     if (lvls.length && lvls.every(l => (save.stars[l.id] || 0) === 3)) award('w' + (wi + 1));
   });
-  if (LEVELS.every(l => (save.stars[l.id] || 0) === 3)) award('allstars');
+  if (LEVELS.filter(l => l.ch >= 0).every(l => (save.stars[l.id] || 0) === 3)) award('allstars');
 }
 
 /* ---------- Données de niveau ---------- */
@@ -238,7 +238,8 @@ I.crate = `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="18" y="20" wid
 I.flower = `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 58V84" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="40" r="13" fill="currentColor"/><circle cx="33" cy="52" r="13" fill="currentColor"/><circle cx="67" cy="52" r="13" fill="currentColor"/><circle cx="40" cy="66" r="11" fill="currentColor"/><circle cx="60" cy="66" r="11" fill="currentColor"/></svg>`;
 I.pad2 = `<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="54" rx="36" ry="24" fill="currentColor"/><path d="M50 34V72M50 48C42 44 34 42 27 45" stroke="var(--card)" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
 I.firefly = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="52" r="30" fill="currentColor" opacity=".4"/><path d="M50 28C40 28 35 38 37 50C39 62 44 72 50 72C56 72 61 62 63 50C65 38 60 28 50 28Z" fill="currentColor"/></svg>`;
-const CH_ICON = [I.arrow, I.bush, I.drop, I.jump, I.loop, I.tr, I.until, I.fork, I.magic, I.mushroom, I.crate, I.flower, symUse('ball').replace('viewBox', 'width="100%" height="100%" viewBox'), I.lens, I.firefly, I.star(true)];
+I.ball = `<svg viewBox="0 0 100 100" aria-hidden="true" width="100%" height="100%"><use href="#ball" width="100" height="100"/></svg>`;
+const CH_ICON = [I.arrow, I.bush, I.jump, I.loop, I.tr, I.pad2, I.until, I.fork, I.magic, I.mushroom, I.crate, I.flower, I.ball, I.lens, I.firefly, I.star(true)];
 const DAILY_IDX = (d => (d.getDay() + 6) % 7)(new Date());
 const DAILY_NAMES = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 const DAILY_LEVELS = LEVELS.filter(l => l.daily);
@@ -258,8 +259,13 @@ LEVELS.forEach(lv => {
 /* ---------- Écrans ---------- */
 const STANDALONE = matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
 function show(id) {
+  if (id !== 'game') { G.session++; G.abort = true; G.busy = false; G.step = null; setRunning(false); }
   $('#home').hidden = id !== 'home';
   $('#game').hidden = id !== 'game';
   $('#sandbox').hidden = id !== 'sandbox';
+  $('#lab').hidden = id !== 'lab';
+  $('#story').hidden = true;
+  $('#win').hidden = true;
+  if (typeof L !== 'undefined' && id !== 'lab') { L.token++; L.running = false; }
   if (id === 'home') { renderHome(); hideHand(); stopVoice(); }
 }

@@ -1,6 +1,6 @@
 /* ---------- Accueil : la grande promenade ---------- */
 const unlocked = i => save.all || i === 0 || (save.stars[LEVELS[i - 1].id] || 0) > 0;
-const nextIndex = () => { const i = LEVELS.findIndex(l => !(save.stars[l.id] > 0)); return i < 0 ? LEVELS.length - 1 : i; };
+const nextIndex = () => { const i = LEVELS.findIndex(l => l.ch >= 0 && !(save.stars[l.id] > 0)); return i < 0 ? LAST_STORY : i; };
 const chapterDone = ci => LEVELS.filter(l => l.ch === ci).every(l => (save.stars[l.id] || 0) > 0);
 const worldOf = ci => CHAPTERS[ci].w;
 
@@ -11,6 +11,8 @@ function renderHome() {
   $('#albumCount').textContent = `${save.stickers.length}/${STICKERS.length} images`;
   $('#dailyLabel').textContent = 'Aujourd\'hui : ' + DAILY_NAMES[DAILY_IDX];
   $('#dailyDots').innerHTML = DAILY_NAMES.map((_, k) => `<i class="${save.daily[k] ? 'on' : ''}"></i>`).join('');
+  $('#btnPlay').lastElementChild.textContent = Object.keys(save.stars).length ? 'Continuer' : 'L’aventure';
+  $('#btnPlay').setAttribute('aria-label', 'Continuer l’aventure de Bip');
 
   let h = '';
   let lastWorld = -1;
@@ -32,6 +34,7 @@ function renderHome() {
   // Le défi de Zoé n'est pas sur la carte : il vit dans sa carte tout en bas
   $('#journey').innerHTML = h;
   $$('.lvl', $('#journey')).forEach(b => b.addEventListener('click', () => { audio(); openLevel(+b.dataset.i); }));
+  renderLabHome();
 }
 
 /* ---------- Album ---------- */

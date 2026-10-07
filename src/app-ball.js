@@ -66,12 +66,14 @@ async function runBall() {
     return;
   }
   stopVoice(); G.busy = true; G.abort = false; setRunning(true);
+  const session = ++G.session;
   G.dirty = true;
   resetBoard(); renderTiles();
   say('C\'est parti, Ballon !', true);
   const res = rollBall(G.lv, tiles, G.v);
   const ball = $('#ballSprite');
   for (const st of res.steps) {
+    if (G.session !== session) return;
     if (G.abort) break;
     ball.style.setProperty('--x', st.to[0]); ball.style.setProperty('--y', st.to[1]);
     if (!RM) { ball.classList.remove('roll'); void ball.offsetWidth; ball.classList.add('roll'); }
@@ -82,6 +84,7 @@ async function runBall() {
       if (st.nd) { G.tiles[st.tile.join(',')] = st.nd; renderTiles(); }
     } else SFX.balltap();
     await sleep(240 * T);
+    if (G.session !== session) return;
   }
   const aborted = G.abort; G.busy = false; setRunning(false);
   if (aborted) { resetBoard(); renderTiles(); say('Stop ! Ballon s\'arrête.', true); return; }
@@ -104,7 +107,8 @@ function ballFinish(res, n) {
     $('#btnNext').innerHTML = `<span>Suivant</span>${I.next}`;
     $('#win').hidden = false;
     speak($('#winTitle').textContent + ' ' + $('#winText').textContent);
-    setTimeout(() => $('#btnNext').focus({ preventScroll: true }), 50);
+    const session = G.session;
+    setTimeout(() => { if (G.session === session && !$('#win').hidden) $('#btnNext').focus({ preventScroll: true }); }, 50);
     return;
   }
   G.fails++;
