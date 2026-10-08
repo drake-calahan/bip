@@ -1,153 +1,134 @@
-/* Run against the local server. Optional argv[2] is a Node package directory. */
-const assert = require('node:assert/strict');
-const path = require('node:path');
-const fs = require('node:fs');
-const { chromium } = require(process.argv[2] ? path.join(process.argv[2], 'playwright') : 'playwright');
-const root = path.resolve(__dirname, '..');
-const captures = path.join(root, '.artifact');
-fs.mkdirSync(captures, { recursive: true });
-const errors = [];
-let checks = 0;
-function check(value, message) { assert.ok(value, message); checks++; }
+/* QA navigateur V4 — parcours complets avec Playwright (npm i -D playwright, ou PLAYWRIGHT_BROWSERS_PATH).
+   Usage : python -m http.server 8103 --bind 127.0.0.1   puis   node tools/check-ui.js [http://127.0.0.1:8103/]
+   Vérifie : carte, niveau 1 joué et gagné, fin de chapitre (mascotte), toboggan gagné, les quatre machines
+   gagnées par les gestes (glisser, toucher), Mon jardin, album, feuille adultes, aucune erreur JS,
+   en 390×844 (tactile) et 1280×800. Captures dans .artifact/. */
+const path = require('path');
+const fs = require('fs');
+const { chromium } = require('playwright');
 
-async function noOverflow(page, context) {
-  const issues = await page.evaluate(() => {
-    const viewport = window.innerWidth;
-    const root = document.querySelector('#lab').hidden ? document.querySelector('#home') : document.querySelector('#lab');
-    const buttons = [...root.querySelectorAll('button')].filter(button => button.getClientRects().length && !button.closest('svg'));
-    return {
-      hidden: root.hidden,
-      overflow: root.scrollWidth > viewport + 1,
-      escaped: buttons.filter(button => { const r = button.getBoundingClientRect(); return r.left < -1 || r.right > viewport + 1; }).map(button => { const r = button.getBoundingClientRect(); return { text: button.textContent || button.getAttribute('aria-label'), x: r.x, right: r.right, width: r.width }; }),
-      small: buttons.filter(button => { const r = button.getBoundingClientRect(); return r.width < 43 || r.height < 43; }).map(button => button.textContent || button.getAttribute('aria-label'))
-    };
-  });
-  check(!issues.hidden && !issues.overflow && !issues.escaped.length, context + ' visible with no horizontal overflow: ' + JSON.stringify(issues));
-  check(!issues.small.length, context + ' touch targets: ' + JSON.stringify(issues.small));
+const URL = process.argv[2] || 'http://127.0.0.1:8103/';
+const OUT = path.join(__dirname, '..', '.artifact');
+fs.mkdirSync(OUT, { recursive: true });
+const shot = (pg, name) => pg.screenshot({ path: path.join(OUT, name + '.png') });
+const assert = (cond, msg) => { if (!cond) throw new Error('ÉCHEC : ' + msg); console.log('  ok  ' + msg); };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function dismissStory(pg) { if (await pg.locator('#story').isVisible()) { await pg.click('#storyCard'); await sleep(300); } }
+
+async function run() {
+  const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
+  const errors = [];
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+  const pg = await ctx.newPage();
+  pg.on('pageerror', e => errors.push(String(e)));
+  pg.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text()); });
+
+  console.log('Carte');
+  await pg.goto(URL); await sleep(500);
+  assert(await pg.locator('#trail .node').count() === 80, '80 cailloux sur le chemin');
+  assert(await pg.locator('#trail .node.next').count() === 1, 'Bip est posé sur un seul caillou');
+  assert(await pg.locator('#trail .chap-banner').count() === 16, '16 bannières de chapitre');
+  await shot(pg, 'v4-home-390');
+
+  console.log('Niveau 1');
+  await pg.click('#btnPlay'); await sleep(500); await dismissStory(pg);
+  assert(!(await pg.locator('#game').isHidden()), 'le niveau 1 s\'ouvre en un geste');
+  assert((await pg.locator('#palette .blk').count()) === 1, 'palette : une seule flèche au niveau 1');
+  for (let k = 0; k < 3; k++) { await pg.click('#palette .blk'); await sleep(120); }
+  assert((await pg.locator('#main .blk').count()) === 3, 'trois blocs dans le programme');
+  await shot(pg, 'v4-level1-390');
+  await pg.click('#btnRun'); await sleep(4200);
+  assert(await pg.locator('#win').isVisible(), 'carte Bravo après la victoire');
+  assert((await pg.locator('#winStars svg.on').count()) === 3, 'trois étoiles');
+  await shot(pg, 'v4-win-390');
+  await pg.click('#btnNext'); await sleep(500);
+  assert(await pg.evaluate(() => window.__bip.G.lv.id === 2), 'Suivant ouvre le niveau 2 sans écran intermédiaire');
+
+  console.log('Fin de chapitre');
+  await pg.evaluate(() => { const s = window.__bip.save; for (let i = 1; i <= 4; i++) s.stars[i] = 3; s.seen.ce = {}; window.__bip.persist(); window.__bip.openLevel(4); });
+  await sleep(400); await dismissStory(pg);
+  await pg.evaluate(() => { const B = window.__bip; B.G.prog = B.parseProg('r r d l', () => 'q' + Math.random()); B.runAll(); });
+  await sleep(4500);
+  assert(await pg.locator('#winWho').isVisible(), 'la mascotte parle sur la carte de fin de chapitre');
+  await shot(pg, 'v4-chapter-end-390');
+
+  console.log('Toboggan');
+  await pg.evaluate(() => window.__bip.openLevel(60)); await sleep(500); await dismissStory(pg);
+  assert(await pg.locator('#game.ball-only').count() === 1, 'mode toboggan : palette de flèches au sol');
+  const bb = await pg.locator('#board').boundingBox(); const cell = await pg.evaluate(() => window.__bip.G.cellPx);
+  await pg.click('#palette .blk[data-t="d"]'); await sleep(150);
+  await pg.mouse.click(bb.x + 7 + cell * 1.5, bb.y + 7 + cell * .5); await sleep(300);
+  await pg.click('#btnRun'); await sleep(3000);
+  assert(await pg.locator('#win').isVisible(), 'Ballon arrive au nid');
+
+  console.log('Machines');
+  await pg.goto(URL); await sleep(400);
+  await pg.click('#btnMachines'); await sleep(400);
+  assert((await pg.locator('#machinesGrid .mcard').count()) === 4, 'quatre machines');
+  await shot(pg, 'v4-machines-390');
+  await pg.evaluate(() => window.__bip.openLab('balance-1', false)); await sleep(400);
+  const g = await pg.locator('#scene .basket.grab').boundingBox();
+  await pg.mouse.move(g.x + g.width / 2, g.y + g.height / 2); await pg.mouse.down();
+  await pg.mouse.move(g.x + g.width / 2 + 40, g.y + g.height / 2, { steps: 6 }); await pg.mouse.up(); await sleep(300);
+  assert(await pg.evaluate(() => window.__bip.L.setup.small === 2), 'le panier glisse d\'un cran');
+  await pg.click('#labGuess button[data-v="balanced"]'); await sleep(150);
+  await pg.click('#btnLabRun'); await sleep(2600);
+  assert(await pg.evaluate(() => !!window.__bip.save.labs.solved['balance-1']), 'balance 1 réussie après le lâcher');
+  assert(await pg.locator('#labGuess button.hit').count() === 1, 'la prédiction juste s\'allume');
+  await shot(pg, 'v4-balance-390');
+  await pg.evaluate(() => window.__bip.openLab('light-1', false)); await sleep(300);
+  await pg.click('#scene .mirror.tap'); await sleep(200);
+  await pg.click('#btnLabRun'); await sleep(2500);
+  assert(await pg.evaluate(() => !!window.__bip.save.labs.solved['light-1']), 'lumière 1 : un tap sur le miroir suffit');
+  await shot(pg, 'v4-light-390');
+  await pg.evaluate(() => window.__bip.openLab('gears-1', false)); await sleep(300);
+  await pg.click('#scene .gear.tap'); await sleep(200);     // 24 → 6
+  await pg.click('#scene .gear.tap'); await sleep(200);     // 6 → 12
+  await pg.click('#btnLabRun'); await sleep(3600);
+  assert(await pg.evaluate(() => !!window.__bip.save.labs.solved['gears-1']), 'roues 1 : deux taps changent la roue');
+  await shot(pg, 'v4-gears-390');
+  await pg.evaluate(() => window.__bip.openLab('rhythm-1', false)); await sleep(300);
+  await pg.click('#scene .row.tap'); await sleep(200);      // 1 → 2
+  await pg.click('#scene .row.tap'); await sleep(200);      // 2 → 0
+  await pg.click('#btnLabRun'); await sleep(3200);
+  assert(await pg.evaluate(() => !!window.__bip.save.labs.solved['rhythm-1']), 'rendez-vous 1 : décaler Zoé suffit');
+  await shot(pg, 'v4-rhythm-390');
+
+  console.log('Mon jardin, album, adultes');
+  await pg.goto(URL); await sleep(400);
+  await pg.click('#btnSandbox'); await sleep(400);
+  assert(await pg.locator('#sandbox').isVisible(), 'Mon jardin s\'ouvre');
+  await shot(pg, 'v4-sandbox-390');
+  await pg.goto(URL); await sleep(400);
+  await pg.click('#btnAlbum'); await sleep(400);
+  assert((await pg.locator('#albumGrid .stk').count()) >= 29, 'album : chapitres, mondes, spéciaux et machines');
+  await shot(pg, 'v4-album-390');
+  await pg.keyboard.press('Escape');
+  await pg.click('#btnAdults'); await sleep(300);
+  assert(await pg.locator('#sheet').isVisible(), 'feuille adultes');
+  await pg.keyboard.press('Escape');
+  await pg.reload(); await sleep(500);
+  assert(await pg.evaluate(() => (window.__bip.save.stars[1] || 0) > 0 && !!window.__bip.save.labs.solved['balance-1']), 'la progression survit au rechargement');
+  await ctx.close();
+
+  console.log('Paysage 1280×800');
+  const ctx2 = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const pg2 = await ctx2.newPage();
+  pg2.on('pageerror', e => errors.push('desk: ' + String(e)));
+  await pg2.goto(URL); await sleep(500);
+  await shot(pg2, 'v4-home-desktop');
+  await pg2.evaluate(() => window.__bip.openLevel(16)); await sleep(500); await dismissStory(pg2);
+  const prog = await pg2.locator('#progCard').boundingBox(), board = await pg2.locator('#board').boundingBox();
+  assert(prog.x > board.x + board.width - 1, 'paysage : programme à droite du plateau');
+  await shot(pg2, 'v4-level-desktop');
+  await pg2.evaluate(() => window.__bip.openLab('gears-3', false)); await sleep(500);
+  await shot(pg2, 'v4-gears-desktop');
+  const over = await pg2.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
+  assert(!over, 'pas de débordement horizontal');
+  await browser.close();
+
+  if (errors.length) { console.log('\nErreurs JS :'); errors.forEach(e => console.log('  ' + e)); process.exit(1); }
+  console.log('\nUI OK — captures dans .artifact/');
 }
-
-async function clickSetting(page, key, value) {
-  const option = await page.evaluate(({ key, value }) => window.__bipLabs.state.level.controls.find(control => control.key === key).options.findIndex(item => item.value === value), { key, value });
-  await page.locator(`[data-control="${key}"][data-option="${option}"]`).click();
-}
-
-async function solveCurrent(page) {
-  const solution = await page.evaluate(() => window.__bipLabs.state.level.solution);
-  for (const [key, value] of Object.entries(solution)) await clickSetting(page, key, value);
-  await page.locator('#btnLabRun').click();
-  await page.waitForFunction(() => !window.__bipLabs.state.running);
-  check(await page.evaluate(() => window.__bipLabs.state.last.result.success), 'lab solution succeeds through UI');
-}
-
-(async () => {
-  const browser = await chromium.launch({ headless: true, channel: process.env.BIP_BROWSER || 'chrome' });
-  try {
-    const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
-    await context.addInitScript(() => {
-      // A pre-existing adventure save must survive the V3 upgrade.
-      if (!localStorage.getItem('bip-robot-v2')) localStorage.setItem('bip-robot-v2', JSON.stringify({ stars: { 1: 2 }, voice: false, sound: false, seen: { w: {}, c: {}, ce: {} } }));
-    });
-    const page = await context.newPage();
-    page.on('pageerror', error => errors.push(error.message));
-    await page.goto(process.env.BIP_URL || 'http://127.0.0.1:8103', { waitUntil: 'networkidle' });
-    await noOverflow(page, 'desktop home');
-    await page.screenshot({ path: path.join(captures, 'v3-home-desktop.png') });
-    check(await page.evaluate(() => JSON.parse(localStorage.getItem('bip-robot-v2')).stars[1] === 2), 'legacy progress preserved');
-
-    await page.locator('[data-lab-open="balance-1"]').first().click();
-    await page.locator('[data-predict="right"]').click();
-    await page.locator('#btnLabRun').click();
-    await page.waitForFunction(() => !window.__bipLabs.state.running);
-    check(await page.locator('#labFeedback').innerText().then(text => text.includes('surprise')), 'unexpected prediction remains gentle');
-    await solveCurrent(page);
-    check(await page.locator('#labCompare').isVisible(), 'two trials can be compared');
-    await page.screenshot({ path: path.join(captures, 'v3-balance-desktop.png') });
-    await noOverflow(page, 'desktop balance');
-
-    const ids = await page.evaluate(() => window.__bipLabs.levels.map(level => level.id));
-    for (const id of ids.slice(1)) {
-      await page.evaluate(id => window.__bipLabs.open(id), id);
-      check(await page.locator('#labCompare').isHidden(), 'comparison cleared on opening ' + id);
-      await solveCurrent(page);
-      if (id.endsWith('-3')) await page.screenshot({ path: path.join(captures, 'v3-' + id + '-desktop.png') });
-    }
-    await page.locator('#btnLabHome').click();
-    check(await page.locator('#labTotal').innerText() === '12/12', 'all twelve discoveries counted');
-    await page.locator('#tabNotebook').click();
-    check(await page.locator('.discovery:not(.locked)').count() === 12, 'notebook contains all discoveries');
-    await page.locator('#tabLabs').click();
-    await page.locator('[data-lab-free="gears-3"]').click();
-    await clickSetting(page, 'middle', 24);
-    await page.locator('#btnLabSave').click();
-    await page.locator('#btnLabHome').click();
-    await page.reload({ waitUntil: 'networkidle' });
-    await page.locator('[data-lab-recipe="gears"]').click();
-    check(await page.evaluate(() => window.__bipLabs.state.setup.middle === 24 && window.__bipLabs.state.free), 'invention survives reload');
-    await page.locator('#btnLabHome').click();
-    await page.locator('#btnDaily').click();
-    check(await page.evaluate(() => window.__bip.G.daily), 'daily mode recognized');
-    await page.evaluate(async () => {
-      const api = window.__bip;
-      api.G.prog = JSON.parse(JSON.stringify(api.G.lv.ref)); api.G.fn = JSON.parse(JSON.stringify(api.G.lv.refFn)); api.G.spd = .001;
-      await api.runAll();
-    });
-    await page.waitForSelector('#win:not([hidden])');
-    await page.locator('#btnNext').click();
-    check(await page.locator('#home').isVisible() && await page.locator('#story').isHidden(), 'daily returns home without finale');
-    check(await page.evaluate(() => Object.keys(JSON.parse(localStorage.getItem('bip-robot-v2')).daily).length === 1), 'daily completion persisted');
-
-    for (const index of [0, 25, 45, 50, 55, 60]) {
-      await page.evaluate(index => window.__bip.openLevel(index), index);
-      while (await page.locator('#story').isVisible()) await page.locator('#btnStoryNext').click();
-      await page.evaluate(async () => {
-        const api = window.__bip, g = api.G;
-        g.spd = .001; g.prog = JSON.parse(JSON.stringify(g.lv.ref)); g.fn = JSON.parse(JSON.stringify(g.lv.refFn));
-        if (g.mode === 'ball') g.tiles = Object.fromEntries(g.lv.tiles.map(tile => { const [x, y, direction] = tile.split(','); return [x + ',' + y, direction]; }));
-        await api.runAll();
-      });
-      await page.waitForSelector('#win:not([hidden])');
-      check(await page.locator('#winTitle').innerText().then(text => !!text), 'legacy win ' + (index + 1));
-      await page.locator('#btnAgain').click();
-      await page.locator('#btnHome').click();
-    }
-
-    for (const viewport of [{ width: 360, height: 640 }, { width: 390, height: 844 }, { width: 1024, height: 600 }]) {
-      await page.setViewportSize(viewport);
-      await page.screenshot({ path: path.join(captures, `v3-home-${viewport.width}.png`) });
-      await noOverflow(page, `${viewport.width} home`);
-      for (const family of ['balance', 'light', 'gears', 'rhythm']) {
-        await page.evaluate(id => window.__bipLabs.open(id), family + '-3');
-        await solveCurrent(page);
-        await noOverflow(page, `${viewport.width} ${family}`);
-        await page.locator('#lab').evaluate(element => { element.scrollTop = 0; });
-        await page.screenshot({ path: path.join(captures, `v3-${family}-${viewport.width}.png`) });
-        await page.locator('#btnLabHome').click();
-      }
-    }
-    await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await page.evaluate(() => window.__bipLabs.open('gears-1', false, { output: 24 }));
-    await page.locator('#btnLabRun').click();
-    const start = await page.locator('.lab-gear').last().evaluate(element => getComputedStyle(element).rotate);
-    await page.waitForTimeout(700);
-    const middle = await page.locator('.lab-gear').last().evaluate(element => getComputedStyle(element).rotate);
-    check(start !== middle, 'gears move during observation');
-    await page.waitForFunction(() => !window.__bipLabs.state.running);
-    check(await page.locator('.lab-gear').last().evaluate(element => getComputedStyle(element).rotate) === '-180deg', 'half turn remains visible');
-    await page.evaluate(() => window.__bipLabs.open('light-2'));
-    await page.locator('#btnLabRun').click();
-    await page.locator('#btnLabHome').click();
-    await page.waitForTimeout(1300);
-    check(await page.locator('#home').isVisible() && await page.locator('#labFollow').isHidden(), 'cancelled experiment cannot write result after navigation');
-
-    await page.waitForFunction(() => !!navigator.serviceWorker.controller);
-    await context.setOffline(true);
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    check(await page.locator('.lab-family').count() === 4, 'PWA reloads offline');
-    await page.locator('[data-lab-open="light-1"]').first().click();
-    await solveCurrent(page);
-    check(await page.locator('#labScene svg').count() === 1, 'offline scene rendered');
-    check(errors.length === 0, 'no browser errors: ' + errors.join('; '));
-    console.log(`UI OK: ${checks} checks, twelve puzzles, inventions, daily, six legacy modes, three viewport sizes, animation and offline.`);
-  } finally { await browser.close(); }
-})().catch(error => { console.error(error); process.exitCode = 1; });
+run().catch(e => { console.error(e); process.exit(1); });

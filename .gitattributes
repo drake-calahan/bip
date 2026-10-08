@@ -1,0 +1,5 @@
+# Normalisation des fins de ligne : LF dans le dépôt, quel que soit le poste
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.webp binary

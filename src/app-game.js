@@ -8,21 +8,19 @@ const hasFn = () => !!(G.lv.pal && G.lv.pal.includes('star'));
 const totalBlocks = () => countBlocks(G.prog) + countBlocks(G.fn);
 
 const WORLD_WHO = ['zoe', 'zoe', 'papi', 'noctule'];
-function storyForLevel(lv) {
+/* Une seule carte-histoire par monde ; l'intro du chapitre se dit dans la bulle. */
+function worldCardFor(lv) {
   if (lv.daily || lv.sandbox || lv.ch == null || lv.ch < 0) return null;
-  const lines = [];
   const w = CHAPTERS[lv.ch].w;
   const firstOfWorld = CHAPTERS.find(c => c.w === w) === CHAPTERS[lv.ch];
-  if (firstOfWorld && !save.seen.w[w]) {
-    save.seen.w[w] = true;
-    WORLDS[w].intro.forEach(l => lines.push({ who: WORLD_WHO[w], line: l, title: 'Monde ' + (w + 1) + ' : ' + WORLDS[w].name }));
-  }
-  if (!save.seen.c[lv.ch]) {
-    save.seen.c[lv.ch] = true;
-    lines.push({ who: CHAPTERS[lv.ch].who, line: CHAPTERS[lv.ch].intro, title: 'Chapitre ' + (lv.ch + 1) });
-  }
-  persist();
-  return lines.length ? lines : null;
+  if (!firstOfWorld || save.seen.w[w]) return null;
+  save.seen.w[w] = true; persist();
+  return [{ who: WORLD_WHO[w], title: WORLDS[w].name, line: WORLDS[w].intro.join(' ') }];
+}
+function chapterIntroFor(lv) {
+  if (lv.daily || lv.sandbox || lv.ch == null || lv.ch < 0 || save.seen.c[lv.ch]) return null;
+  save.seen.c[lv.ch] = true; persist();
+  return { who: CHAPTERS[lv.ch].who, text: CHAPTERS[lv.ch].intro };
 }
 
 function openLevel(i) { openLevelObj(LEVELS[i], { index: i }); }
@@ -44,24 +42,49 @@ function openLevelObj(lv, opts = {}) {
   const tone = TONES[CHAPTERS[lv.ch] ? CHAPTERS[lv.ch].tone : 'sky'];
   $('#lvlPill').innerHTML = `<i style="background:${tone}"></i>${lv.daily ? 'Défi de ' + DAILY_NAMES[DAILY_IDX] : lv.sandbox ? 'Mon jardin' : 'Niveau ' + lv.id}`;
   $('#btnHint').classList.remove('glow'); $('#btnStep').classList.remove('glow');
+  $('#game').classList.toggle('ball-only', G.mode === 'ball');
   $('#fnRow').hidden = !hasFn() || G.mode === 'ball';
-  $('#seqScroll').hidden = G.mode === 'ball';
-  $('#btnStep').hidden = G.mode === 'ball';
+  $('#progLab').textContent = G.mode === 'ball' ? 'Les flèches de Ballon' : 'Programme';
   buildVars();
   setVariant(0);
   const start = () => {
     buildPalette(); renderProg();
-    say(lv.text);
+    const intro = chapterIntroFor(lv);
+    if (intro) sayLines([{ who: intro.who, text: intro.text }, { who: 'bip', text: lv.text }]);
+    else say(lv.text);
     if (STANDALONE) { try { history.pushState({ g: 1 }, ''); } catch (e) { /* */ } }
   };
-  const story = storyForLevel(lv);
-  if (story) playStory(story, start); else start();
+  const card = worldCardFor(lv);
+  if (card) playStory(card, start); else start();
 }
 
-function say(text, quiet) {
+let sayToken = 0;
+function say(text, quiet, who) {
+  sayToken++;
   const m = $('#msg'); m.textContent = text;
+  const mini = $('#miniBip');
+  const art = (CHARS[who || 'bip'] || CHARS.bip).art();
+  if (mini.dataset.who !== (who || 'bip')) { mini.innerHTML = art; mini.dataset.who = who || 'bip'; }
   const b = $('#bubble'); b.classList.remove('new'); void b.offsetWidth; b.classList.add('new');
   if (!quiet) speak(text);
+}
+/* Plusieurs phrases à la suite (la mascotte, puis Bip) : la suivante arrive quand la voix a fini,
+   ou après un court délai, ou dès que l'enfant touche la bulle. */
+function sayLines(lines) {
+  let k = 0;
+  const session = G.session;
+  const next = () => {
+    if (G.session !== session || k >= lines.length) { G.sayNext = null; return; }
+    const L = lines[k++];
+    say(L.text, false, L.who);
+    const token = sayToken;
+    if (k < lines.length) {
+      G.sayNext = () => { if (sayToken === token) next(); };
+      const ms = Math.min(7000, 2200 + L.text.length * 55);
+      setTimeout(() => { if (sayToken === token && G.sayNext) G.sayNext(); }, ms);
+    } else G.sayNext = null;
+  };
+  next();
 }
 
 /* ---------- Jardins (variantes) ---------- */
@@ -116,8 +139,9 @@ function fitBoard() {
   if (!G.P) return;
   const r = $('#boardWrap').getBoundingClientRect();
   if (!r.width || !r.height) return;
+  const bub = $('#bubble').offsetHeight + 10;
   const vars = $('#vars'), vh = vars.hidden ? 0 : vars.offsetHeight + 8;
-  const cell = Math.max(24, Math.floor(Math.min((r.width - 16) / G.P.w, (r.height - vh - 16) / G.P.h, 112)));
+  const cell = Math.max(24, Math.floor(Math.min((r.width - 16) / G.P.w, (r.height - bub - vh - 16) / G.P.h, 112)));
   $('#board').style.setProperty('--cell', cell + 'px');
   G.cellPx = cell;
   placeHand();
@@ -760,8 +784,9 @@ function win() {
 }
 function showWin(stars, n, par) {
   const lastLevel = G.i === LAST_STORY;
-  const chapterEnd = !lastLevel && G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
-  $('#winBip').innerHTML = robotSVG();
+  const chapterEnd = !lastLevel && G.i >= 0 && !G.daily && !G.sandbox && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
+  const wrap = $('#winBip');
+  wrap.className = 'bipwrap happy'; wrap.innerHTML = robotSVG();
   $('#winStars').innerHTML = [1, 2, 3].map(k => I.star(k <= stars)).join('');
   $$('#winStars svg.on').forEach((s, k) => { s.style.animationDelay = (k * 0.18) + 's'; });
   let title = stars === 3 ? 'Bravo !' : 'Bien joué !';
@@ -772,13 +797,22 @@ function showWin(stars, n, par) {
   if (G.daily) { title = 'Joli défi !'; text = 'Une nouvelle idée pour la collection de Zoé !'; }
   if (G.lv.nv > 1 && stars === 3) text = `Ton programme marche dans les ${G.lv.nv} jardins, avec ${n} blocs seulement !`;
   if (lastLevel) { title = 'Champion !'; text = 'Tu as fini toute l’aventure de Bip. Tu sais vraiment programmer un robot !'; }
-  else if (chapterEnd && stars === 3) text += ` Prochain chapitre : ${CHAPTERS[G.lv.ch + 1].name.toLowerCase()}.`;
+  const who = $('#winWho'); who.hidden = true; who.textContent = '';
+  let spoken = title + ' ' + text;
+  if (chapterEnd && !save.seen.ce[G.lv.ch]) {
+    save.seen.ce[G.lv.ch] = true; persist();
+    const c = CHAPTERS[G.lv.ch], L = c.end[0], ch = CHARS[L.who] || CHARS.zoe;
+    if (L.who !== 'bip') { wrap.className = 'bipwrap av'; wrap.innerHTML = ch.art(); }
+    title = 'Chapitre fini !';
+    who.hidden = false; who.textContent = `${ch.name} : « ${L.line} »`;
+    spoken = title + ' ' + L.line + ' ' + text;
+  }
   $('#winTitle').textContent = title;
   $('#winText').textContent = text;
   $('#btnAgain').innerHTML = `${I.replay}<span>Encore</span>`;
   $('#btnNext').innerHTML = lastLevel || G.daily ? `${I.home}<span>Carte</span>` : `<span>Suivant</span>${I.next}`;
   $('#win').hidden = false;
-  speak(title + ' ' + text);
+  speak(spoken);
   const session = G.session;
   setTimeout(() => { if (G.session === session && !$('#win').hidden) $('#btnNext').focus({ preventScroll: true }); }, 50);
 }
@@ -788,17 +822,11 @@ function afterWinNext() {
   if (G.daily) { show('home'); return; }
   if (G.i >= LAST_STORY) {
     playStory([
-      { who: 'zoe', line: 'Regarde qui arrive… tout le monde est là, et le panier est plein !' },
-      { who: 'tous', title: 'Le grand pique-nique', line: 'Merci champion ! Tu as retrouvé tous les jouets et préparé le plus beau pique-nique du monde. Bip est très fier de toi !' },
+      { who: 'tous', title: 'Le grand pique-nique', line: 'Merci champion ! Tu as retrouvé tous les jouets et préparé le plus beau pique-nique du monde. Bip est très fier de toi !', cta: 'Youpi !' },
     ], () => show('home'));
     return;
   }
-  const chapterEnd = G.i >= 0 && LEVELS[G.i + 1] && LEVELS[G.i + 1].ch !== G.lv.ch;
-  const next = () => openLevel(G.i + 1);
-  if (chapterEnd && !save.seen.ce[G.lv.ch]) {
-    save.seen.ce[G.lv.ch] = true; persist();
-    playStory(CHAPTERS[G.lv.ch].end, next);
-  } else next();
+  openLevel(G.i + 1);
 }
 
 /* ---------- Aide : le chemin en pointillés ---------- */
@@ -830,7 +858,7 @@ function hideHint() { clearTimeout(G.hintT); $$('#fx .hint').forEach(d => d.remo
 
 /* ---------- Main qui montre (niveaux d'initiation) ---------- */
 function coachTarget() {
-  if ($('#game').hidden || G.busy || !$('#win').hidden || !$('#sheet').hidden || !$('#story').hidden || D || G.mode === 'ball') return null;
+  if ($('#game').hidden || G.busy || !$('#win').hidden || !$('#sheet').hidden || !$('#story').hidden || !$('#album').hidden || D || G.mode === 'ball') return null;
   const id = G.lv.id;
   if (id === 1 && !save.stars[1]) return G.prog.length ? $('#btnRun') : $('#palette .blk');
   if (id === 16 && !save.stars[16]) {

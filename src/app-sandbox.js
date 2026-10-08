@@ -28,7 +28,7 @@ function openSandbox() {
   show('sandbox');
   if (!G.sb.rows.length) loadSbSlot(G.sb.cur, true);
   renderSbSlots(); renderSbTools(); renderSbBoard();
-  sbSay('Construis ton jardin ! Touche un élément en bas, puis touche l\'herbe pour le poser.');
+  sbSay('Mon jardin ! Touche un élément en bas, puis touche l\'herbe pour le poser.');
 }
 function sbSay(text, quiet) { $('#sbMsg').textContent = text; if (!quiet) speak(text); }
 function loadSbSlot(i, fallback) {
@@ -44,7 +44,7 @@ function persistSb() {
   award('sandbox1');
 }
 function renderSbSlots() {
-  $('#sbSlots').innerHTML = '<span>Jardins</span>' + save.sandbox.map((s, i) =>
+  $('#sbSlots').innerHTML = save.sandbox.map((s, i) =>
     `<button data-s="${i}" class="${i === G.sb.cur ? 'on' : ''} ${s ? 'has' : ''}" aria-label="Jardin ${i + 1}">${i + 1}</button>`).join('');
   $$('#sbSlots button').forEach(b => b.addEventListener('click', () => {
     if (G.sb.cur !== +b.dataset.s) { G.sb.cur = +b.dataset.s; loadSbSlot(G.sb.cur, true); renderSbBoard(); }

@@ -1,37 +1,32 @@
-# QA checklist — Bip v2 (manual browser pass)
+# QA checklist — Bip V4 (manual browser pass)
 
-Run after every build (`python tools/build.py`), serve with `python -m http.server 8099`.
+Run after every build (`python tools/build.py`), serve with `python -m http.server 8103 --bind 127.0.0.1`.
+`node tools/check-ui.js` covers the automated part; this list is what a human eye adds.
 
-## Home / journey map
-- [ ] Hero shows Bip + Zoé, title, "Continuer" targets the next unfinished level.
-- [ ] Journey path scrolls; stations locked/unlocked correctly; world signposts readable.
-- [ ] One flower per completed chapter appears in the hero garden.
-- [ ] "Le défi de Zoé" card shows today's weekday and opens the daily level.
-- [ ] Album opens; earned stickers visible, unearned show soft silhouettes.
+## La carte
+- [ ] Hero: Bip, « Jouer » (then « Continuer » + current chapter name), one flower per finished chapter.
+- [ ] Four picture buttons (Zoé / fleur / engrenage / étoile) open daily, Mon jardin, machines, album — each speaks its name.
+- [ ] Path scrolls; worlds change colour; Bip sits on the next pebble and breathes; done pebbles show stars; future pebbles are pale dots, no padlocks.
+- [ ] Opening the map scrolls to Bip only when Bip is not already visible.
 
-## Classic play
-- [ ] New level: voice reads consigne; avatar (Zoé/Bip) correct.
-- [ ] Chapter intro overlay on first level of a chapter; story beat at world starts.
-- [ ] Pond: lily pad sinks after Bip leaves it (visual + soft bloop); cannot walk back.
-- [ ] Paint: trail follows Bip; flowers fill when painted; win requires all flowers.
-- [ ] Crates: push animation; crate into water → plank (bridge); crate onto switch opens gates.
-- [ ] Switch: stepping on mushroom opens gates with clunk-chime; gates animate.
-- [ ] Night chapter: soft night wash, fireflies glow, no dark-scary contrast.
-- [ ] Fails stay gentle: bump/splash/tired messages, bad block highlighted, no punishment copy.
+## Le niveau
+- [ ] Bubble shows the right face (mascot for a chapter intro, then Bip) and reads aloud; tapping the bubble replays or skips to the next line.
+- [ ] One story card at the start of a world only; tap anywhere closes it.
+- [ ] Board + bubble centred; palette blocks ≥ 50 px; green button 72 px; landscape puts the program on the right.
+- [ ] Pond / paint / crates / switches / night / toboggans behave as in V2 (sink, trail, plank, gate, glow, roll).
+- [ ] Chapter end: the mascot appears on the Bravo card with its line; no extra modal. Finale: picnic card.
 
-## Ball mode (toboggans)
-- [ ] Palette shows 4 arrow tiles + eraser; tap cycles/places; tap eraser removes.
-- [ ] Run rolls ball with soft taps; redirect on tiles; loop detection → gentle stop.
-- [ ] Win at nest: confetti, stars by tile count.
-
-## Sandbox
-- [ ] Place/remove every item; start unique; ≥1 toy enforced with kind message.
-- [ ] Save 3 slots with thumbnails; play own garden; win gives watering-can sticker once.
+## Les machines
+- [ ] Hub shows four real machine drawings, three dots each, a pencil for free play.
+- [ ] Balance: baskets drag and snap to notches; release tilts the beam; pollen dots count each side.
+- [ ] Light: tap rotates a mirror; the ray travels cell by cell; fireflies glow.
+- [ ] Gears: tap cycles 6/12/24 teeth; gears turn with the right direction and speed; Zoé's goal is pictured.
+- [ ] Rhythm: tap shifts a friend; cursor walks the timeline; hearts at the meetings.
+- [ ] Prediction is optional, icon-only; after the run the right icon lights, the voice says what happened. Success reads the discovery.
+- [ ] Hint pulses the object to change. Reset restores. Suivant appears only after success.
 
 ## Meta
-- [ ] Sticker toast on new stickers; album reflects.
-- [ ] Chapter end shows story dialog; finale shows picnic scene.
-- [ ] Adults sheet updated, toggles work, reset arms double-tap.
-- [ ] Progress persists after reload; v1 players get the "ancien joueur" sticker once.
-- [ ] Portrait 360×640 and landscape 1024×600: no overflow, targets ≥44px.
-- [ ] prefers-reduced-motion: animations collapse, game still playable.
+- [ ] Sticker toast; album shows real pictures, missing ones faded; machine stickers after 3 wins in a family.
+- [ ] Adults sheet: toggles work, reset arms on double tap.
+- [ ] Progress persists after reload (key `bip-robot-v2`); V2/V3 saves load.
+- [ ] 360×640 portrait and 1024×600 landscape: no overflow, targets ≥ 44 px; prefers-reduced-motion still playable.

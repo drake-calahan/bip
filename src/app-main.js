@@ -4,11 +4,13 @@ function wire() {
   $('#icoPlayBig').innerHTML = I.play;
   $('#icoInfo').innerHTML = I.info;
   $('#icoDaily').innerHTML = symUse('avatar-zoe');
-  $('#icoSandbox').innerHTML = I.garden || S('M50 62V84M50 70C42 70 34 64 32 56M50 76C58 76 66 70 68 62M50 62a14 14 0 1 1 0-28 14 14 0 0 1 0 28z', 7);
-  $('#icoAlbum').innerHTML = I.album;
+  $('#icoSandbox').innerHTML = I.flowerIco;
+  $('#icoMachines').innerHTML = `<span style="display:block;width:100%;height:100%;color:#CF745F">${I.cog}</span>`;
+  $('#icoAlbum').innerHTML = I.sticker;
+  $('#icoZoeAlbum').innerHTML = symUse('avatar-zoe');
   $('#btnHome').innerHTML = I.home;
   $('#btnHint').innerHTML = I.bulb;
-  $('#miniBip').innerHTML = robotSVG();
+  $('#miniBip').innerHTML = robotSVG(); $('#miniBip').dataset.who = 'bip';
   $('#miniBip2').innerHTML = robotSVG();
   $('#icoSpk').innerHTML = I.speaker;
   $('#icoProg').innerHTML = `<span style="display:block;width:22px;height:22px">${robotSVG()}</span>`;
@@ -17,23 +19,25 @@ function wire() {
   $('#btnStep').innerHTML = I.step;
   $('#btnClose').innerHTML = I.close;
   $('#btnAlbumClose').innerHTML = I.close;
+  $('#btnMachinesClose').innerHTML = I.close;
   $('#icoStoryNext').innerHTML = I.next;
   $('#btnSbHome').innerHTML = I.home;
   $('#btnSbPlay').innerHTML = I.play;
+  $('#sbPill').innerHTML = I.flowerIco;
   setRunning(false);
 
-  // Joueur v1 : un autocollant souvenir
+  // Joueur de la première heure : un autocollant souvenir
   try { if (localStorage.getItem('bip-robot-v1')) setTimeout(() => award('v1'), 1200); } catch (e) { /* */ }
 
   $('#btnPlay').addEventListener('click', () => { audio(); openLevel(nextIndex()); });
   $('#btnDaily').addEventListener('click', () => { audio(); openLevelObj(dailyLevel(), { daily: true }); });
   $('#btnSandbox').addEventListener('click', () => { audio(); openSandbox(); });
-  $('#btnAlbum').addEventListener('click', () => { renderAlbum(); $('#album').hidden = false; });
+  $('#btnAlbum').addEventListener('click', () => { audio(); openAlbum(); });
   $('#btnAlbumClose').addEventListener('click', () => { $('#album').hidden = true; });
   $('#album').addEventListener('click', e => { if (e.target.id === 'album') $('#album').hidden = true; });
-  $('#btnHome').addEventListener('click', () => { G.abort = true; show('home'); });
+  $('#btnHome').addEventListener('click', () => { G.abort = true; show('home'); scrollToBip(true); });
   $('#btnHint').addEventListener('click', showHint);
-  $('#bubble').addEventListener('click', () => speak($('#msg').textContent));
+  $('#bubble').addEventListener('click', () => { if (G.sayNext) { const f = G.sayNext; G.sayNext = null; f(); } else speak($('#msg').textContent); });
   $('#btnRun').addEventListener('click', () => { audio(); runAll(); });
   $('#btnStep').addEventListener('click', () => { audio(); stepOnce(); });
   $('#fnRow').addEventListener('click', e => { if (e.target.closest('.blk, .ctr, .slot')) return; setTarget('fn'); });
@@ -75,31 +79,36 @@ function wire() {
       return;
     }
     clearTimeout(resetArm); b.classList.remove('arm');
-    save.stars = {}; save.all = false; save.stickers = []; save.daily = {}; save.seen = { w: {}, c: {}, ce: {} }; save.sandbox = [null, null, null]; save.labs = { solved: {}, drafts: {}, inventions: [], attempts: {}, predictions: {} };
+    save.stars = {}; save.all = false; save.stickers = []; save.daily = {}; save.seen = { w: {}, c: {}, ce: {} }; save.sandbox = [null, null, null]; save.labs = { solved: {} };
     persist(); syncToggles(); renderHome();
     $('#resetLabel').textContent = 'Progression effacée';
     setTimeout(() => { $('#resetLabel').textContent = 'Effacer la progression'; }, 2000);
   });
   $('#btnSbHome').addEventListener('click', () => show('home'));
   $('#btnSbPlay').addEventListener('click', () => { audio(); playSandbox(); });
+  $('#sbBubble').addEventListener('click', () => speak($('#sbMsg').textContent));
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (!$('#sheet').hidden) closeSheet();
       else if (!$('#album').hidden) $('#album').hidden = true;
-      else if (!$('#story').hidden) $('#btnStoryNext').click();
+      else if (!$('#machines').hidden) $('#machines').hidden = true;
+      else if (!$('#story').hidden) $('#storyCard').click();
     }
   });
-  document.addEventListener('contextmenu', e => { if (e.target.closest('.blk, .ctr, .board, .sb-item')) e.preventDefault(); });
+  document.addEventListener('contextmenu', e => { if (e.target.closest('.blk, .ctr, .board, .sb-item, .scene')) e.preventDefault(); });
   new ResizeObserver(fitBoard).observe($('#boardWrap'));
+  new ResizeObserver(fitBoard).observe($('#bubble'));
+  new ResizeObserver(fitScene).observe($('.scene-wrap'));
   new ResizeObserver(fitSbBoard).observe($('#sbBoardWrap'));
   window.addEventListener('resize', () => { placeHand(); });
   $('#seqScroll').addEventListener('scroll', placeHand, { passive: true });
-  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden || !$('#sandbox').hidden || !$('#lab').hidden) { G.abort = true; show('home'); } });
+  if (STANDALONE) window.addEventListener('popstate', () => { if (!$('#game').hidden || !$('#sandbox').hidden || !$('#lab').hidden) { G.abort = true; L.token++; L.running = false; show('home'); } });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopVoice(); });
   wireLabs();
   show('home');
+  requestAnimationFrame(() => scrollToBip(false));
 }
 wire();
 // Accès QA/dev (console) : window.__bip.openLevel(i), .run(), .state()
-window.__bip = { G, openLevel, openLevelObj, parseProg, runAll, LEVELS, CHAPTERS, WORLDS, simulate };
+window.__bip = { G, L, openLevel, openLevelObj, openLab, parseProg, runAll, runLab, LEVELS, CHAPTERS, WORLDS, LAB_LEVELS, simulate, save, persist, show, renderHome };

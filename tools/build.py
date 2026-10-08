@@ -9,7 +9,7 @@ lab=rd('src/lab.js').split("if (typeof module !== 'undefined')")[0]
 app_files=['app-core.js','app-home.js','app-game.js','app-ball.js','app-sandbox.js','app-lab.js','app-main.js']
 app='\n'.join(rd('src/'+n) for n in app_files)
 app="(function () {\n'use strict';\n"+app+"\n})();"
-page=body.replace('/*@LAB_STYLE@*/',rd('src/lab.css')).replace('/*@ENGINE@*/',eng).replace('/*@BALL@*/',ball).replace('/*@LEVELS@*/',lev).replace('/*@LAB@*/',lab).replace('/*@APP@*/',app)
+page=body.replace('/*@ENGINE@*/',eng).replace('/*@BALL@*/',ball).replace('/*@LEVELS@*/',lev).replace('/*@LAB@*/',lab).replace('/*@APP@*/',app)
 os.makedirs(os.path.join(root,'.artifact'),exist_ok=True)
 open(os.path.join(root,'.artifact/bip.html'),'w',encoding='utf-8').write(page)
 
@@ -21,7 +21,7 @@ head = '''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#EAF3F3">
-<meta name="description" content="Bip V3 : programme, expérimente et découvre la physique et les mathématiques dans le jardin des possibles. Dès 5 ans, sans pression.">
+<meta name="description" content="Bip, le grand jardin : programme un petit robot, construis des machines et découvre la logique en jouant. Dès 5 ans, sans lire, sans pression.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Bip">
@@ -44,7 +44,7 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 open(os.path.join(root,'index.html'),'w',encoding='utf-8').write(head+page+tail)
 manifest = {
   "name": "Bip le robot", "short_name": "Bip", "lang": "fr",
-  "description": "Bip V3 : le jardin des possibles. Programmation, équilibre, lumière, engrenages et rythmes pour les 5-7 ans.",
+  "description": "Bip, le grand jardin : programmation par blocs et machines à manipuler pour les 5-7 ans. Sans lire, sans pression, hors connexion.",
   "start_url": "./", "scope": "./", "id": "./",
   "display": "standalone", "display_override": ["fullscreen", "standalone"], "orientation": "any",
   "background_color": "#EAF3F3", "theme_color": "#EAF3F3",
