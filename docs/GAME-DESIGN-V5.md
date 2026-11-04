@@ -135,3 +135,24 @@ débuts allégés (ch2 : 4,4,5,6,7 ; ch9 : étoile en `* *`), courbes lissées
 - `python tools/build.py`, bump `VERSION` dans `sw.js`, `node tools/check-ui.js` → `UI OK` + captures `.artifact/` ;
 - Relecture des bulles modifiées à voix haute (≤ 2 phrases courtes, tutoiement) ;
 - Commit « V5 « L'harmonie du jardin » : charge lissée, un seul repère, marge batterie, débuts showcase, défis ordonnés ».
+
+## 8. Focus QA post-V5 (audit complet, 2026-11)
+
+Audit statique custom + balayage navigateur des 102 niveaux + QA sauvegarde :
+
+- **Corrigé pendant le QA** : 4 maps à lignes de largeur inégale (L6, L7, L15, L92) ;
+  doublon de palette sur L80 (`[...REL, 'f', 'tr', …]` rendait des blocs en double) ;
+  texte de L65 (« flèches » → « blocs avance », la palette est relative depuis V5).
+- **Vérifié OK** : toutes les refs gagnent sur toutes les variantes, tous les `start`
+  de détective échouent ; `max >= par+1` partout ; dailies triés [2,3,3,4,4,4,6] ;
+  0 palette absolue en ch5+ ; LAST_STORY id=95 ; mondes 20/25/25/25.
+- **Navigateur (Playwright)** : rendu des 102 niveaux conforme (palette = pal, cellPx OK,
+  ball-only sur toboggans) ; 8 niveaux V5 joués et gagnés en UI (L21, L26, L46, L61, L71,
+  L81, L84, L93) ; ampoule OK (L26) ; main guidée visible sur débuts de chapitre (L1, L21),
+  absente en milieu de chapitre (L22) et en mode ball (L66) ; 0 erreur JS.
+- **Save-compat** : vieux save V4 (étoiles ids 1–80) → « Continuer » reprend à L81
+  (épilogue) ; `save.daily` toujours indexé par jour de semaine ; déverrouillage de la
+  carte OK avec 95 niveaux d'aventure ; L95 gagné → bouton « Carte » ; frontière du swap
+  ch13/14 propre (L65 détective → L66 toboggan).
+- **Note** : L19 (3×7) dépasse la règle « map ≤ 8×6 » — pré-existant V2, rendu OK via
+  `fitBoard`, laissé tel quel.
