@@ -118,7 +118,7 @@ function buildBoard() {
     if (k === 'grass') return;
     const x = idx % P.w, y = (idx / P.w) | 0;
     const cls = k === 'switch' ? 'switchc' : k;
-    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest', flag: 'flag' }[k];
+    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest', flag: 'flag' }[k];
     h += `<div class="it ${cls}" data-idx="${idx}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
   });
   P.crates.forEach((c, i) => { h += `<div class="it crate" data-ci="${i}" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });

@@ -87,7 +87,7 @@ svg { display: block; }
   color: #fff; background: var(--go); padding: 13px 28px 13px 20px; border-radius: 999px; box-shadow: 0 5px 0 var(--go-edge); }
 .big-go svg { width: 26px; height: 26px; }
 .big-go:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--go-edge); }
-.hub { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.hub { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 340px; margin: 0 auto; }
 .hub button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 8px; border-radius: 22px; background: var(--card); box-shadow: 0 4px 0 var(--line); }
 .hub button:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--line); }
 .hub .ico { position: relative; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--tint, var(--paper)); }
@@ -772,9 +772,7 @@ svg { display: block; }
         <button class="big-go" id="btnPlay"><span id="icoPlayBig"></span><span>Jouer</span></button>
       </header>
       <nav class="hub" aria-label="Les autres jeux">
-        <button id="btnDaily" aria-label="Le défi de Zoé"><span class="ico" style="--tint:#FFE5E8"><span id="icoDaily"></span><span class="week" id="dailyDots"></span></span><small>Défi de Zoé</small></button>
         <button id="btnSandbox" aria-label="Mon jardin"><span class="ico" style="--tint:#E2F2DA"><span id="icoSandbox"></span></span><small>Mon jardin</small></button>
-        <button id="btnMachines" aria-label="Les machines de Grand-Papa"><span class="ico" style="--tint:#F9E6D6"><span id="icoMachines"></span><span class="badge" id="machinesBadge" hidden></span></span><small>Les machines</small></button>
         <button id="btnAlbum" aria-label="L'album de Zoé"><span class="ico" style="--tint:#FFF1C2"><span id="icoAlbum"></span><span class="badge" id="albumBadge" hidden></span></span><small>L'album</small></button>
       </nav>
       <div class="trail" id="trail"></div>
@@ -930,6 +928,12 @@ svg { display: block; }
     <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application ». Bip fonctionne ensuite sans connexion, en plein écran. La progression reste sur l'appareil.</p>
     <h3>Version</h3>
     <div id="versionNotes"></div>
+    <h3>Bonus archivés (V9)</h3>
+    <p>Anciens à-côtés retirés du parcours principal pour garder le jeu centré sur la programmation : les défis quotidiens de Zoé et les machines de Grand-Papa (physique/maths). Ils restent jouables ici ; les récompenses déjà gagnées sont dans l'album.</p>
+    <div class="toggles">
+      <button class="tg" id="btnDaily"><span><span id="icoDaily"></span>Défi de Zoé du jour</span><span class="week" id="dailyDots"></span></button>
+      <button class="tg" id="btnMachines"><span><span id="icoMachines"></span>Les machines de Grand-Papa</span><span class="badge" id="machinesBadge" hidden></span></button>
+    </div>
     <h3>Réglages</h3>
     <div class="toggles">
       <button class="tg" id="tgVoice" role="switch"><span>Voix qui lit les consignes</span><span class="sw"></span></button>

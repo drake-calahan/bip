@@ -1,4 +1,4 @@
-# REFLEXION — Progression et difficulté des niveaux (retour bêta Thomas, 2026-11)
+# REFLEXION — Progression et difficulté des niveaux (retour bêta Thomas, 2026-11) — **APPLIQUÉ en V9** (voir docs/GAME-DESIGN-V9.md)
 
 > « Les niveaux en eux-mêmes n'ont pas de sens dans la progression et la difficulté.
 > Les 2 derniers niveaux sont totalement faciles là où ceux d'avant sont durs ;

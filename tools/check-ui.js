@@ -76,14 +76,19 @@ async function run() {
   await shot(pg, 'v8-nested-final-390');
   // capteur + balises : L95 pose-balise
   await pg.evaluate(() => window.__bip.openLevel(94)); await sleep(500); await dismissStory(pg);
-  await pg.evaluate(() => { const B = window.__bip; B.G.prog = B.parseProg('p f g'); B.G.fn = []; B.runAll(); });
-  for (let i = 0; i < 40 && !(await pg.locator('#win').isVisible()); i++) await sleep(500);
-  assert(await pg.locator('#win').isVisible(), 'L95 pose une balise puis revient (p f g) gagné');
+  await pg.evaluate(() => { const B = window.__bip; B.G.prog = B.parseProg('p f g N2(It(f|tr))'); B.G.fn = []; B.runAll(); });
+  for (let i = 0; i < 60 && !(await pg.locator('#win').isVisible()); i++) await sleep(500);
+  assert(await pg.locator('#win').isVisible(), 'L95 tournoi final (p f g N2(It(f|tr))) gagné');
   assert(await pg.locator('#board .it.flag').count() >= 1, 'la balise posée apparaît sur le plateau');
 
-  console.log('Machines');
+  console.log('Machines (bonus archivé dans la feuille adultes)');
   await pg.goto(URL); await sleep(400);
-  await pg.click('#btnMachines'); await sleep(400);
+  assert(await pg.locator('#home #btnDaily').count() === 0, 'plus de bouton défi de Zoé sur l’accueil (archivé V9)');
+  assert(await pg.locator('#home #btnMachines').count() === 0, 'plus de bouton machines sur l’accueil (archivé V9)');
+  await pg.click('#btnAdults'); await sleep(300);
+  assert(await pg.locator('#sheet #btnDaily').count() === 1 && await pg.locator('#sheet #btnMachines').count() === 1, 'bonus archivés présents dans la feuille adultes');
+  await pg.click('#sheet #btnMachines'); await sleep(400);
+  await pg.keyboard.press('Escape'); await sleep(300);   // fermer la feuille adultes, laisser la machine au premier plan
   assert((await pg.locator('#machinesGrid .mcard').count()) === 4, 'quatre machines');
   await shot(pg, 'v4-machines-390');
   await pg.evaluate(() => window.__bip.openLab('balance-1', false)); await sleep(400);
@@ -126,8 +131,8 @@ async function run() {
   await pg.keyboard.press('Escape');
   await pg.click('#btnAdults'); await sleep(300);
   assert(await pg.locator('#sheet').isVisible(), 'feuille adultes');
-  assert((await pg.locator('#versionNotes li').count()) >= 4 && (await pg.locator('#versionNotes').textContent()).includes('V8'), 'note de version V8 affichée dans la feuille adultes');
-  await shot(pg, 'v8-adults-sheet-390');
+  assert((await pg.locator('#versionNotes li').count()) >= 4 && (await pg.locator('#versionNotes').textContent()).includes('V9'), 'note de version V9 affichée dans la feuille adultes');
+  await shot(pg, 'v9-adults-sheet-390');
   await pg.keyboard.press('Escape');
   await pg.reload(); await sleep(500);
   assert(await pg.evaluate(() => (window.__bip.save.stars[1] || 0) > 0 && !!window.__bip.save.labs.solved['balance-1']), 'la progression survit au rechargement');

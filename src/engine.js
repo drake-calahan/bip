@@ -1,7 +1,7 @@
 /* ===== Moteur pur : simulation d'un programme sur un niveau =====
    Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), g (va à la balise), p (pose une balise), star (bloc magique)
    Conteneurs : loop {n, body} · while {c:'free'|'toys'|'flag', body} · if {c:'puddle'|'obst'|'toy', body, els}
-   Terrain : . herbe · # buisson · o rocher · ~ flaque · K coffre
+   Terrain : . herbe · # buisson · o rocher · ~ flaque
              - nénuphar (s'enfonce quand Bip le quitte) · s champignon (ouvre les barrières)
              G barrière (bloque tant que fermée) · * fleur (à peindre en marchant dessus) · F balise (waypoint)
    Entités : C caisse (poussée par Bip ; dans l'eau elle devient un pont)
@@ -9,7 +9,7 @@
 const DIRS = { r: [1, 0], l: [-1, 0], u: [0, -1], d: [0, 1] };
 const LEFT = { u: 'l', l: 'd', d: 'r', r: 'u' };
 const RIGHT = { u: 'r', r: 'd', d: 'l', l: 'u' };
-const TOY_CHARS = 'bnctae';
+const TOY_CHARS = 'bncta';
 const CONTAINERS = ['loop', 'while', 'if'];
 const MAX_ACTS = 110, MAX_CHECKS = 220;
 
@@ -19,7 +19,7 @@ function parseLevel(lv, v) {
   const rows = mapOf(lv, v);
   const h = rows.length, w = rows[0].length;
   const cells = [];
-  let start = null, box = null;
+  let start = null;
   const flags = [];
   const toys = [], pads = [], switches = [], gates = [], crates = [], flowers = [];
   for (let y = 0; y < h; y++) {
@@ -29,7 +29,6 @@ function parseLevel(lv, v) {
       if (ch === '#') kind = 'bush';
       else if (ch === 'o') kind = 'rock';
       else if (ch === '~') kind = 'puddle';
-      else if (ch === 'K') { kind = 'box'; box = [x, y]; }
       else if (ch === 'F') { kind = 'flag'; flags.push([x, y]); }
       else if (ch === '-') { kind = 'pad'; pads.push(cells.length); }
       else if (ch === 's') { kind = 'switch'; switches.push(cells.length); }
@@ -41,7 +40,7 @@ function parseLevel(lv, v) {
       cells.push(kind);
     }
   }
-  return { w, h, cells, start, box, flags, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
+  return { w, h, cells, start, box: null, flags, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
 }
 
 function cellAt(P, x, y) {
@@ -176,7 +175,7 @@ function simulate(lv, prog, fn, v) {
       const rows = mapOf(lv, v).map((r, ri) => r.split('').map((c, ci) => {
         if (c === 'R') return '.';
         if (c === 'F') return ri === f[1] && ci === f[0] ? 'b' : '.';
-        if (c === 'C' || c === 'G' || c === 'K') return '.';
+        if (c === 'C' || c === 'G') return '.';
         return c;
       }).join(''));
       rows[y] = rows[y].slice(0, x) + 'R' + rows[y].slice(x + 1);
@@ -226,7 +225,6 @@ function simulate(lv, prog, fn, v) {
   catch (e) { if (e && e.__stop) return { steps, result: e.r, why: e.why, P }; throw e; }
   if (got.size < P.toys.length) return { steps, result: 'missing', P, left: P.toys.length - got.size };
   if (painted.size < P.flowers.length) return { steps, result: 'unpainted', P, left: P.flowers.length - painted.size };
-  if (P.box && !(x === P.box[0] && y === P.box[1])) return { steps, result: 'notbox', P };
   return { steps, result: 'win', P };
 }
 
@@ -244,7 +242,7 @@ function solve(lv, palette, v) {
   const q = [[P.start[0], P.start[1], P.face, 0, 0, 0, []]];
   const seen = new Set([key(P.start[0], P.start[1], P.face, 0, 0, 0)]);
   const padIdx = idx => P.pads.indexOf(idx);
-  const won = (m, fl, x, y) => m === full && fl === flAll && (!P.box || (x === P.box[0] && y === P.box[1]));
+  const won = (m, fl) => m === full && fl === flAll;
   while (q.length) {
     const [x, y, f, m, fl, pd, path] = q.shift();
     for (const mv of moves) {

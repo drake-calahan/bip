@@ -47,9 +47,23 @@ function depth(list) {
 }
 
 const seen = new Set();
+const seenSym = new Set(), seenCond = new Set();
+const MAPSYM = /[^.Rb-z]/g;
+function featOf(lv) {
+  const f = new Set();
+  for (const b of lv.pal || []) if (!seen.has(b)) f.add('bloc:' + b);
+  for (const b of lv.pal || []) seen.add(b);
+  if (lv.mode === 'ball') f.add('mode:ball');
+  for (const r of (lv.variants || [lv.map || []]).flat())
+    for (const m of r.match(MAPSYM) || []) if (!seenSym.has(m)) { seenSym.add(m); f.add('sym:' + m); }
+  const src = ((lv.sol || '') + ' ' + (lv.fn || ''));
+  for (const m of src.match(/W[otg]\(|I[pot]\(/g) || []) if (!seenCond.has(m)) { seenCond.add(m); f.add('cond:' + m); }
+  return f;
+}
 const rows = LEVELS.map(lv => {
   const story = lv.ch >= 0;
-  const nb = lv.mode === 'ball' ? 1 : (lv.pal || []).filter(b => !seen.has(b)).length;
+  const feat = featOf(lv);
+  const nb = feat.size;
   (lv.pal || []).forEach(b => seen.add(b));
   const fr = frameOf(lv);
   const zeroSlack = lv.max != null && lv.max < lv.par + 1 ? 1 : 0;
@@ -58,7 +72,7 @@ const rows = LEVELS.map(lv => {
     + 3 * nb
     + 1 * (lv.nv - 1)
     + 2 * zeroSlack;
-  return { lv, story, ch: lv.ch, par: lv.par, load, nb, fr, zeroSlack,
+  return { lv, story, ch: lv.ch, par: lv.par, load, nb, feat, fr, zeroSlack,
     rampPrev: null, name: lv.ch >= 0 ? CHAPTERS[lv.ch].name : 'défi' };
 });
 
@@ -122,6 +136,30 @@ console.log(`débuts > 4 blocs   : ${chapters.filter(c => !(c.def.final || c.def
 console.log(`rampes > 4         : ${chapters.filter(c => c.ramp > 4).map(c => 'Ch' + (c.ci + 1) + ' (+' + c.ramp + ')').join(',') || 'aucune'}`);
 console.log(`changements repère : ${switches.length}${switches.length ? ' (' + switches.join(', ') + ')' : ''}`);
 console.log(`spikes par         : ${spikes.length}${spikes.length ? ' (' + spikes.join(', ') + ')' : ''}`);
+
+/* 7. DEAD LEVEL (V9) : aucune nouveauté (bloc/symbole/condition) + par+profondeur <= 2 + 1 variante -> niveau filler (ch1-5 exemptés : on-ramp volontaire) */
+const depthOf = list => { let m = 0; for (const it of list || []) { const d = it.body ? 1 + depthOf(it.body) : it.els ? 1 + depthOf(it.els) : 0; if (d > m) m = d; } return m; };
+rows.forEach(r => {
+  if (!r.story || r.ch < 5 || r.lv.mode === 'ball') return;
+  const dep = depthOf(r.lv.ref) + depthOf(r.lv.refFn);
+  if (r.feat.size === 0 && r.par + dep <= 2 && r.lv.nv === 1)
+    violations.push(`DEAD LEVEL L${r.lv.id} (${r.name}) par=${r.par} prof=${dep} : aucune nouveauté, aucun combo`);
+});
+/* 8. FIN TROP BASSE (V9) : le dernier niveau de l'aventure doit finir haut (>= 70 % de la charge max) */
+{
+  const maxLoad = Math.max(...storyRows.map(r => r.load));
+  const last = storyRows[storyRows.length - 1];
+  if (last.load < 0.7 * maxLoad)
+    violations.push(`FIN TROP BASSE L${last.lv.id} charge=${last.load} < 70% du max (${maxLoad.toFixed(1)})`);
+}
+/* 9. CHUTE DANS LE FINAL (V9) : dans le dernier chapitre, aucun niveau trivial (par <= 2) et sans nouveauté */
+{
+  const lastCh = storyRows[storyRows.length - 1].ch;
+  for (const r of storyRows) {
+    if (r.ch === lastCh && r.feat.size === 0 && r.par <= 2 && r.lv.mode !== 'ball')
+      violations.push(`CHUTE L${r.lv.id} (${r.name}) par=${r.par} : niveau trivial sans nouveauté dans le dernier chapitre`);
+  }
+}
 
 if (violations.length) {
   console.log('\nVIOLATIONS :');

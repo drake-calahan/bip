@@ -72,3 +72,10 @@
   `g` ignore la balise sous Bip comme cible mais ne la marque PAS visitée : `p f g` revient au drapeau planté.
 - UI : `insertItem` refuse (avec message parlé) ce que `canNest` interdit, au lieu de déplacer en silence ;
   `badMark` entoure aussi les conteneurs parents (`.badpath`) ; un conteneur vide bloque le run avec explication.
+
+## V9 — objectif unique + tournoi de nuit + anti-filler
+
+- **Un seul but partout : ramasse tous les jouets.** Plus de coffre cible (K retiré du moteur, des maps, du tiroir), plus de luciole-jouet (e retiré) : les jouets sont b n c t a, identiques dans tous les mondes (nuit comprise).
+- **Jamais de niveau filler** : check-curve alerte DEAD LEVEL (aucune nouveauté bloc/symbole/condition + par+profondeur <= 2 + 1 variante, ch1-5 exemptés) et CHUTE (niveau trivial non-nouveau dans le dernier chapitre) ; FIN TROP BASSE si le dernier niveau < 70 % de la charge max.
+- Queue ch17-19 = tournoi de nuit en combos (pars ch17 [5,7,8], ch18 [1,2,4,4], ch19 [4,4,4,4,2,4,4,7]). Règle balise : jamais de jouet AU-DELÀ du drapeau (la route g le ramasse et dépasse la balise).
+- Défis de Zoé + machines = bonus archivés (feuille adultes). Ne pas réintégrer dans le hub home.

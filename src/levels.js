@@ -1,6 +1,6 @@
 /* ===== Chapitres et niveaux — Bip v2 « Le grand pique-nique » =====
-   Légende : R départ · b n c t a z jouets · e luciole · # buisson · o rocher
-   ~ flaque · K coffre · - nénuphar (coule une fois quitté) · s champignon (ouvre)
+   Légende : R départ · b n c t a jouets · # buisson · o rocher
+   ~ flaque · - nénuphar (coule une fois quitté) · s champignon (ouvre)
    G barrière · C caisse (poussable, flotte → pont) · * fleur (à peindre)
    S départ de Ballon · N nid (mode toboggan) · F balise (waypoint : le bloc g y va)
    sol / fn / start : programmes dans le petit langage de parseProg (engine.js)
@@ -106,8 +106,8 @@ const LEVELS = [
     text: 'Attention, une flaque ! Si Bip marche dedans, il est tout mouillé.' },
   { ch: 1, pal: ARROWS, map: ['R~.#b.', '......'],
     text: 'Buissons et flaques : prends ton temps.' },
-  { ch: 1, pal: ARROWS, map: ['K.b..', '..R.n'],
-    text: 'Voici le coffre ! Ramasse les jouets, puis range-les dans le coffre.' },
+  { ch: 1, pal: ARROWS, map: ['..b..', '..R.n'],
+    text: 'Ramasse le ballon et le nounours !' },
   // Chapitre 3 — Le saut
   { ch: 2, pal: [...ARROWS, 'j'], map: ['##o##', 'R.~.b', '#o###'],
     text: 'Bip sait sauter ! Il saute par-dessus une case, tout droit devant lui.' },
@@ -115,10 +115,10 @@ const LEVELS = [
     text: 'Une flaque sur le chemin. Avance, puis saute !' },
   { ch: 2, pal: [...ARROWS, 'j'], map: ['R~~..b', '......'],
     text: 'Deux flaques collées : saute par-dessus, Bip sait faire.' },
-  { ch: 2, pal: [...ARROWS, 'j'], map: ['R.~.n', '.###.', '...K.'],
-    text: 'Saute vers le nounours, puis va ranger au coffre.' },
-  { ch: 2, pal: [...ARROWS, 'j'], sol: 'd u r j j', map: ['R.~b~K', 'a.....'],
-    text: 'Le grand défi du saut ! Saute, ramasse le ballon, saute encore, puis au coffre.' },
+  { ch: 2, pal: [...ARROWS, 'j'], map: ['R.~.n', '.###.', '.....'],
+    text: 'Saute vers le nounours !' },
+  { ch: 2, pal: [...ARROWS, 'j'], sol: 'd u r j j', map: ['R.~b~.', 'a.....'],
+    text: 'Le grand défi du saut ! Saute, ramasse le ballon, saute encore !' },
   // Chapitre 4 — Tourne, tourne ! (Répéter)
   { ch: 3, pal: ['r', 'loop'], max: 3, sol: 'N5(r)', map: ['......', 'R....b', '......'],
     text: 'Bip n\'a que 2 piles ! Le bloc Répéter refait la même flèche plusieurs fois.' },
@@ -128,8 +128,8 @@ const LEVELS = [
     text: 'Deux blocs Répéter, l\'un après l\'autre.' },
   { ch: 3, pal: [...ARROWS, 'loop'], max: 4, sol: 'r N6(d)', map: ['R..', '...', '.b.', '...', '.n.', '...', '.c.'],
     text: 'L\'allée aux jouets : tout droit, en ligne droite !' },
-  { ch: 3, pal: [...ARROWS, 'j', 'loop'], sol: 'N2(r j) d', map: ['##o####', 'R.~b.~n', '######K'],
-    text: 'Le grand défi ! Saute, ramasse et range tout dans le coffre.' },
+  { ch: 3, pal: [...ARROWS, 'j', 'loop'], sol: 'N2(r j) d', map: ['##o####', 'R.~b.~n', '######.'],
+    text: 'Le grand défi ! Saute et ramasse tous les jouets.' },
 
   /* ============ Monde 2 — La grande promenade ============ */
   // Chapitre 5 — Le chemin de Zoé (repère relatif)
@@ -150,9 +150,9 @@ const LEVELS = [
     text: 'Deux jouets sur les îles. Une fois parti d\'un nénuphar, impossible d\'y revenir !' },
   { ch: 5, face: 'r', pal: [...REL, 'j'], map: ['R--b', '.~~.', '.n~.'],
     text: 'Traverse la mare, puis reviens chercher le nounours en sautant.' },
-  { ch: 5, face: 'r', pal: [...REL, 'loop'], sol: 'N4(f) tr N2(f) tr f f', map: ['R---b', '~~~~.', '..K..'],
-    text: 'La grande traversée : les nénuphars sont le seul chemin. Au coffre !' },
-  { ch: 5, face: 'r', pal: [...REL, 'loop'], max: 9, sol: 'N5(f) tr f f tr f f', map: ['R--.-b', '~~~...', '...K..'],
+  { ch: 5, face: 'r', pal: [...REL, 'loop'], sol: 'N4(f) tr N2(f) tr f f', map: ['R---b', '~~~~.', '.....'],
+    text: 'La grande traversée : les nénuphars sont le seul chemin. Ramasse le ballon !' },
+  { ch: 5, face: 'r', pal: [...REL, 'loop'], sol: 'N5(f) tr f f tr f f', map: ['R--.-b', '~~~...', '......'],
     text: 'Que de nénuphars ! Le bloc Répéter fait traverser Bip feuille à feuille.' },
   // Chapitre 7 — Jusqu'au bout (boucle conditionnelle)
   { ch: 6, face: 'r', pal: [...REL, 'while'], max: 3, sol: 'Wo(f)', map: ['.......', 'R.....b', '.......'],
@@ -244,8 +244,8 @@ const LEVELS = [
     text: 'Trois ateliers : la barrière n\'est jamais au même endroit. Si un obstacle est devant, Bip tourne !' },
   { ch: 9, face: 'r', pal: REL, sol: 'tr f tl f f f tl f', map: ['RG.b', 's...'],
     text: 'La barrière bloque le chemin. Le champignon est caché en dessous !' },
-  { ch: 9, face: 'r', pal: REL, sol: 'f f f f f f', map: ['R.s.GbK'],
-    text: 'Ouvre la barrière, ramasse le cube, puis range-le dans le coffre.' },
+  { ch: 9, face: 'r', pal: REL, sol: 'f f f f f f', map: ['R.s.Gb.'],
+    text: 'Ouvre la barrière et ramasse le cube !' },
   // Chapitre 11 — Pousse-pousse (caisses)
   { ch: 10, face: 'r', pal: REL, sol: 'f f f', map: ['RC~b'],
     text: 'Une caisse ! Marche dedans pour la pousser. Dans l\'eau… elle devient un pont !' },
@@ -255,8 +255,8 @@ const LEVELS = [
     text: 'La caisse bloque le couloir. Pousse-la pour te frayer un chemin.' },
   { ch: 10, face: 'r', pal: REL, sol: 'f f f tr f f', map: ['RC.s.', '###G.', '##.n.'],
     text: 'Pousse la caisse sur le champignon : elle reste appuyée dessus et la barrière s\'ouvre !' },
-  { ch: 10, face: 'r', pal: REL, sol: 'f f f f f', map: ['RC~.bK', '#....#', '......'],
-    text: 'Le grand pont ! Pousse la caisse dans l\'eau : elle flotte. Ramasse tout et range au coffre.' },
+  { ch: 10, face: 'r', pal: REL, sol: 'f f f f f', map: ['RC~.b.', '#....#', '......'],
+    text: 'Le grand pont ! Pousse la caisse dans l\'eau : elle flotte. Ramasse tous les jouets.' },
   // Chapitre 12 — Le pollen doré (peinture)
   { ch: 11, face: 'r', pal: REL, map: ['R***'],
     text: 'Regarde : Bip laisse du pollen doré là où il marche ! Couvre toutes les fleurs.' },
@@ -298,74 +298,79 @@ const LEVELS = [
 
   /* ============ Monde 4 — Le jardin de nuit ============ */
   // Chapitre 15 — Les lucioles de Noctule (récapitulatif de nuit)
-  { ch: 14, face: 'r', pal: ['f', 'loop', 'j'], sol: 'N2(f) j', map: ['R**#e'],
-    text: 'L\'allée dorée de nuit : saute le buisson, peins les fleurs, attrape la luciole !' },
-  { ch: 14, face: 'r', pal: [...REL, 'while'], max: 3, sol: 'Wo(f)', map: ['R.sG.e.'],
-    text: 'La barrière de nuit. Marche sur le champignon lumineux et répète jusqu\'à la luciole.' },
-  { ch: 14, face: 'r', pal: [...REL, 'j'], map: ['R-e', '...', '-t-'],
-    text: 'La mare de nuit : attrape la luciole et la toupie sans tomber à l\'eau !' },
+  { ch: 14, face: 'r', pal: ['f', 'loop', 'j'], sol: 'N2(f) j', map: ['R**#b'],
+    text: 'L\'allée dorée de nuit : saute le buisson, peins les fleurs, attrape le jouet !' },
+  { ch: 14, face: 'r', pal: [...REL, 'while'], max: 3, sol: 'Wo(f)', map: ['R.sG.n.'],
+    text: 'La barrière de nuit. Marche sur le champignon lumineux et répète jusqu\'à tous les jouets.' },
+  { ch: 14, face: 'r', pal: [...REL, 'j'], map: ['R-b', '...', '-t-'],
+    text: 'La mare de nuit : attrape les deux jouets sans tomber à l\'eau !' },
   { ch: 14, pal: [...REL, 'star'], max: 8, sol: '* * *', fn: 'f tl f tr', face: 'r',
-    map: ['...e', '..e.', '.e.#', 'R.##'],
-    text: 'La ronde des lucioles : le bloc magique va chercher chacune d\'elles.' },
+    map: ['...b', '..n.', '.c.#', 'R.##'],
+    text: 'La ronde de nuit : le bloc magique va chercher chacune d\'elles.' },
   { ch: 14, face: 'r', pal: [...REL, 'j', 'while', 'if'], max: 8, sol: 'Wo(Ip(j|f)) tr Wo(f)',
     variants: [
-      ['........', 'R.~.~..e', '.......e'],
-      ['........', 'R..~..~e', '.......e'],
-      ['........', 'R~..~.e.', '.......e'],
+      ['........', 'R.~.~..n', '.......c'],
+      ['........', 'R..~..~t', '.......a'],
+      ['........', 'R~..~.b.', '.......n'],
     ],
     text: 'Les flaques de nuit : le même programme pour les trois jardins.' },
   // Chapitre 16 — Le grand pique-nique (final)
-  { ch: 15, face: 'r', pal: [...REL, 'j', 'loop'], sol: 'N2(f j) tr f', map: ['##o####', 'R.~e.~t', '######K'],
-    text: 'Le grand pique-nique commence ! Saute les flaques et range les surprises dans le coffre.' },
+  { ch: 15, face: 'r', pal: [...REL, 'j', 'loop'], sol: 'N2(f j) tr f', map: ['##o####', 'R.~c.~t', '######.'],
+    text: 'Le grand pique-nique commence ! Saute les flaques et ramasse tous les jouets.' },
   { ch: 15, face: 'r', pal: [...REL, 'while', 'if'], max: 5, sol: 'Wt(Io(tr|f))',
     variants: [
-      ['R....', '####.', '.e.#.', '.###.', '.....'],
-      ['R..#.', '##.#.', '##.#.', 'e..#.', '####.'],
-      ['R....', '####.', '...#.', '.#.#.', '#e...'],
+      ['R....', '####.', '.t.#.', '.###.', '.....'],
+      ['R..#.', '##.#.', '##.#.', 'a..#.', '####.'],
+      ['R....', '####.', '...#.', '.#.#.', '#b...'],
     ],
-    text: 'L\'escargot de nuit : répète jusqu\'à avoir la luciole.' },
-  { ch: 15, face: 'r', pal: REL, sol: 'f f f tr f f', map: ['RC.s.', '###G.', '##.e.'],
-    text: 'Une caisse, un champignon, une barrière et une luciole : l\'atelier de Grand-Papa pour de vrai.' },
+    text: 'L\'escargot de nuit : répète jusqu\'à avoir tous les jouets.' },
+  { ch: 15, face: 'r', pal: REL, sol: 'f f f tr f f', map: ['RC.s.', '###G.', '##.n.'],
+    text: 'Une caisse, un champignon, une barrière et un jouet : l\'atelier de Grand-Papa pour de vrai.' },
   { ch: 15, face: 'r', pal: [...REL, 'j', 'while', 'if', 'star'], max: 9, sol: 'Wo(*) tr Wo(*)', fn: 'Ip(j|f)',
     variants: [
-      ['R..~.e', '......', '.....~', '.....t'],
+      ['R..~.b', '......', '.....~', '.....t'],
       ['R~.~c.', '.....~', '......', '.....a'],
-      ['R.~...', '......', '.....~', '.....e'],
+      ['R.~...', '......', '.....~', '.....n'],
     ],
     text: 'Le même programme, trois jardins, un bloc magique : tu es un chef !' },
-  { ch: 15, face: 'r', pal: [...REL, 'j', 'loop', 'while', 'if', 'star'], max: 10,
+  { ch: 15, face: 'r', pal: [...REL, 'j', 'loop', 'while', 'if', 'star'],
     sol: 'N2(Wo(*) tr) Wo(*)', fn: 'Ip(j|f)',
-    map: ['R.~e..', '#####.', '..o.#~', '#####.', 'K.~.b.'],
-    text: 'LE GRAND FINAL ! Ramasse tout et range dans le coffre. Tous tes blocs sont là. Bon courage, champion !' },
+    map: ['R.~b..', '#####.', '..o.#~', '#####.', '..~.b.'],
+    text: 'LE GRAND FINAL ! Ramasse tous les jouets. Tous tes blocs sont là. Bon courage, champion !' },
 
-  /* ============ Chapitre 17 — Le rêve de Bip (niveaux-ponts, épilogue de nuit) ============ */
-  { ch: 16, face: 'r', pal: [...REL, 'loop'], max: 3, sol: 'N4(f)', map: ['R***e'],
-    text: 'Le rêve de Bip : encore un peu de pollen doré sous les étoiles. Répète !' },
-  { ch: 16, face: 'r', pal: [...REL, 'j', 'while', 'if'], max: 5, sol: 'Wt(Ip(j|f))',
+  /* ============ Chapitre 17 — Le rêve de Bip (tournoi de nuit 1 : combos relevés) ============ */
+  { ch: 16, face: 'r', pal: [...REL, 'j', 'loop'], sol: 'N2(f) j N2(f)', map: ['R**#**b'],
+    text: 'Le rêve de Bip : boucle, saut, peinture dorée et jouet. Tout ensemble !' },
+  { ch: 16, face: 'r', pal: [...REL, 'j', 'while', 'if'], sol: 'Wo(Ip(j|f)) tr Wo(f)',
     variants: [
-      ['........', 'R.~.~..e', '........'],
-      ['........', 'R..~..~e', '........'],
-      ['........', 'R~..~.e.', '........'],
+      ['........', 'R.~.~..b', '.......n'],
+      ['........', 'R..~..~c', '.......t'],
+      ['........', 'R~..~.b.', '.......n'],
     ],
-    text: 'Le rêve de Bip : trois jardins étoilés, un seul programme !' },
-  { ch: 16, face: 'r', pal: [...REL, 'star'], sol: '* tr *', fn: 'f f', map: ['R.e.', '....', '..e.'],
-    text: 'Le rêve de Bip : le bloc magique attrape les deux lucioles. Dors bien !' },
+    text: 'Le rêve de Bip : jusqu’au bout, saute les flaques, tourne, attrape tout !' },
+  { ch: 16, face: 'r', pal: [...REL, 'j', 'while', 'if', 'star'], sol: 'Wo(*) tr Wo(*)', fn: 'Ip(j|f)',
+    variants: [
+      ['........', 'R.~.~..b', '.......n'],
+      ['........', 'R..~..~c', '.......t'],
+      ['........', 'R~..~.b.', '.......n'],
+    ],
+    text: 'Le rêve de Bip : l’étoile contient un Si — le programme devient tout petit !' },
 
-  /* ============ Chapitre 18 — Les balises de Noctule (waypoint : bloc g) ============ */
+  /* ============ Chapitre 18 — Les balises de Noctule (tournoi de nuit 2 : la balise en combo) ============ */
   { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g', map: ['R.b.F'],
     text: 'Nouveau : la balise ! Le bloc balise envoie Bip jusqu’au drapeau, tout seul.' },
-  { ch: 17, face: 'r', pal: [...REL, 'j', 'g'], sol: 'g', map: ['R~bF.'],
-    text: 'La balise saute la flaque toute seule, et attrape le nounours au passage !' },
-  { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g', map: ['R.#..', '..b..', '.#F..'],
-    text: 'Un mur de buissons : la balise trouve le chemin et ramasse le nounours !' },
-  { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g f f', map: ['R.bF.K'],
-    text: 'Va à la balise, puis range le ballon dans le coffre !' },
+  { ch: 17, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'N2(g)', map: ['RbF..', '.....', '..nF.'],
+    text: 'Deux balises ! Répète le bloc balise : Bip visite les deux drapeaux et ramasse tout.' },
+  { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g tr f f', map: ['R.F..', '.###.', '..b..'],
+    text: 'Va à la balise… puis continue à la main jusqu’au jouet !' },
+  { ch: 17, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'g tr N2(f)', map: ['R.bF..', '.....', '..#..'],
+    text: 'Balise puis Répéter : Bip revient par le bas et attrape le nounours !' },
 
-  /* ============ Chapitre 19 — Les yeux de Bip (capteur jouet : It) + balises multiples ============ */
-  { ch: 18, face: 'r', pal: [...REL, 'if'], sol: 'It(f|tr)', map: ['Rb..'],
-    text: 'Nouveau capteur : si un jouet est devant Bip, il avance ! Sinon, il tourne.' },
-  { ch: 18, face: 'r', pal: [...REL, 'j', 'if'], sol: 'It(f|j)', map: ['R.b'],
-    text: 'Pas de jouet devant ? Alors Bip saute pour attraper le ballon !' },
+  /* ============ Chapitre 19 — Les yeux de Bip (tournoi de nuit 3 : capteurs + balises en combo) ============ */
+  { ch: 18, face: 'r', pal: [...REL, 'if', 'loop'], sol: 'N2(It(f|tr))', map: ['Rbn'],
+    text: 'Nouveau capteur : si un jouet est devant, Bip avance. Dans un Répéter, il ramasse tout !' },
+  { ch: 18, face: 'r', pal: [...REL, 'if', 'g', 'loop'], sol: 'N2(It(f|g))', map: ['Rb.F.'],
+    text: 'Capteur + balise : jouet devant ? Bip avance. Sinon, il fonce au drapeau !' },
   { ch: 18, face: 'r', pal: [...REL, 'j', 'if', 'loop'], sol: 'N2(It(f|j))', map: ['Rb~n'],
     text: 'Le capteur dans un Répéter : avance, puis saute la flaque pour le nounours !' },
   { ch: 18, face: 'd', pal: [...REL, 'if', 'while'], max: 5, sol: 'Wt(It(f|tr))',
@@ -375,16 +380,16 @@ const LEVELS = [
       ['R..', 'b..', 'a..'],
     ],
     text: 'Bip descend le couloir tout seul et ramasse tous les jouets !' },
-  { ch: 18, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'N2(g)', map: ['RbF..', '.....', '..nF.'],
-    text: 'Deux balises ! Répète le bloc balise : Bip visite les deux drapeaux et ramasse tout.' },
   { ch: 18, face: 'r', pal: [...REL, 'while'], sol: 'Wg(f)', map: ['R.b.F'],
     text: 'Jusqu’à la balise ! Bip avance jusqu’au drapeau, et ramasse le ballon au passage.' },
-  { ch: 18, face: 'r', pal: [...REL, 'j', 'while', 'if'], sol: 'Wg(Ip(j|f))', map: ['R~.F'],
+  { ch: 18, face: 'r', pal: [...REL, 'j', 'while', 'if'], sol: 'Wg(Ip(j|f))', map: ['R~bF'],
     text: 'Jusqu’au drapeau en sautant la flaque : la molette du Jusqu’à a une troisième position !' },
-  { ch: 18, face: 'r', pal: [...REL, 'p', 'g'], sol: 'p f g', map: ['R.b..'],
-    text: 'Pose une balise ici, va chercher le ballon, puis reviens à la balise !' },
+  { ch: 18, face: 'r', pal: [...REL, 'j', 'while', 'if', 'g'], sol: 'Wg(It(f|g))', map: ['R~.bF'],
+    text: 'Jusqu’au drapeau : jouet devant ? avance. Sinon, fonce à la balise !' },
+  { ch: 18, face: 'r', pal: [...REL, 'p', 'g', 'if', 'loop'], sol: 'p f g N2(It(f|tr))', map: ['R.b.F..', '..#...', '.n...F'],
+    text: 'LE TOURNOI FINAL ! Pose une balise, fonce au drapeau, reviens en ramassant tout. Champion !' },
 
-  /* ============ Les défis de Zoé (un par jour de la semaine, du plus doux au plus costaud) ============ */
+  /* ============ Les défis de Zoé (archivés V9 — accessibles depuis la feuille adultes) ============ */
   { ch: -1, daily: true, pal: ['r', 'loop'], max: 3, sol: 'N6(r)', map: ['R******'],
     text: 'Défi de Zoé : l\'allée dorée en une seule pile.' },
   { ch: -1, daily: true, pal: ARROWS, map: ['bRc.'],

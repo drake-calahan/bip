@@ -12,7 +12,6 @@ const SB_ITEMS = [
   { ch: 'c', label: TOY_NAME.c, icon: () => toyUse('c') },
   { ch: 't', label: TOY_NAME.t, icon: () => toyUse('t') },
   { ch: 'a', label: TOY_NAME.a, icon: () => toyUse('a') },
-  { ch: 'e', label: TOY_NAME.e, icon: () => toyUse('e') },
   { ch: '#', label: 'Un buisson', icon: () => symUse('bush') },
   { ch: 'o', label: 'Un rocher', icon: () => symUse('rock') },
   { ch: '~', label: 'Une flaque', icon: () => symUse('puddle') },
@@ -21,7 +20,6 @@ const SB_ITEMS = [
   { ch: 'G', label: 'Une barrière', icon: () => symUse('gate') },
   { ch: 'C', label: 'Une caisse', icon: () => symUse('crate') },
   { ch: '*', label: 'Une fleur', icon: () => symUse('flower') },
-  { ch: 'K', label: 'Le coffre', icon: () => symUse('box') },
   { ch: 'F', label: 'Une balise', icon: () => symUse('flag') },
   { ch: '.', label: 'Gomme', icon: () => I.eraser, eraser: true },
 ];
