@@ -68,6 +68,13 @@ function wire() {
   $('#btnAdults').addEventListener('click', openSheet);
   $('#btnClose').addEventListener('click', closeSheet);
   $('#sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
+
+  // Note de version dans la feuille adultes
+  const vn = $('#versionNotes');
+  if (vn && typeof VERSION_NOTES !== 'undefined') {
+    vn.innerHTML = `<p><b>${VERSION_NOTES[0][0]}</b> — version installée sur cet appareil.</p><ul>` +
+      VERSION_NOTES.map(([v, d]) => `<li><b>${v}</b> : ${d}</li>`).join('') + `</ul>`;
+  }
   $('#tgVoice').addEventListener('click', () => { save.voice = !save.voice; if (!save.voice) stopVoice(); persist(); syncToggles(); });
   $('#tgSound').addEventListener('click', () => { save.sound = !save.sound; persist(); syncToggles(); });
   $('#tgAll').addEventListener('click', () => { save.all = !save.all; persist(); syncToggles(); });

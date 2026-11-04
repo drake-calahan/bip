@@ -126,6 +126,8 @@ async function run() {
   await pg.keyboard.press('Escape');
   await pg.click('#btnAdults'); await sleep(300);
   assert(await pg.locator('#sheet').isVisible(), 'feuille adultes');
+  assert((await pg.locator('#versionNotes li').count()) >= 4 && (await pg.locator('#versionNotes').textContent()).includes('V8'), 'note de version V8 affichée dans la feuille adultes');
+  await shot(pg, 'v8-adults-sheet-390');
   await pg.keyboard.press('Escape');
   await pg.reload(); await sleep(500);
   assert(await pg.evaluate(() => (window.__bip.save.stars[1] || 0) > 0 && !!window.__bip.save.labs.solved['balance-1']), 'la progression survit au rechargement');

@@ -914,6 +914,7 @@ svg { display: block; }
       <li>Ranger des instructions dans l'ordre (séquence), répéter (boucle, chapitre 4), s'arrêter tout seul (Jusqu'à, chapitre 7), choisir (Si… sinon, chapitre 8), réutiliser (bloc magique, chapitre 9), réparer (détective, chapitre 14).</li>
       <li><b>L'état des machines</b> : les champignons ouvrent les barrières, les caisses deviennent des ponts. Une action change le monde pour la suite du programme.</li>
       <li><b>Programmer le lieu</b> : aux toboggans de Ballon, on pose des flèches au sol au lieu de donner des ordres au robot.</li>
+      <li><b>Des capteurs et des balises</b> : le bloc Si peut voir un jouet devant (3e position de sa molette) ; le bloc « balise » envoie Bip au drapeau, et Bip peut en poser un lui-même.</li>
       <li><b>Les machines de Grand-Papa</b> : balance (poids et distance), lumière (miroirs), roues dentées (sens et vitesse), rendez-vous (rythmes et multiples). L'enfant construit, peut prédire en touchant une image, puis lâche la machine et observe.</li>
       <li><b>Créer</b> : Mon jardin permet d'inventer ses propres niveaux et de les faire résoudre par Bip.</li>
     </ul>
@@ -922,7 +923,7 @@ svg { display: block; }
       <li><b>Le jardin de Bip</b> (chapitres 1 à 4) : flèches, obstacles, saut, boucle Répéter.</li>
       <li><b>La grande promenade</b> (5 à 9) : repère relatif, nénuphars, Jusqu'à, Si… sinon, bloc magique.</li>
       <li><b>Les ateliers de Grand-Papa</b> (10 à 14) : champignons, caisses, pollen, toboggans, détective.</li>
-      <li><b>Le jardin de nuit</b> (15 et 16) : tout ce qui précède, sous les étoiles, jusqu'au grand pique-nique.</li>
+      <li><b>Le jardin de nuit</b> (15 à 19) : tout ce qui précède sous les étoiles, jusqu'au grand pique-nique, le rêve de Bip, les balises de Noctule et les yeux de Bip.</li>
     </ul>
     <h3>Comment l'accompagner</h3>
     <ul>
@@ -943,6 +944,8 @@ svg { display: block; }
     </ul>
     <h3>Installer sur Android</h3>
     <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application ». Bip fonctionne ensuite sans connexion, en plein écran. La progression reste sur l'appareil.</p>
+    <h3>Version</h3>
+    <div id="versionNotes"></div>
     <h3>Réglages</h3>
     <div class="toggles">
       <button class="tg" id="tgVoice" role="switch"><span>Voix qui lit les consignes</span><span class="sw"></span></button>
@@ -2124,6 +2127,13 @@ const CTR = ['loop', 'while', 'if'];
 const isCtr = t => CTR.includes(t);
 const LOOP_NS = [2, 3, 4, 5, 6, 8];
 const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'p', 'loop', 'while', 'if', 'star'];
+/* Note de version affichée dans la feuille « Pour les adultes » (bump avec sw.js VERSION) */
+const VERSION_NOTES = [
+  ['V8 — « Jusqu’à la balise »', 'Balises : blocs « va à la balise », « pose une balise » et « jusqu’à la balise » ; capteur « jouet devant » ; boucles emboîtées plus lisibles (bloc fautif et parents surlignés, conteneur vide expliqué).'],
+  ['V7 — « Les yeux de Bip »', 'Capteur « si un jouet est devant » (3e position du bloc Si) ; plusieurs balises par niveau.'],
+  ['V6 — « Les balises de Noctule »', 'Nouveau chapitre : le bloc « balise » envoie Bip au drapeau tout seul (waypoint).'],
+  ['V5 — « L’harmonie du jardin »', 'Courbe de difficulté lissée, un seul repère (relatif) après le chapitre 5, marge garantie sur les piles de blocs, défis de Zoé du lundi au dimanche.'],
+];
 const BALL_DIRS = ['r', 'd', 'l', 'u'];
 
 function robotSVG() {
@@ -4265,6 +4275,13 @@ function wire() {
   $('#btnAdults').addEventListener('click', openSheet);
   $('#btnClose').addEventListener('click', closeSheet);
   $('#sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
+
+  // Note de version dans la feuille adultes
+  const vn = $('#versionNotes');
+  if (vn && typeof VERSION_NOTES !== 'undefined') {
+    vn.innerHTML = `<p><b>${VERSION_NOTES[0][0]}</b> — version installée sur cet appareil.</p><ul>` +
+      VERSION_NOTES.map(([v, d]) => `<li><b>${v}</b> : ${d}</li>`).join('') + `</ul>`;
+  }
   $('#tgVoice').addEventListener('click', () => { save.voice = !save.voice; if (!save.voice) stopVoice(); persist(); syncToggles(); });
   $('#tgSound').addEventListener('click', () => { save.sound = !save.sound; persist(); syncToggles(); });
   $('#tgAll').addEventListener('click', () => { save.all = !save.all; persist(); syncToggles(); });

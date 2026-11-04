@@ -51,6 +51,13 @@ const CTR = ['loop', 'while', 'if'];
 const isCtr = t => CTR.includes(t);
 const LOOP_NS = [2, 3, 4, 5, 6, 8];
 const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'p', 'loop', 'while', 'if', 'star'];
+/* Note de version affichée dans la feuille « Pour les adultes » (bump avec sw.js VERSION) */
+const VERSION_NOTES = [
+  ['V8 — « Jusqu’à la balise »', 'Balises : blocs « va à la balise », « pose une balise » et « jusqu’à la balise » ; capteur « jouet devant » ; boucles emboîtées plus lisibles (bloc fautif et parents surlignés, conteneur vide expliqué).'],
+  ['V7 — « Les yeux de Bip »', 'Capteur « si un jouet est devant » (3e position du bloc Si) ; plusieurs balises par niveau.'],
+  ['V6 — « Les balises de Noctule »', 'Nouveau chapitre : le bloc « balise » envoie Bip au drapeau tout seul (waypoint).'],
+  ['V5 — « L’harmonie du jardin »', 'Courbe de difficulté lissée, un seul repère (relatif) après le chapitre 5, marge garantie sur les piles de blocs, défis de Zoé du lundi au dimanche.'],
+];
 const BALL_DIRS = ['r', 'd', 'l', 'u'];
 
 function robotSVG() {
