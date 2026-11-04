@@ -26,7 +26,7 @@ async function run() {
 
   console.log('Carte');
   await pg.goto(URL); await sleep(500);
-  assert(await pg.locator('#trail .node').count() === 92, '92 cailloux sur le chemin (aventure V6)');
+  assert(await pg.locator('#trail .node').count() === 95, '95 cailloux sur le chemin (aventure V6)');
   assert(await pg.locator('#trail .node.next').count() === 1, 'Bip est posé sur un seul caillou');
   assert(await pg.locator('#trail .chap-banner').count() === 19, '19 bannières de chapitre');
   await shot(pg, 'v4-home-390');
@@ -61,6 +61,25 @@ async function run() {
   await pg.mouse.click(bb.x + 7 + cell * 1.5, bb.y + 7 + cell * .5); await sleep(300);
   await pg.click('#btnRun'); await sleep(3000);
   assert(await pg.locator('#win').isVisible(), 'Ballon arrive au nid');
+
+  console.log('Imbrications (robustesse UI V8)');
+  await pg.evaluate(() => window.__bip.openLevel(79)); await sleep(500); await dismissStory(pg);
+  // conteneur vide -> le run est bloque avec explication, pas de boucle infinie
+  await pg.click('#palette .blk[data-t="loop"]'); await sleep(250);
+  await pg.click('#btnRun'); await sleep(600);
+  assert(await pg.evaluate(() => !window.__bip.G.busy && window.__bip.G.prog.length === 1), 'un bloc Répéter vide bloque le lancement avec explication');
+  assert(await pg.locator('#progCard .ctr.bad').count() === 1, 'le conteneur vide est marqué en orange');
+  // niveau final tres imbrique : N2(Wo(*) tr) Wo(*) avec fn Ip(j|f) -> gagne
+  await pg.evaluate(() => { const B = window.__bip; B.G.prog = B.parseProg('N2(Wo(*) tr) Wo(*)'); B.G.fn = B.parseProg('Ip(j|f)'); B.runAll(); });
+  for (let i = 0; i < 80 && !(await pg.locator('#win').isVisible()); i++) await sleep(500);
+  assert(await pg.locator('#win').isVisible(), 'niveau final imbrique (boucle>jusqu’à>étoile>si) gagné en UI');
+  await shot(pg, 'v8-nested-final-390');
+  // capteur + balises : L95 pose-balise
+  await pg.evaluate(() => window.__bip.openLevel(94)); await sleep(500); await dismissStory(pg);
+  await pg.evaluate(() => { const B = window.__bip; B.G.prog = B.parseProg('p f g'); B.G.fn = []; B.runAll(); });
+  for (let i = 0; i < 40 && !(await pg.locator('#win').isVisible()); i++) await sleep(500);
+  assert(await pg.locator('#win').isVisible(), 'L95 pose une balise puis revient (p f g) gagné');
+  assert(await pg.locator('#board .it.flag').count() >= 1, 'la balise posée apparaît sur le plateau');
 
   console.log('Machines');
   await pg.goto(URL); await sleep(400);

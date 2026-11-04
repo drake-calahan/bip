@@ -17,14 +17,14 @@ complète est dans [docs/GAME-DESIGN-V4.md](docs/GAME-DESIGN-V4.md).
   les ateliers, la nuit). Bip est posé sur le prochain caillou ; les cailloux
   réussis portent leurs étoiles ; les suivants sont pâles, jamais cadenassés.
   Un seul geste (« Jouer ») ouvre le prochain niveau.
-- **L'aventure** : 4 mondes · 19 chapitres · 92 niveaux d'aventure + 7 défis de Zoé
-  (99 niveaux au total). Flèches, buissons et
+- **L'aventure** : 4 mondes · 19 chapitres · 95 niveaux d'aventure + 7 défis de Zoé
+  (102 niveaux au total). Flèches, buissons et
   flaques, saut, Répéter, repère relatif, nénuphars qui coulent, Répéter jusqu'à,
   Si… sinon (3 jardins, 1 programme), bloc magique, champignons et barrières,
   caisses qui deviennent des ponts, pollen doré, détective, toboggans de Ballon
   (on programme le décor), puis le jardin de nuit jusqu'au grand pique-nique,
   au rêve de Bip, aux balises de Noctule (le bloc « balise » y envoie Bip tout seul)
-  et aux yeux de Bip (capteur « jouet devant » sur la molette du bloc Si).
+  et aux yeux de Bip (capteur « jouet devant » sur la molette du bloc Si, « jusqu’à la balise » sur la molette du Jusqu’à, et le bloc « pose une balise »).
   L'histoire se raconte dans la bulle du niveau, par le personnage qui parle.
 - **Les machines de Grand-Papa** : la balance (glisser les paniers), la lumière
   (tourner les miroirs), les roues (changer leur taille), le rendez-vous (décaler

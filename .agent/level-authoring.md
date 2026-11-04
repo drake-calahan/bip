@@ -63,3 +63,12 @@
   `N2(g)` / `N3(g)` = visiter 2/3 balises. Une balise sous Bip est considérée visitée.
 - Anti-patterns : pas de `C`/`G` sur le chemin d'une balise ; `It` ne voit pas les jouets
   déjà ramassés (écrire les niveaux en conséquence).
+
+## V8 — Wg (jusqu'à la balise), p (pose une balise), robustesse UI des imbrications
+
+- `Wg(...)` = répéter jusqu'à être SUR une balise (présente ou plantée par `p`).
+  La molette du bloc Jusqu'à n'a la 3e position (drapeau) que si le niveau a une balise.
+- `p` plante une balise sur la case courante de Bip (visible à l'exécution, step `plant`).
+  `g` ignore la balise sous Bip comme cible mais ne la marque PAS visitée : `p f g` revient au drapeau planté.
+- UI : `insertItem` refuse (avec message parlé) ce que `canNest` interdit, au lieu de déplacer en silence ;
+  `badMark` entoure aussi les conteneurs parents (`.badpath`) ; un conteneur vide bloque le run avec explication.

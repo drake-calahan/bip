@@ -377,6 +377,12 @@ const LEVELS = [
     text: 'Bip descend le couloir tout seul et ramasse tous les jouets !' },
   { ch: 18, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'N2(g)', map: ['RbF..', '....', '..nF.'],
     text: 'Deux balises ! Répète le bloc balise : Bip visite les deux drapeaux et ramasse tout.' },
+  { ch: 18, face: 'r', pal: [...REL, 'while'], sol: 'Wg(f)', map: ['R.b.F'],
+    text: 'Jusqu’à la balise ! Bip avance jusqu’au drapeau, et ramasse le ballon au passage.' },
+  { ch: 18, face: 'r', pal: [...REL, 'j', 'while', 'if'], sol: 'Wg(Ip(j|f))', map: ['R~.F'],
+    text: 'Jusqu’au drapeau en sautant la flaque : la molette du Jusqu’à a une troisième position !' },
+  { ch: 18, face: 'r', pal: [...REL, 'p', 'g'], sol: 'p f g', map: ['R.b..'],
+    text: 'Pose une balise ici, va chercher le ballon, puis reviens à la balise !' },
 
   /* ============ Les défis de Zoé (un par jour de la semaine, du plus doux au plus costaud) ============ */
   { ch: -1, daily: true, pal: ['r', 'loop'], max: 3, sol: 'N6(r)', map: ['R******'],

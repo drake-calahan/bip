@@ -232,13 +232,17 @@ const seqHTML = (list, cid) => list.map(itemHTML).join('') + slotHTML(cid);
 const itemHTML = it => isCtr(it.t) ? ctrHTML(it) : blockHTML(it.t, it.id);
 function pillHTML(it) {
   if (it.t === 'loop') return '×' + it.n;
-  if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : symUse('bush');
+  if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : it.c === 'flag' ? symUse('flag') : symUse('bush');
   return it.c === 'puddle' ? symUse('puddle') : it.c === 'obst' ? symUse('gate') : toyUse('b');
 }
 function pillLabel(it) {
   if (it.t === 'loop') return `Répéter ${it.n} fois`;
-  if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : 'Jusqu’à un obstacle';
+  if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : it.c === 'flag' ? 'Jusqu’à une balise' : 'Jusqu’à un obstacle';
   return it.c === 'puddle' ? 'Si une flaque est devant' : it.c === 'obst' ? 'Si un obstacle est devant' : 'Si un jouet est devant';
+}
+function levelHasFlag() {
+  const rows = (G.lv.variants || [G.lv.map || []]).flat();
+  return rows.some(r => r.includes('F')) || (G.lv.pal || []).includes('p') || (G.lv.pal || []).includes('g');
 }
 function ctrHTML(it) {
   const tThen = G.target === it.id, tElse = G.target === it.id + ':else';
@@ -307,6 +311,7 @@ function canAdd() {
 function insertItem(it, cid, idx) {
   let loc = locate(cid);
   if (!canNest(loc, it)) {
+    say(`Le bloc ${BLOCK_NAME[it.t] || it.t} ne rentre pas dans un ${loc && loc.type !== 'main' && loc.type !== 'fn' ? 'bloc ' + (BLOCK_LABEL[loc.type] || loc.type) : 'bloc'} : il est posé tout en haut.`);
     const root = loc ? loc.root : 'main';
     cid = root; loc = locate(root); idx = null;
     if (!canNest(loc, it)) { cid = 'main'; loc = locate('main'); }
@@ -352,7 +357,11 @@ function cyclePill(id) {
   const it = f.it;
   let msg;
   if (it.t === 'loop') { it.n = LOOP_NS[(LOOP_NS.indexOf(it.n) + 1) % LOOP_NS.length]; msg = `Bip va répéter ${it.n} fois.`; }
-  else if (it.t === 'while') { it.c = it.c === 'free' ? 'toys' : 'free'; msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.'; }
+  else if (it.t === 'while') {
+    const seq = levelHasFlag() ? ['free', 'toys', 'flag'] : ['free', 'toys'];
+    it.c = seq[(seq.indexOf(it.c) + 1) % seq.length];
+    msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : it.c === 'flag' ? 'Bip répète jusqu’à être sur une balise.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.';
+  }
   else { it.c = it.c === 'puddle' ? 'obst' : it.c === 'obst' ? 'toy' : 'puddle'; msg = it.c === 'puddle' ? 'Si une flaque est devant Bip : ligne verte. Sinon : ligne grise.' : it.c === 'obst' ? 'Si un obstacle est devant Bip : ligne verte. Sinon : ligne grise.' : 'Si un jouet est devant Bip : ligne verte. Sinon : ligne grise.'; }
   SFX.tap(); edited();
   const p = $(`#progCard .ctr[data-id="${id}"] > .ctr-head .ctr-p`);
@@ -371,7 +380,7 @@ function clearNow() {
 }
 function clearMarks() {
   clearNow();
-  $$('#progCard .bad, #progCard .done').forEach(e => e.classList.remove('bad', 'done'));
+  $$('#progCard .bad, #progCard .done, #progCard .badpath').forEach(e => e.classList.remove('bad', 'done', 'badpath'));
   $$('#progCard .ctr').forEach(c => { const f = findItem(c.dataset.id); if (f) $(':scope > .ctr-head .ctr-p', c).innerHTML = pillHTML(f.it); });
 }
 
@@ -504,6 +513,25 @@ async function runAll() {
   if (G.mode === 'ball') return runBall();
   if (G.busy) { G.abort = true; return; }
   if (!totalBlocks() || !G.prog.length) { emptyNudge(); return; }
+  // V8 : un conteneur totalement vide est probablement une erreur d'imbrication -> on l'explique avant de lancer
+  const findEmpty = list => {
+    for (const it of list) {
+      if (it && (it.body || it.els)) {   // conteneur = objet avec body/els (indépendant de isCtr, hors app-core)
+        if (!it.body.length && !(it.els || []).length) return it;
+        const r = findEmpty(it.body) || findEmpty(it.els || []);
+        if (r) return r;
+      }
+    }
+    return null;
+  };
+  const empty = findEmpty(G.prog) || findEmpty(G.fn);
+  if (empty) {
+    SFX.nope();
+    say('Un bloc est vide : mets des blocs dedans avant de lancer !');
+    const c = $(`#progCard .ctr[data-id="${empty.id}"]`);
+    if (c) { c.classList.add('bad'); c.scrollIntoView({ block: 'nearest' }); }
+    return;
+  }
   stopVoice(); G.step = null; clearMarks(); hideHint();
   const session = ++G.session;
   const nv = G.lv.nv;
@@ -535,6 +563,7 @@ const CHECK_SAY = {
   'if-toy': ok => ok ? 'Un jouet devant : Bip prend la ligne verte.' : 'Pas de jouet devant : Bip prend la ligne grise.',
   'while-free': ok => ok ? 'La route est libre : Bip continue.' : 'Un obstacle devant : la boucle s’arrête.',
   'while-toys': ok => ok ? 'Il manque des jouets : Bip continue.' : 'Tous les jouets sont là : la boucle s’arrête.',
+  'while-flag': ok => ok ? 'Pas encore sur la balise : Bip continue.' : 'Bip est sur la balise : la boucle s’arrête.',
 };
 async function stepOnce() {
   if (G.busy || G.mode === 'ball') return;
@@ -592,6 +621,18 @@ async function doStep(st, keep, session = G.session) {
     $$('#board .it.switchc').forEach(s => s.classList.add('pressed'));
     SFX.gate();
     await sleep(700 * k);
+    return;
+  }
+  if (st.kind === 'plant') {
+    mark(st.ins);
+    SFX.gate();
+    const d = document.createElement('div');
+    d.className = 'it flag';
+    d.style.cssText = `--x:${st.to[0]};--y:${st.to[1]}`;
+    d.innerHTML = symUse('flag');
+    $('#board').append(d);
+    d.animate([{ transform: 'scale(.4)' }, { transform: 'scale(1.15)' }, { transform: 'scale(1)' }], { duration: 380 * k, easing: 'ease-out' });
+    await sleep(450 * k);
     return;
   }
   if (!R) return;
@@ -760,6 +801,11 @@ function badMark(ins) {
   clearNow();
   const b = $(`#progCard .blk[data-id="${ins.id}"]`);
   if (b) { b.classList.add('bad'); b.scrollIntoView({ block: 'nearest' }); }
+  // V8 : aussi entourer les conteneurs parents (le chemin d'imbrication) pour voir DANS quelle boucle est le bloc fautif
+  for (const p of ins.path || []) {
+    const c = $(`#progCard .ctr[data-id="${p.id}"]`);
+    if (c) c.classList.add('badpath');
+  }
 }
 
 /* ---------- Réussite ---------- */
