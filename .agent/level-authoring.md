@@ -53,3 +53,13 @@
 - Anti-patterns balise : pas de caisse `C` ni barrière `G` sur le chemin de la balise
   (le pathfinding les ignore), pas de `F` derrière un mur (résultat « bump/flag »),
   pas de `F` sur la case de départ.
+
+## V7 — capteur « jouet devant » (It) et balises multiples
+
+- Le bloc Si a 3 conditions (molette) : flaque `Ip`, obstacle `Io`, **jouet devant `It`**.
+  `It` teste la case devant pour un jouet NON ramassé. UI : pill 3 positions, CHECK_SAY `if-toy`.
+- Plusieurs `F` par niveau autorisés : `g` va à la **balise la plus proche non visitée**
+  (route calculée depuis la position courante de Bip, pas depuis le départ).
+  `N2(g)` / `N3(g)` = visiter 2/3 balises. Une balise sous Bip est considérée visitée.
+- Anti-patterns : pas de `C`/`G` sur le chemin d'une balise ; `It` ne voit pas les jouets
+  déjà ramassés (écrire les niveaux en conséquence).

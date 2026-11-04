@@ -70,15 +70,18 @@ const CHAPTERS = [
   { w: 3, who: 'noctule', tone: 'indigo', name: 'Les lucioles de Noctule', hint: 'Tout ce que tu sais, sous les étoiles.', night: true,
     intro: 'Bienvenue dans le jardin de nuit, après la glissade de Ballon ! Mes copines lucioles adorent jouer : va les chercher !',
     end: [{ who: 'noctule', line: 'Le jardin scintille grâce à toi !' }] },
-  { w: 3, who: 'zoe', tone: 'night', name: 'Le grand pique-nique', hint: 'Le grand final : tout ensemble !', night: true,
+  { w: 3, who: 'zoe', tone: 'night', name: 'Le grand pique-nique', hint: 'Le grand final : tout ensemble !', night: true, final: true,
     intro: 'C\'est l\'heure du grand pique-nique ! Un dernier effort… tous ensemble !',
     end: [{ who: 'zoe', line: 'Youpiii ! Le plus beau pique-nique du monde ! Encore un petit rêve avant de dormir ?' }] },
-  { w: 3, who: 'noctule', tone: 'night', name: 'Le rêve de Bip', hint: 'Sous les étoiles, on rejoue tout doucement.', night: true,
+  { w: 3, who: 'noctule', tone: 'night', name: 'Le rêve de Bip', hint: 'Sous les étoiles, on rejoue tout doucement.', night: true, epilogue: true,
     intro: 'Le pique-nique est fini… mais Noctule veille encore. Un dernier rêve dans le jardin ?',
     end: [{ who: 'noctule', line: 'Dors bien, petit ingénieur. Demain, un nouveau défi de Zoé !' }] },
-  { w: 3, who: 'noctule', tone: 'indigo', name: 'Les balises de Noctule', hint: 'Le bloc balise envoie Bip au drapeau.', night: true,
+  { w: 3, who: 'noctule', tone: 'indigo', name: 'Les balises de Noctule', hint: 'Le bloc balise envoie Bip au drapeau.', night: true, epilogue: true,
     intro: 'Noctule a planté des balises lumineuses dans le jardin. Le bloc balise y envoie Bip tout seul !',
     end: [{ who: 'noctule', line: 'Bip retrouve toujours son chemin. Quelle belle nuit !' }] },
+  { w: 3, who: 'zoe', tone: 'night', name: 'Les yeux de Bip', hint: 'Bip voit si un jouet est devant lui.', night: true, epilogue: true,
+    intro: 'Nouveau capteur ! La molette du bloc Si a une troisième position : Bip voit si un jouet est devant lui.',
+    end: [{ who: 'zoe', line: 'Bip a des yeux maintenant : plus besoin de compter les cases !' }] },
 ];
 
 const LEVELS = [
@@ -357,6 +360,23 @@ const LEVELS = [
     text: 'Un mur de buissons : la balise trouve le chemin et ramasse le nounours !' },
   { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g f f', map: ['R.bF.K'],
     text: 'Va à la balise, puis range le ballon dans le coffre !' },
+
+  /* ============ Chapitre 19 — Les yeux de Bip (capteur jouet : It) + balises multiples ============ */
+  { ch: 18, face: 'r', pal: [...REL, 'if'], sol: 'It(f|tr)', map: ['Rb..'],
+    text: 'Nouveau capteur : si un jouet est devant Bip, il avance ! Sinon, il tourne.' },
+  { ch: 18, face: 'r', pal: [...REL, 'j', 'if'], sol: 'It(f|j)', map: ['R.b'],
+    text: 'Pas de jouet devant ? Alors Bip saute pour attraper le ballon !' },
+  { ch: 18, face: 'r', pal: [...REL, 'j', 'if', 'loop'], sol: 'N2(It(f|j))', map: ['Rb~n'],
+    text: 'Le capteur dans un Répéter : avance, puis saute la flaque pour le nounours !' },
+  { ch: 18, face: 'd', pal: [...REL, 'if', 'while'], max: 5, sol: 'Wt(It(f|tr))',
+    variants: [
+      ['R..', 'b..', 'n..'],
+      ['R...', 'b...', 'c...', 'n...'],
+      ['R..', 'b..', 'a..'],
+    ],
+    text: 'Bip descend le couloir tout seul et ramasse tous les jouets !' },
+  { ch: 18, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'N2(g)', map: ['RbF..', '....', '..nF.'],
+    text: 'Deux balises ! Répète le bloc balise : Bip visite les deux drapeaux et ramasse tout.' },
 
   /* ============ Les défis de Zoé (un par jour de la semaine, du plus doux au plus costaud) ============ */
   { ch: -1, daily: true, pal: ['r', 'loop'], max: 3, sol: 'N6(r)', map: ['R******'],

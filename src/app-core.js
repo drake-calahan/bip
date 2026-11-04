@@ -193,7 +193,7 @@ function playStory(lines, done) {
 
 /* ---------- Album de stickers ---------- */
 const STICKERS = [];
-const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag'];
+const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag', 'toy-n'];
 CHAPTERS.forEach((c, i) => {
   const sym = CH_STICKER[i] || 'toy-b';
   STICKERS.push({ id: 'c' + (i + 1), name: c.name, how: 'Chapitre ' + (i + 1) + ' terminé', icon: () => sym === 'star-gold' ? I.star(true) : symUse(sym) });

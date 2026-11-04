@@ -26,9 +26,9 @@ async function run() {
 
   console.log('Carte');
   await pg.goto(URL); await sleep(500);
-  assert(await pg.locator('#trail .node').count() === 87, '87 cailloux sur le chemin (aventure V6)');
+  assert(await pg.locator('#trail .node').count() === 92, '92 cailloux sur le chemin (aventure V6)');
   assert(await pg.locator('#trail .node.next').count() === 1, 'Bip est posé sur un seul caillou');
-  assert(await pg.locator('#trail .chap-banner').count() === 18, '18 bannières de chapitre');
+  assert(await pg.locator('#trail .chap-banner').count() === 19, '19 bannières de chapitre');
   await shot(pg, 'v4-home-390');
 
   console.log('Niveau 1');

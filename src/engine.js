@@ -19,7 +19,8 @@ function parseLevel(lv, v) {
   const rows = mapOf(lv, v);
   const h = rows.length, w = rows[0].length;
   const cells = [];
-  let start = null, box = null, flag = null;
+  let start = null, box = null;
+  const flags = [];
   const toys = [], pads = [], switches = [], gates = [], crates = [], flowers = [];
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -29,7 +30,7 @@ function parseLevel(lv, v) {
       else if (ch === 'o') kind = 'rock';
       else if (ch === '~') kind = 'puddle';
       else if (ch === 'K') { kind = 'box'; box = [x, y]; }
-      else if (ch === 'F') { kind = 'flag'; flag = [x, y]; }
+      else if (ch === 'F') { kind = 'flag'; flags.push([x, y]); }
       else if (ch === '-') { kind = 'pad'; pads.push(cells.length); }
       else if (ch === 's') { kind = 'switch'; switches.push(cells.length); }
       else if (ch === 'G') { kind = 'gate'; gates.push(cells.length); }
@@ -40,7 +41,7 @@ function parseLevel(lv, v) {
       cells.push(kind);
     }
   }
-  return { w, h, cells, start, box, flag, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
+  return { w, h, cells, start, box, flags, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
 }
 
 function cellAt(P, x, y) {
@@ -82,7 +83,7 @@ function simulate(lv, prog, fn, v) {
     return crateAt(bx, by) >= 0;
   };
   const ahead = () => { const [dx, dy] = DIRS[face]; return cellAt(P, x + dx, y + dy); };
-  const test = c => c === 'puddle' ? ['puddle', 'water'].includes(ahead()) : c === 'obst' ? blockedAt(x + DIRS[face][0], y + DIRS[face][1]) : got.size === P.toys.length;
+  const test = c => c === 'puddle' ? ['puddle', 'water'].includes(ahead()) : c === 'obst' ? blockedAt(x + DIRS[face][0], y + DIRS[face][1]) : c === 'toy' ? P.toys.some((t, i) => !got.has(i) && t.x === x + DIRS[face][0] && t.y === y + DIRS[face][1]) : got.size === P.toys.length;
   const stop = (r, extra) => Object.assign({ __stop: true, r }, extra);
 
   const gateStep = at => steps.push({ ins: null, kind: 'gate', at, from: at, to: at, face });
@@ -160,14 +161,29 @@ function simulate(lv, prog, fn, v) {
     if (++checks > MAX_CHECKS) throw stop('tired');
     steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok, cond: it.c, from: [x, y], to: [x, y], face });
   }
-  /* Chemin vers la balise : on réutilise le solveur BFS sur un niveau temporaire
-     où la balise devient un jouet (les vrais jouets sont gardés : la route les ramasse
-     au passage) ; coffre/caisses/barrières sont vidés, le bloc g s'arrête à la balise. */
+  /* Chemin vers la balise la plus proche non visitée : on réutilise le solveur BFS sur un
+     niveau temporaire où SEULE cette balise devient un jouet (les vrais jouets sont gardés :
+     la route les ramasse au passage) ; coffre/caisses/barrières sont vidés. */
+  const visitedFlags = new Set();
   function pathToFlag() {
-    if (!P.flag) return null;
-    const rows = mapOf(lv, v).map(r => r.split('').map(c =>
-      c === 'F' ? 'b' : (c === 'C' || c === 'G' || c === 'K' ? '.' : c)).join(''));
-    return solve({ map: rows, face: P.face }, ['f', 'tl', 'tr', 'j'], 0);
+    if (!P.flags.length) return null;
+    P.flags.forEach((f, i) => { if (f[0] === x && f[1] === y) visitedFlags.add(i); });
+    let best = null;
+    P.flags.forEach((f, fi) => {
+      if (visitedFlags.has(fi)) return;
+      // niveau temporaire : départ = position courante de Bip, balise cible = jouet,
+      // autres balises = herbe, coffre/caisses/barrières vidés, vrais jouets gardés
+      const rows = mapOf(lv, v).map((r, ri) => r.split('').map((c, ci) => {
+        if (c === 'R') return '.';
+        if (c === 'F') return ri === f[1] && ci === f[0] ? 'b' : '.';
+        if (c === 'C' || c === 'G' || c === 'K') return '.';
+        return c;
+      }).join(''));
+      rows[y] = rows[y].slice(0, x) + 'R' + rows[y].slice(x + 1);
+      const route = solve({ map: rows, face }, ['f', 'tl', 'tr', 'j'], 0);
+      if (route && (!best || route.length < best.route.length)) best = { route, fi };
+    });
+    return best;
   }
   function run(list, path, depth) {
     for (const it of list) {
@@ -190,12 +206,14 @@ function simulate(lv, prog, fn, v) {
         if (depth > 3) throw stop('tired');
         run(fn, path.concat({ id: it.id, call: true }), depth + 1);
       } else if (it.t === 'g') {
-        const route = pathToFlag();
-        if (!route) {
+        const target = pathToFlag();
+        if (!target) {
           steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: false, cond: 'flag', from: [x, y], to: [x, y], face });
           throw stop('bump', { why: 'flag' });
         }
-        run(route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'g' }), depth);
+        run(target.route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'g' }), depth);
+        visitedFlags.add(target.fi);
+        steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: true, cond: 'flag', from: [x, y], to: [x, y], face });
       } else act(it, path);
     }
   }
@@ -253,13 +271,13 @@ function solve(lv, palette, v) {
   return null;
 }
 
-/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) * g"
+/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) It(f|tr) * g"
    N3(...) répéter 3 fois · Wo(...) jusqu'à un obstacle · Wt(...) jusqu'à tous les jouets
-   Ip(a|b) si flaque devant · Io(a|b) si obstacle devant · * bloc magique · g va à la balise */
+   Ip(a|b) si flaque devant · Io(a|b) si obstacle devant · It(a|b) si jouet devant · * bloc magique · g va à la balise */
 function parseProg(src, mkId) {
   let n = 0;
   mkId = mkId || (() => 'p' + n++);
-  const toks = (src || '').match(/N\d+\(|W[ot]\(|I[po]\(|\(|\)|\||tl|tr|\*|[rludfjg]/g) || [];
+  const toks = (src || '').match(/N\d+\(|W[ot]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjg]/g) || [];
   let i = 0;
   function seq(stops) {
     const out = [];
@@ -270,8 +288,8 @@ function parseProg(src, mkId) {
     const t = toks[i++];
     if (/^N\d+\($/.test(t)) { const it = { t: 'loop', n: +t.slice(1, -1), id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
     if (/^W[ot]\($/.test(t)) { const it = { t: 'while', c: t[1] === 'o' ? 'free' : 'toys', id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
-    if (/^I[po]\($/.test(t)) {
-      const it = { t: 'if', c: t[1] === 'p' ? 'puddle' : 'obst', id: mkId(), body: [], els: [] };
+    if (/^I[pot]\($/.test(t)) {
+      const it = { t: 'if', c: t[1] === 'p' ? 'puddle' : t[1] === 'o' ? 'obst' : 'toy', id: mkId(), body: [], els: [] };
       it.body = seq(['|', ')']);
       if (toks[i] === '|') { i++; it.els = seq([')']); }
       i++; return it;

@@ -233,12 +233,12 @@ const itemHTML = it => isCtr(it.t) ? ctrHTML(it) : blockHTML(it.t, it.id);
 function pillHTML(it) {
   if (it.t === 'loop') return '×' + it.n;
   if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : symUse('bush');
-  return it.c === 'puddle' ? symUse('puddle') : symUse('gate');
+  return it.c === 'puddle' ? symUse('puddle') : it.c === 'obst' ? symUse('gate') : toyUse('b');
 }
 function pillLabel(it) {
   if (it.t === 'loop') return `Répéter ${it.n} fois`;
   if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : 'Jusqu’à un obstacle';
-  return it.c === 'puddle' ? 'Si une flaque est devant' : 'Si un obstacle est devant';
+  return it.c === 'puddle' ? 'Si une flaque est devant' : it.c === 'obst' ? 'Si un obstacle est devant' : 'Si un jouet est devant';
 }
 function ctrHTML(it) {
   const tThen = G.target === it.id, tElse = G.target === it.id + ':else';
@@ -353,7 +353,7 @@ function cyclePill(id) {
   let msg;
   if (it.t === 'loop') { it.n = LOOP_NS[(LOOP_NS.indexOf(it.n) + 1) % LOOP_NS.length]; msg = `Bip va répéter ${it.n} fois.`; }
   else if (it.t === 'while') { it.c = it.c === 'free' ? 'toys' : 'free'; msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.'; }
-  else { it.c = it.c === 'puddle' ? 'obst' : 'puddle'; msg = it.c === 'puddle' ? 'Si une flaque est devant Bip : ligne verte. Sinon : ligne grise.' : 'Si un obstacle est devant Bip : ligne verte. Sinon : ligne grise.'; }
+  else { it.c = it.c === 'puddle' ? 'obst' : it.c === 'obst' ? 'toy' : 'puddle'; msg = it.c === 'puddle' ? 'Si une flaque est devant Bip : ligne verte. Sinon : ligne grise.' : it.c === 'obst' ? 'Si un obstacle est devant Bip : ligne verte. Sinon : ligne grise.' : 'Si un jouet est devant Bip : ligne verte. Sinon : ligne grise.'; }
   SFX.tap(); edited();
   const p = $(`#progCard .ctr[data-id="${id}"] > .ctr-head .ctr-p`);
   if (p) p.animate([{ transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 250 });
@@ -532,6 +532,7 @@ async function runAll() {
 const CHECK_SAY = {
   'if-puddle': ok => ok ? 'Une flaque devant : Bip prend la ligne verte.' : 'Pas de flaque devant : Bip prend la ligne grise.',
   'if-obst': ok => ok ? 'Un obstacle devant : Bip prend la ligne verte.' : 'Pas d’obstacle devant : Bip prend la ligne grise.',
+  'if-toy': ok => ok ? 'Un jouet devant : Bip prend la ligne verte.' : 'Pas de jouet devant : Bip prend la ligne grise.',
   'while-free': ok => ok ? 'La route est libre : Bip continue.' : 'Un obstacle devant : la boucle s’arrête.',
   'while-toys': ok => ok ? 'Il manque des jouets : Bip continue.' : 'Tous les jouets sont là : la boucle s’arrête.',
 };
@@ -601,7 +602,7 @@ async function doStep(st, keep, session = G.session) {
     const c = $(`#progCard .ctr[data-id="${st.ins.id}"]`);
     if (c) c.classList.add(st.ok ? 'yes' : 'no');
     SFX.look(st.ok);
-    if (st.cond !== 'toys') {
+    if (st.cond !== 'toys' && st.cond !== 'flag') {
       const s = document.createElement('div');
       s.className = 'sense' + (st.ok ? ' yes' : '');
       s.style.cssText = `--x:${st.from[0] + dx};--y:${st.from[1] + dy}`;

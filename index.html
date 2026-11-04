@@ -975,7 +975,8 @@ function parseLevel(lv, v) {
   const rows = mapOf(lv, v);
   const h = rows.length, w = rows[0].length;
   const cells = [];
-  let start = null, box = null, flag = null;
+  let start = null, box = null;
+  const flags = [];
   const toys = [], pads = [], switches = [], gates = [], crates = [], flowers = [];
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -985,7 +986,7 @@ function parseLevel(lv, v) {
       else if (ch === 'o') kind = 'rock';
       else if (ch === '~') kind = 'puddle';
       else if (ch === 'K') { kind = 'box'; box = [x, y]; }
-      else if (ch === 'F') { kind = 'flag'; flag = [x, y]; }
+      else if (ch === 'F') { kind = 'flag'; flags.push([x, y]); }
       else if (ch === '-') { kind = 'pad'; pads.push(cells.length); }
       else if (ch === 's') { kind = 'switch'; switches.push(cells.length); }
       else if (ch === 'G') { kind = 'gate'; gates.push(cells.length); }
@@ -996,7 +997,7 @@ function parseLevel(lv, v) {
       cells.push(kind);
     }
   }
-  return { w, h, cells, start, box, flag, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
+  return { w, h, cells, start, box, flags, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
 }
 
 function cellAt(P, x, y) {
@@ -1038,7 +1039,7 @@ function simulate(lv, prog, fn, v) {
     return crateAt(bx, by) >= 0;
   };
   const ahead = () => { const [dx, dy] = DIRS[face]; return cellAt(P, x + dx, y + dy); };
-  const test = c => c === 'puddle' ? ['puddle', 'water'].includes(ahead()) : c === 'obst' ? blockedAt(x + DIRS[face][0], y + DIRS[face][1]) : got.size === P.toys.length;
+  const test = c => c === 'puddle' ? ['puddle', 'water'].includes(ahead()) : c === 'obst' ? blockedAt(x + DIRS[face][0], y + DIRS[face][1]) : c === 'toy' ? P.toys.some((t, i) => !got.has(i) && t.x === x + DIRS[face][0] && t.y === y + DIRS[face][1]) : got.size === P.toys.length;
   const stop = (r, extra) => Object.assign({ __stop: true, r }, extra);
 
   const gateStep = at => steps.push({ ins: null, kind: 'gate', at, from: at, to: at, face });
@@ -1116,14 +1117,29 @@ function simulate(lv, prog, fn, v) {
     if (++checks > MAX_CHECKS) throw stop('tired');
     steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok, cond: it.c, from: [x, y], to: [x, y], face });
   }
-  /* Chemin vers la balise : on réutilise le solveur BFS sur un niveau temporaire
-     où la balise devient un jouet (les vrais jouets sont gardés : la route les ramasse
-     au passage) ; coffre/caisses/barrières sont vidés, le bloc g s'arrête à la balise. */
+  /* Chemin vers la balise la plus proche non visitée : on réutilise le solveur BFS sur un
+     niveau temporaire où SEULE cette balise devient un jouet (les vrais jouets sont gardés :
+     la route les ramasse au passage) ; coffre/caisses/barrières sont vidés. */
+  const visitedFlags = new Set();
   function pathToFlag() {
-    if (!P.flag) return null;
-    const rows = mapOf(lv, v).map(r => r.split('').map(c =>
-      c === 'F' ? 'b' : (c === 'C' || c === 'G' || c === 'K' ? '.' : c)).join(''));
-    return solve({ map: rows, face: P.face }, ['f', 'tl', 'tr', 'j'], 0);
+    if (!P.flags.length) return null;
+    P.flags.forEach((f, i) => { if (f[0] === x && f[1] === y) visitedFlags.add(i); });
+    let best = null;
+    P.flags.forEach((f, fi) => {
+      if (visitedFlags.has(fi)) return;
+      // niveau temporaire : départ = position courante de Bip, balise cible = jouet,
+      // autres balises = herbe, coffre/caisses/barrières vidés, vrais jouets gardés
+      const rows = mapOf(lv, v).map((r, ri) => r.split('').map((c, ci) => {
+        if (c === 'R') return '.';
+        if (c === 'F') return ri === f[1] && ci === f[0] ? 'b' : '.';
+        if (c === 'C' || c === 'G' || c === 'K') return '.';
+        return c;
+      }).join(''));
+      rows[y] = rows[y].slice(0, x) + 'R' + rows[y].slice(x + 1);
+      const route = solve({ map: rows, face }, ['f', 'tl', 'tr', 'j'], 0);
+      if (route && (!best || route.length < best.route.length)) best = { route, fi };
+    });
+    return best;
   }
   function run(list, path, depth) {
     for (const it of list) {
@@ -1146,12 +1162,14 @@ function simulate(lv, prog, fn, v) {
         if (depth > 3) throw stop('tired');
         run(fn, path.concat({ id: it.id, call: true }), depth + 1);
       } else if (it.t === 'g') {
-        const route = pathToFlag();
-        if (!route) {
+        const target = pathToFlag();
+        if (!target) {
           steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: false, cond: 'flag', from: [x, y], to: [x, y], face });
           throw stop('bump', { why: 'flag' });
         }
-        run(route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'g' }), depth);
+        run(target.route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'g' }), depth);
+        visitedFlags.add(target.fi);
+        steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: true, cond: 'flag', from: [x, y], to: [x, y], face });
       } else act(it, path);
     }
   }
@@ -1209,13 +1227,13 @@ function solve(lv, palette, v) {
   return null;
 }
 
-/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) * g"
+/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) It(f|tr) * g"
    N3(...) répéter 3 fois · Wo(...) jusqu'à un obstacle · Wt(...) jusqu'à tous les jouets
-   Ip(a|b) si flaque devant · Io(a|b) si obstacle devant · * bloc magique · g va à la balise */
+   Ip(a|b) si flaque devant · Io(a|b) si obstacle devant · It(a|b) si jouet devant · * bloc magique · g va à la balise */
 function parseProg(src, mkId) {
   let n = 0;
   mkId = mkId || (() => 'p' + n++);
-  const toks = (src || '').match(/N\d+\(|W[ot]\(|I[po]\(|\(|\)|\||tl|tr|\*|[rludfjg]/g) || [];
+  const toks = (src || '').match(/N\d+\(|W[ot]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjg]/g) || [];
   let i = 0;
   function seq(stops) {
     const out = [];
@@ -1226,8 +1244,8 @@ function parseProg(src, mkId) {
     const t = toks[i++];
     if (/^N\d+\($/.test(t)) { const it = { t: 'loop', n: +t.slice(1, -1), id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
     if (/^W[ot]\($/.test(t)) { const it = { t: 'while', c: t[1] === 'o' ? 'free' : 'toys', id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
-    if (/^I[po]\($/.test(t)) {
-      const it = { t: 'if', c: t[1] === 'p' ? 'puddle' : 'obst', id: mkId(), body: [], els: [] };
+    if (/^I[pot]\($/.test(t)) {
+      const it = { t: 'if', c: t[1] === 'p' ? 'puddle' : t[1] === 'o' ? 'obst' : 'toy', id: mkId(), body: [], els: [] };
       it.body = seq(['|', ')']);
       if (toks[i] === '|') { i++; it.els = seq([')']); }
       i++; return it;
@@ -1381,15 +1399,18 @@ const CHAPTERS = [
   { w: 3, who: 'noctule', tone: 'indigo', name: 'Les lucioles de Noctule', hint: 'Tout ce que tu sais, sous les étoiles.', night: true,
     intro: 'Bienvenue dans le jardin de nuit, après la glissade de Ballon ! Mes copines lucioles adorent jouer : va les chercher !',
     end: [{ who: 'noctule', line: 'Le jardin scintille grâce à toi !' }] },
-  { w: 3, who: 'zoe', tone: 'night', name: 'Le grand pique-nique', hint: 'Le grand final : tout ensemble !', night: true,
+  { w: 3, who: 'zoe', tone: 'night', name: 'Le grand pique-nique', hint: 'Le grand final : tout ensemble !', night: true, final: true,
     intro: 'C\'est l\'heure du grand pique-nique ! Un dernier effort… tous ensemble !',
     end: [{ who: 'zoe', line: 'Youpiii ! Le plus beau pique-nique du monde ! Encore un petit rêve avant de dormir ?' }] },
-  { w: 3, who: 'noctule', tone: 'night', name: 'Le rêve de Bip', hint: 'Sous les étoiles, on rejoue tout doucement.', night: true,
+  { w: 3, who: 'noctule', tone: 'night', name: 'Le rêve de Bip', hint: 'Sous les étoiles, on rejoue tout doucement.', night: true, epilogue: true,
     intro: 'Le pique-nique est fini… mais Noctule veille encore. Un dernier rêve dans le jardin ?',
     end: [{ who: 'noctule', line: 'Dors bien, petit ingénieur. Demain, un nouveau défi de Zoé !' }] },
-  { w: 3, who: 'noctule', tone: 'indigo', name: 'Les balises de Noctule', hint: 'Le bloc balise envoie Bip au drapeau.', night: true,
+  { w: 3, who: 'noctule', tone: 'indigo', name: 'Les balises de Noctule', hint: 'Le bloc balise envoie Bip au drapeau.', night: true, epilogue: true,
     intro: 'Noctule a planté des balises lumineuses dans le jardin. Le bloc balise y envoie Bip tout seul !',
     end: [{ who: 'noctule', line: 'Bip retrouve toujours son chemin. Quelle belle nuit !' }] },
+  { w: 3, who: 'zoe', tone: 'night', name: 'Les yeux de Bip', hint: 'Bip voit si un jouet est devant lui.', night: true, epilogue: true,
+    intro: 'Nouveau capteur ! La molette du bloc Si a une troisième position : Bip voit si un jouet est devant lui.',
+    end: [{ who: 'zoe', line: 'Bip a des yeux maintenant : plus besoin de compter les cases !' }] },
 ];
 
 const LEVELS = [
@@ -1668,6 +1689,23 @@ const LEVELS = [
     text: 'Un mur de buissons : la balise trouve le chemin et ramasse le nounours !' },
   { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g f f', map: ['R.bF.K'],
     text: 'Va à la balise, puis range le ballon dans le coffre !' },
+
+  /* ============ Chapitre 19 — Les yeux de Bip (capteur jouet : It) + balises multiples ============ */
+  { ch: 18, face: 'r', pal: [...REL, 'if'], sol: 'It(f|tr)', map: ['Rb..'],
+    text: 'Nouveau capteur : si un jouet est devant Bip, il avance ! Sinon, il tourne.' },
+  { ch: 18, face: 'r', pal: [...REL, 'j', 'if'], sol: 'It(f|j)', map: ['R.b'],
+    text: 'Pas de jouet devant ? Alors Bip saute pour attraper le ballon !' },
+  { ch: 18, face: 'r', pal: [...REL, 'j', 'if', 'loop'], sol: 'N2(It(f|j))', map: ['Rb~n'],
+    text: 'Le capteur dans un Répéter : avance, puis saute la flaque pour le nounours !' },
+  { ch: 18, face: 'd', pal: [...REL, 'if', 'while'], max: 5, sol: 'Wt(It(f|tr))',
+    variants: [
+      ['R..', 'b..', 'n..'],
+      ['R...', 'b...', 'c...', 'n...'],
+      ['R..', 'b..', 'a..'],
+    ],
+    text: 'Bip descend le couloir tout seul et ramasse tous les jouets !' },
+  { ch: 18, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'N2(g)', map: ['RbF..', '....', '..nF.'],
+    text: 'Deux balises ! Répète le bloc balise : Bip visite les deux drapeaux et ramasse tout.' },
 
   /* ============ Les défis de Zoé (un par jour de la semaine, du plus doux au plus costaud) ============ */
   { ch: -1, daily: true, pal: ['r', 'loop'], max: 3, sol: 'N6(r)', map: ['R******'],
@@ -2216,7 +2254,7 @@ function playStory(lines, done) {
 
 /* ---------- Album de stickers ---------- */
 const STICKERS = [];
-const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag'];
+const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag', 'toy-n'];
 CHAPTERS.forEach((c, i) => {
   const sym = CH_STICKER[i] || 'toy-b';
   STICKERS.push({ id: 'c' + (i + 1), name: c.name, how: 'Chapitre ' + (i + 1) + ' terminé', icon: () => sym === 'star-gold' ? I.star(true) : symUse(sym) });
@@ -2653,12 +2691,12 @@ const itemHTML = it => isCtr(it.t) ? ctrHTML(it) : blockHTML(it.t, it.id);
 function pillHTML(it) {
   if (it.t === 'loop') return '×' + it.n;
   if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : symUse('bush');
-  return it.c === 'puddle' ? symUse('puddle') : symUse('gate');
+  return it.c === 'puddle' ? symUse('puddle') : it.c === 'obst' ? symUse('gate') : toyUse('b');
 }
 function pillLabel(it) {
   if (it.t === 'loop') return `Répéter ${it.n} fois`;
   if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : 'Jusqu’à un obstacle';
-  return it.c === 'puddle' ? 'Si une flaque est devant' : 'Si un obstacle est devant';
+  return it.c === 'puddle' ? 'Si une flaque est devant' : it.c === 'obst' ? 'Si un obstacle est devant' : 'Si un jouet est devant';
 }
 function ctrHTML(it) {
   const tThen = G.target === it.id, tElse = G.target === it.id + ':else';
@@ -2773,7 +2811,7 @@ function cyclePill(id) {
   let msg;
   if (it.t === 'loop') { it.n = LOOP_NS[(LOOP_NS.indexOf(it.n) + 1) % LOOP_NS.length]; msg = `Bip va répéter ${it.n} fois.`; }
   else if (it.t === 'while') { it.c = it.c === 'free' ? 'toys' : 'free'; msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.'; }
-  else { it.c = it.c === 'puddle' ? 'obst' : 'puddle'; msg = it.c === 'puddle' ? 'Si une flaque est devant Bip : ligne verte. Sinon : ligne grise.' : 'Si un obstacle est devant Bip : ligne verte. Sinon : ligne grise.'; }
+  else { it.c = it.c === 'puddle' ? 'obst' : it.c === 'obst' ? 'toy' : 'puddle'; msg = it.c === 'puddle' ? 'Si une flaque est devant Bip : ligne verte. Sinon : ligne grise.' : it.c === 'obst' ? 'Si un obstacle est devant Bip : ligne verte. Sinon : ligne grise.' : 'Si un jouet est devant Bip : ligne verte. Sinon : ligne grise.'; }
   SFX.tap(); edited();
   const p = $(`#progCard .ctr[data-id="${id}"] > .ctr-head .ctr-p`);
   if (p) p.animate([{ transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 250 });
@@ -2952,6 +2990,7 @@ async function runAll() {
 const CHECK_SAY = {
   'if-puddle': ok => ok ? 'Une flaque devant : Bip prend la ligne verte.' : 'Pas de flaque devant : Bip prend la ligne grise.',
   'if-obst': ok => ok ? 'Un obstacle devant : Bip prend la ligne verte.' : 'Pas d’obstacle devant : Bip prend la ligne grise.',
+  'if-toy': ok => ok ? 'Un jouet devant : Bip prend la ligne verte.' : 'Pas de jouet devant : Bip prend la ligne grise.',
   'while-free': ok => ok ? 'La route est libre : Bip continue.' : 'Un obstacle devant : la boucle s’arrête.',
   'while-toys': ok => ok ? 'Il manque des jouets : Bip continue.' : 'Tous les jouets sont là : la boucle s’arrête.',
 };
@@ -3021,7 +3060,7 @@ async function doStep(st, keep, session = G.session) {
     const c = $(`#progCard .ctr[data-id="${st.ins.id}"]`);
     if (c) c.classList.add(st.ok ? 'yes' : 'no');
     SFX.look(st.ok);
-    if (st.cond !== 'toys') {
+    if (st.cond !== 'toys' && st.cond !== 'flag') {
       const s = document.createElement('div');
       s.className = 'sense' + (st.ok ? ' yes' : '');
       s.style.cssText = `--x:${st.from[0] + dx};--y:${st.from[1] + dy}`;
