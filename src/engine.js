@@ -1,15 +1,15 @@
 /* ===== Moteur pur : simulation d'un programme sur un niveau =====
-   Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), star (bloc magique)
+   Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), g (va à la balise), star (bloc magique)
    Conteneurs : loop {n, body} · while {c:'free'|'toys', body} · if {c:'puddle'|'obst', body, els}
    Terrain : . herbe · # buisson · o rocher · ~ flaque · K coffre
              - nénuphar (s'enfonce quand Bip le quitte) · s champignon (ouvre les barrières)
-             G barrière (bloque tant que fermée) · * fleur (à peindre en marchant dessus)
+             G barrière (bloque tant que fermée) · * fleur (à peindre en marchant dessus) · F balise (waypoint)
    Entités : C caisse (poussée par Bip ; dans l'eau elle devient un pont)
-   Jouets : b n c t a z e (e = luciole) */
+   Jouets : b n c t a e (e = luciole) */
 const DIRS = { r: [1, 0], l: [-1, 0], u: [0, -1], d: [0, 1] };
 const LEFT = { u: 'l', l: 'd', d: 'r', r: 'u' };
 const RIGHT = { u: 'r', r: 'd', d: 'l', l: 'u' };
-const TOY_CHARS = 'bnctaze';
+const TOY_CHARS = 'bnctae';
 const CONTAINERS = ['loop', 'while', 'if'];
 const MAX_ACTS = 110, MAX_CHECKS = 220;
 
@@ -19,7 +19,7 @@ function parseLevel(lv, v) {
   const rows = mapOf(lv, v);
   const h = rows.length, w = rows[0].length;
   const cells = [];
-  let start = null, box = null;
+  let start = null, box = null, flag = null;
   const toys = [], pads = [], switches = [], gates = [], crates = [], flowers = [];
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -29,6 +29,7 @@ function parseLevel(lv, v) {
       else if (ch === 'o') kind = 'rock';
       else if (ch === '~') kind = 'puddle';
       else if (ch === 'K') { kind = 'box'; box = [x, y]; }
+      else if (ch === 'F') { kind = 'flag'; flag = [x, y]; }
       else if (ch === '-') { kind = 'pad'; pads.push(cells.length); }
       else if (ch === 's') { kind = 'switch'; switches.push(cells.length); }
       else if (ch === 'G') { kind = 'gate'; gates.push(cells.length); }
@@ -39,7 +40,7 @@ function parseLevel(lv, v) {
       cells.push(kind);
     }
   }
-  return { w, h, cells, start, box, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
+  return { w, h, cells, start, box, flag, toys, pads, switches, gates, crates, flowers, face: lv.face || 'r' };
 }
 
 function cellAt(P, x, y) {
@@ -159,6 +160,15 @@ function simulate(lv, prog, fn, v) {
     if (++checks > MAX_CHECKS) throw stop('tired');
     steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok, cond: it.c, from: [x, y], to: [x, y], face });
   }
+  /* Chemin vers la balise : on réutilise le solveur BFS sur un niveau temporaire
+     où la balise devient un jouet (les vrais jouets sont gardés : la route les ramasse
+     au passage) ; coffre/caisses/barrières sont vidés, le bloc g s'arrête à la balise. */
+  function pathToFlag() {
+    if (!P.flag) return null;
+    const rows = mapOf(lv, v).map(r => r.split('').map(c =>
+      c === 'F' ? 'b' : (c === 'C' || c === 'G' || c === 'K' ? '.' : c)).join(''));
+    return solve({ map: rows, face: P.face }, ['f', 'tl', 'tr', 'j'], 0);
+  }
   function run(list, path, depth) {
     for (const it of list) {
       if (it.t === 'loop') {
@@ -179,6 +189,13 @@ function simulate(lv, prog, fn, v) {
       } else if (it.t === 'star') {
         if (depth > 3) throw stop('tired');
         run(fn, path.concat({ id: it.id, call: true }), depth + 1);
+      } else if (it.t === 'g') {
+        const route = pathToFlag();
+        if (!route) {
+          steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: false, cond: 'flag', from: [x, y], to: [x, y], face });
+          throw stop('bump', { why: 'flag' });
+        }
+        run(route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'g' }), depth);
       } else act(it, path);
     }
   }
@@ -196,7 +213,7 @@ function solve(lv, palette, v) {
   const P = parseLevel(lv, v);
   const rows = mapOf(lv, v);
   for (const row of rows) if (/[CG]/.test(row)) return null;   // mécanique non résolue : sol explicite requis
-  const moves = palette.filter(m => !CONTAINERS.includes(m) && m !== 'star');
+  const moves = palette.filter(m => !CONTAINERS.includes(m) && m !== 'star' && m !== 'g');
   const full = (1 << P.toys.length) - 1;
   const flAll = (1 << P.flowers.length) - 1;
   const flowerIdx = idx => P.flowers.indexOf(idx);
@@ -236,13 +253,13 @@ function solve(lv, palette, v) {
   return null;
 }
 
-/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) *"
+/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) * g"
    N3(...) répéter 3 fois · Wo(...) jusqu'à un obstacle · Wt(...) jusqu'à tous les jouets
-   Ip(a|b) si flaque devant · Io(a|b) si obstacle devant · * bloc magique */
+   Ip(a|b) si flaque devant · Io(a|b) si obstacle devant · * bloc magique · g va à la balise */
 function parseProg(src, mkId) {
   let n = 0;
   mkId = mkId || (() => 'p' + n++);
-  const toks = (src || '').match(/N\d+\(|W[ot]\(|I[po]\(|\(|\)|\||tl|tr|\*|[rludfj]/g) || [];
+  const toks = (src || '').match(/N\d+\(|W[ot]\(|I[po]\(|\(|\)|\||tl|tr|\*|[rludfjg]/g) || [];
   let i = 0;
   function seq(stops) {
     const out = [];

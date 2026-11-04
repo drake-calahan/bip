@@ -2,7 +2,7 @@
    Légende : R départ · b n c t a z jouets · e luciole · # buisson · o rocher
    ~ flaque · K coffre · - nénuphar (coule une fois quitté) · s champignon (ouvre)
    G barrière · C caisse (poussable, flotte → pont) · * fleur (à peindre)
-   S départ de Ballon · N nid (mode toboggan)
+   S départ de Ballon · N nid (mode toboggan) · F balise (waypoint : le bloc g y va)
    sol / fn / start : programmes dans le petit langage de parseProg (engine.js)
    tiles : tuiles de référence du mode toboggan, "x,y,direction"
    variants : plusieurs jardins, le même programme doit réussir dans tous */
@@ -76,6 +76,9 @@ const CHAPTERS = [
   { w: 3, who: 'noctule', tone: 'night', name: 'Le rêve de Bip', hint: 'Sous les étoiles, on rejoue tout doucement.', night: true,
     intro: 'Le pique-nique est fini… mais Noctule veille encore. Un dernier rêve dans le jardin ?',
     end: [{ who: 'noctule', line: 'Dors bien, petit ingénieur. Demain, un nouveau défi de Zoé !' }] },
+  { w: 3, who: 'noctule', tone: 'indigo', name: 'Les balises de Noctule', hint: 'Le bloc balise envoie Bip au drapeau.', night: true,
+    intro: 'Noctule a planté des balises lumineuses dans le jardin. Le bloc balise y envoie Bip tout seul !',
+    end: [{ who: 'noctule', line: 'Bip retrouve toujours son chemin. Quelle belle nuit !' }] },
 ];
 
 const LEVELS = [
@@ -344,6 +347,16 @@ const LEVELS = [
     text: 'Le rêve de Bip : trois jardins étoilés, un seul programme !' },
   { ch: 16, face: 'r', pal: [...REL, 'star'], sol: '* tr *', fn: 'f f', map: ['R.e.', '....', '..e.'],
     text: 'Le rêve de Bip : le bloc magique attrape les deux lucioles. Dors bien !' },
+
+  /* ============ Chapitre 18 — Les balises de Noctule (waypoint : bloc g) ============ */
+  { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g', map: ['R.b.F'],
+    text: 'Nouveau : la balise ! Le bloc balise envoie Bip jusqu’au drapeau, tout seul.' },
+  { ch: 17, face: 'r', pal: [...REL, 'j', 'g'], sol: 'g', map: ['R~bF.'],
+    text: 'La balise saute la flaque toute seule, et attrape le nounours au passage !' },
+  { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g', map: ['R.#..', '..b..', '.#F..'],
+    text: 'Un mur de buissons : la balise trouve le chemin et ramasse le nounours !' },
+  { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g f f', map: ['R.bF.K'],
+    text: 'Va à la balise, puis range le ballon dans le coffre !' },
 
   /* ============ Les défis de Zoé (un par jour de la semaine, du plus doux au plus costaud) ============ */
   { ch: -1, daily: true, pal: ['r', 'loop'], max: 3, sol: 'N6(r)', map: ['R******'],

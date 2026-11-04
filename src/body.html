@@ -190,6 +190,8 @@ svg { display: block; }
 .it.flower.painted .fp { opacity: 1; }
 .it.flower.painted > svg { animation: pop .45s cubic-bezier(.3, 1.6, .5, 1); }
 .it.crate { z-index: 4; transition: transform .38s cubic-bezier(.45, .05, .35, 1); }
+.it.flag { color: #FFC94F; z-index: 2; animation: beacon 2.2s ease-in-out infinite; }
+@keyframes beacon { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
 .it.toy > svg { width: 74%; height: 74%; animation: idle 3s ease-in-out infinite; animation-delay: calc(var(--x) * -.4s); }
 .it.toy.got > svg { animation: collect .55s ease-in forwards; }
 .it.box > svg { width: 90%; height: 90%; }
@@ -589,6 +591,11 @@ svg { display: block; }
       <ellipse cx="50" cy="56" rx="32" ry="16" fill="#8E6C3D"/>
       <path d="M22 58q28 12 56 0M26 66q24 10 48 0" stroke="#6E5230" stroke-width="4" fill="none" stroke-linecap="round"/>
       <path d="M34 50q16-8 32 0" stroke="#C89B62" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="flag" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="44" fill="currentColor" opacity=".18"/>
+      <path d="M32 92V12" stroke="#8E6C3D" stroke-width="8" stroke-linecap="round"/>
+      <path d="M32 14h46l-13 15 13 15H32z" fill="currentColor"/>
     </symbol>
     <symbol id="box" viewBox="0 0 100 100">
       <ellipse cx="50" cy="87" rx="35" ry="6" fill="#9CC78D" opacity=".6"/>

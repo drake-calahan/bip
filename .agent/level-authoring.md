@@ -43,3 +43,13 @@
 - **Aucun niveau ne change de place** : les ids = index du tableau et la sauvegarde
   `save.stars` est indexée par id. On édite le contenu des niveaux en place ;
   les défis de Zoé peuvent être réordonnés entre eux (save indexée par jour de semaine).
+
+## V6 — la balise (ch18, symbole `F`, bloc `g`)
+
+- Un seul drapeau `F` par niveau ; le bloc `g` y pathfind au moment de l'exécution
+  (BFS sur niveau temporaire, les jouets sont ramassés au passage).
+- Niveau avec `F` = `sol` explicite obligatoire (le solveur BFS ne gère pas `g`) ;
+  `check-levels.js` le force (regex `[CGF]`).
+- Anti-patterns balise : pas de caisse `C` ni barrière `G` sur le chemin de la balise
+  (le pathfinding les ignore), pas de `F` derrière un mur (résultat « bump/flag »),
+  pas de `F` sur la case de départ.

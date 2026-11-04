@@ -30,7 +30,7 @@ const I = {
   replay: S('M24 50a26 26 0 1 0 8-19M30 14v20h20', 10),
   next: S('M20 50H76M54 26l24 24-24 24', 12),
   lens: S('M42 42m-24 0a24 24 0 1 0 48 0a24 24 0 1 0-48 0M60 60l24 24', 11),
-  lock: `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="22" y="44" width="56" height="42" rx="10" fill="currentColor"/><path d="M34 46V34a16 16 0 0 1 32 0v12" fill="none" stroke="currentColor" stroke-width="9"/></svg>`,
+  flag: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M32 92V12" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M32 14h46l-13 15 13 15H32z" fill="currentColor"/></svg>`,
   info: S('M50 46v26M50 30v1', 11),
   eraser: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 62L52 26a8 8 0 0 1 11-1l15 12a8 8 0 0 1 1 11L49 84H30Z" fill="currentColor" opacity=".25"/><path d="M22 62L52 26a8 8 0 0 1 11-1l15 12a8 8 0 0 1 1 11L49 84H30Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><path d="M36 70h44" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></svg>`,
   album: S('M22 30a8 8 0 0 1 8-8h40a8 8 0 0 1 8 8v48H30a8 8 0 0 1-8-8zM30 70h48M40 46l8-12 8 10 6-6 8 12', 8),
@@ -43,13 +43,13 @@ const I = {
   bonk: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6L58 38L92 30L64 52L86 80L52 64L40 96L36 62L6 70L30 46L10 18L42 34Z" fill="#FFD36B" stroke="#E9A923" stroke-width="5" stroke-linejoin="round"/></svg>`,
   star: on => `<svg viewBox="0 0 100 100" aria-hidden="true" class="${on ? 'on' : ''}"><use href="#star" width="100" height="100" fill="${on ? 'var(--star)' : 'var(--paper-2)'}" stroke="${on ? '#E9A923' : 'var(--line)'}"/></svg>`,
 };
-const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
-const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
-const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d: 'descendre', f: 'avancer', tl: 'tourner à gauche', tr: 'tourner à droite', j: 'sauter', loop: 'répéter', while: 'répéter jusqu’à', if: 'si', star: 'bloc magique' };
+const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, g: I.flag, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
+const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', g: 'balise', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
+const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d: 'descendre', f: 'avancer', tl: 'tourner à gauche', tr: 'tourner à droite', j: 'sauter', g: 'aller à la balise', loop: 'répéter', while: 'répéter jusqu’à', if: 'si', star: 'bloc magique' };
 const CTR = ['loop', 'while', 'if'];
 const isCtr = t => CTR.includes(t);
 const LOOP_NS = [2, 3, 4, 5, 6, 8];
-const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'loop', 'while', 'if', 'star'];
+const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'loop', 'while', 'if', 'star'];
 const BALL_DIRS = ['r', 'd', 'l', 'u'];
 
 function robotSVG() {
@@ -75,7 +75,7 @@ function robotSVG() {
 }
 const toyUse = k => `<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#toy-${k}" width="100" height="100"/></svg>`;
 const symUse = k => `<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#${k}" width="100" height="100"/></svg>`;
-const TOY_NAME = { b: 'le ballon', n: 'le nounours', c: 'le canard', t: 'la toupie', a: 'le cube', z: 'l\'anneau', e: 'la luciole' };
+const TOY_NAME = { b: 'le ballon', n: 'le nounours', c: 'le canard', t: 'la toupie', a: 'le cube', e: 'la luciole' };
 
 /* ---------- Sauvegarde ---------- */
 const KEY = 'bip-robot-v2';
@@ -193,7 +193,7 @@ function playStory(lines, done) {
 
 /* ---------- Album de stickers ---------- */
 const STICKERS = [];
-const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule'];
+const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag'];
 CHAPTERS.forEach((c, i) => {
   const sym = CH_STICKER[i] || 'toy-b';
   STICKERS.push({ id: 'c' + (i + 1), name: c.name, how: 'Chapitre ' + (i + 1) + ' terminé', icon: () => sym === 'star-gold' ? I.star(true) : symUse(sym) });

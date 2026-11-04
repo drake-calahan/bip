@@ -22,6 +22,7 @@ const SB_ITEMS = [
   { ch: 'C', label: 'Une caisse', icon: () => symUse('crate') },
   { ch: '*', label: 'Une fleur', icon: () => symUse('flower') },
   { ch: 'K', label: 'Le coffre', icon: () => symUse('box') },
+  { ch: 'F', label: 'Une balise', icon: () => symUse('flag') },
   { ch: '.', label: 'Gomme', icon: () => I.eraser, eraser: true },
 ];
 function openSandbox() {

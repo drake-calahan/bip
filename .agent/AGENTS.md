@@ -33,9 +33,9 @@ Working conventions for any agent (human or AI) contributing to Bip.
 ## Level DSL quick reference (`src/levels.js`)
 
 Map legend: `.` grass · `#` bush · `o` rock · `~` puddle · `K` chest · `R` robot start · `-` lily pad · `s` switch (mushroom) · `G` gate (closed)
-· `C` crate · `*` flower (paint target) · `S` ball start · `N` nest (ball goal) · toys `b n c t a e` (e = firefly).
+· `C` crate · `*` flower (paint target) · `F` flag/balise (waypoint) · `S` ball start · `N` nest (ball goal) · toys `b n c t a e` (e = firefly).
 Program mini-lang (`sol`, `start`, `fn`): `r l u d` arrows · `f tl tr` relative · `j` jump · `N3(...)` repeat ×3 · `Wo(...)` until obstacle
-· `Wt(...)` until all toys · `Ip(a|b)`/`Io(a|b)` if puddle/obstacle · `*` magic block.
+· `Wt(...)` until all toys · `Ip(a|b)`/`Io(a|b)` if puddle/obstacle · `*` magic block · `g` go to the flag (pathfound at runtime).
 Fields: `ch` chapter idx · `pal` palette · `map`/`variants` · `face` start facing · `max` battery · `sol`/`fn` reference solution
 · `start`/`startFn` detective pre-program · `mode:'ball'` + `tiles` ref · `daily:true`.
 

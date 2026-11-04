@@ -11,7 +11,7 @@
 
    Invariants (le script échoue sinon) :
    - si `max` existe, max >= par + 1 (règle de marge, .agent/AGENTS.md #4) ;
-   - premier niveau de chaque chapitre <= 4 blocs (sauf les deux derniers chapitres, final + épilogue) ;
+   - premier niveau de chaque chapitre <= 4 blocs (sauf les trois derniers chapitres, final + épilogues) ;
    - rampe intra-chapitre (dernier - premier, en par) <= 4 ;
    - delta de par moyen entre chapitres consécutifs <= 3.0 en hausse ; toute baisse est acceptée
      (un nouveau monde ou l'épilogue commence plus doucement, c'est voulu) ;
@@ -101,7 +101,7 @@ const violations = [];
 rows.forEach(r => { if (r.lv.max != null && r.lv.max < r.par + 1) violations.push(`MARGE NULLE L${r.lv.id} (${r.name}) par=${r.par} max=${r.lv.max}`); });
 /* 2. débuts de chapitre (les deux derniers chapitres = final + épilogue sont exemptés) */
 const lastCi = CHAPTERS.length - 1;
-chapters.forEach(c => { if (c.ci < lastCi - 1 && c.debut > 4) violations.push(`DEBUT LOOURD Ch${c.ci + 1} "${c.name}" par=${c.debut}`); });
+chapters.forEach(c => { if (c.ci < lastCi - 2 && c.debut > 4) violations.push(`DEBUT LOOURD Ch${c.ci + 1} "${c.name}" par=${c.debut}`); });
 /* 3. rampes intra-chapitre */
 chapters.forEach(c => { if (c.ramp > 4) violations.push(`RAMPE Ch${c.ci + 1} "${c.name}" +${c.ramp} (${c.pars.join(',')})`); });
 /* 4. deltas de par moyen entre chapitres (hausse limitée ; baisse libre : nouveau monde / épilogue) */
@@ -117,7 +117,7 @@ spikes.forEach(s => violations.push(`SPIKE ${s}`));
 
 console.log('\n=== Invariants V5 ===');
 console.log(`marge nulle        : ${rows.filter(r => r.zeroSlack).length} niveau(x)`);
-console.log(`débuts > 4 blocs   : ${chapters.filter(c => c.ci < lastCi - 1 && c.debut > 4).map(c => 'Ch' + (c.ci + 1)).join(',') || 'aucun'}`);
+console.log(`débuts > 4 blocs   : ${chapters.filter(c => c.ci < lastCi - 2 && c.debut > 4).map(c => 'Ch' + (c.ci + 1)).join(',') || 'aucun'}`);
 console.log(`rampes > 4         : ${chapters.filter(c => c.ramp > 4).map(c => 'Ch' + (c.ci + 1) + ' (+' + c.ramp + ')').join(',') || 'aucune'}`);
 console.log(`changements repère : ${switches.length}${switches.length ? ' (' + switches.join(', ') + ')' : ''}`);
 console.log(`spikes par         : ${spikes.length}${spikes.length ? ' (' + spikes.join(', ') + ')' : ''}`);

@@ -31,7 +31,7 @@ for (const lv of LEVELS) {
   }
 
   const fn = lv.fn ? E.parseProg(lv.fn) : [];
-  const hasCG = (lv.variants || [lv.map]).some(rows => rows.some(r => /[CG]/.test(r)));
+  const hasCG = (lv.variants || [lv.map]).some(rows => rows.some(r => /[CGF]/.test(r)));
   let ref;
   if (lv.sol) { ref = E.parseProg(lv.sol); par = E.countBlocks(ref) + E.countBlocks(fn); }
   if (!lv.sol && hasCG) { line += 'NEEDS EXPLICIT SOL (C/G) '; ok = false; }
@@ -67,7 +67,7 @@ for (const lv of LEVELS) {
   const pal = new Set([...(lv.pal || []), 'star']);
   const src = [lv.sol || '', lv.fn || ''].join(' ');
   const structural = new Set(['(', ')', '|']);
-  const used = (src.match(/N\d+\(|W[ot]\(|I[po]\(|\(|\)|\||tl|tr|\*|[rludfj]/g) || []);
+  const used = (src.match(/N\d+\(|W[ot]\(|I[po]\(|\(|\)|\||tl|tr|\*|[rludfjg]/g) || []);
   const bad = used.filter(t => !structural.has(t) && !/^(N\d+\(|W[ot]\(|I[po]\()$/.test(t) && !pal.has(t === '*' ? 'star' : t));
   if (bad.length) { line += ` PAL-MISSING:${bad.join('')}`; ok = false; }
   if (par != null && par > prevPar + 4) line += ' (SPIKE?)';

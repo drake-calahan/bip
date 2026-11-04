@@ -118,7 +118,7 @@ function buildBoard() {
     if (k === 'grass') return;
     const x = idx % P.w, y = (idx / P.w) | 0;
     const cls = k === 'switch' ? 'switchc' : k;
-    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest' }[k];
+    const sym = { bush: 'bush', rock: 'rock', puddle: 'puddle', box: 'box', pad: 'pad', switch: 'switchc', gate: 'gate', flower: 'flower', nest: 'nest', flag: 'flag' }[k];
     h += `<div class="it ${cls}" data-idx="${idx}" style="--x:${x};--y:${y}">${symUse(sym)}</div>`;
   });
   P.crates.forEach((c, i) => { h += `<div class="it crate" data-ci="${i}" style="--x:${c[0]};--y:${c[1]}">${symUse('crate')}</div>`; });
@@ -729,7 +729,7 @@ function finish(sim, v) {
   G.fails++;
   let msg = '';
   if (sim.result === 'bump') {
-    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : 'Aïe ! Bip s’est cogné dans un buisson.';
+    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : sim.why === 'flag' ? 'Oups ! La balise est derrière un mur, Bip n’y arrive pas.' : 'Aïe ! Bip s’est cogné dans un buisson.';
     msg += ' Le bloc orange pose problème.';
     badMark(last.ins);
   } else if (sim.result === 'splash') {
