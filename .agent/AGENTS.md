@@ -41,7 +41,7 @@ Fields: `ch` chapter idx · `pal` palette · `map`/`variants` · `face` start fa
 
 ## Definition of done (per batch)
 
-- `node tools/check-levels.js` → `ALL OK`; `node tools/check-labs.js`, `node tools/smoke-engine.js` pass.
+- `node tools/check-levels.js` → `ALL OK` et `node tools/check-curve.js` → `ALL OK` (V5 : courbe de charge, marge batterie, un seul repère) ; `node tools/check-labs.js`, `node tools/smoke-engine.js` pass.
 - `python tools/build.py` then `node tools/check-ui.js http://127.0.0.1:8103/` → `UI OK`, and a look at the captures in `.artifact/`
   (390×844 and 1280×800).
 - Manual smoke: home → Jouer → 1 level of each mode (classic, pond, paint, crate, ball) → win → sticker toast; one machine by gesture.

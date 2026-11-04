@@ -78,7 +78,7 @@ images veulent dire pour lui.
 
 - [ ] `node tools/check-levels.js` → `ALL OK` ; `node tools/check-ui.js` → `UI OK`.
 - [ ] Sur la tablette : son, voix, rotation portrait/paysage, mode avion après un premier chargement.
-- [ ] Un niveau de chaque mode se joue : classique, nénuphars (26), caisses (51), pollen (56), toboggan (61), nuit (71).
+- [ ] Un niveau de chaque mode se joue : classique, nénuphars (26), caisses (51), pollen (56), détective (61), toboggan (66), nuit (71).
 - [ ] Les quatre machines : glisser, toucher, lâcher, indice, recommencer, suivant.
 - [ ] Mon jardin : poser, effacer, jouer ; retrouver le jardin après fermeture de l'app.
 - [ ] « Pour les adultes » : voix et sons coupés, le jeu reste jouable.

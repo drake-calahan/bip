@@ -1,2 +1,5 @@
 par.json
 .artifact/
+node_modules/
+package.json
+package-lock.json

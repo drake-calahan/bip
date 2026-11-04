@@ -30,3 +30,16 @@
 2. Solve it yourself in the DSL; count blocks; set `max` = par+1 only in loop/while/function chapters.
 3. Run `node tools/check-levels.js` — ref must win all variants; detective `start` must fail.
 4. Read `text` aloud in French — would a 6 yo follow? Cut words if not.
+
+## V5 « L'harmonie du jardin » — règles ajoutées (2026-11, voir docs/GAME-DESIGN-V5.md)
+
+- **Un seul repère après le ch5** : ch1–4 en flèches absolues, puis repère relatif
+  `f/tl/tr` jusqu'à la fin (seuls les deux derniers niveaux du final peuvent mixer).
+  Ne jamais alterner le repère niveau par niveau. Les défis de Zoé restent absolus.
+- **Marge batterie** : si `max` existe, `max >= par + 1`. Si une solution sans
+  conteneur tient dans `max`, retirer carrément `max` (la batterie ne force plus rien).
+- **Début de chapitre <= 4 blocs** (sauf final et épilogue), rampe intra-chapitre <= 4,
+  aucun saut de par > 4 entre deux niveaux : `node tools/check-curve.js` veille.
+- **Aucun niveau ne change de place** : les ids = index du tableau et la sauvegarde
+  `save.stars` est indexée par id. On édite le contenu des niveaux en place ;
+  les défis de Zoé peuvent être réordonnés entre eux (save indexée par jour de semaine).

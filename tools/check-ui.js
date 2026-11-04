@@ -26,9 +26,9 @@ async function run() {
 
   console.log('Carte');
   await pg.goto(URL); await sleep(500);
-  assert(await pg.locator('#trail .node').count() === 80, '80 cailloux sur le chemin');
+  assert(await pg.locator('#trail .node').count() === 83, '83 cailloux sur le chemin (aventure V5)');
   assert(await pg.locator('#trail .node.next').count() === 1, 'Bip est posé sur un seul caillou');
-  assert(await pg.locator('#trail .chap-banner').count() === 16, '16 bannières de chapitre');
+  assert(await pg.locator('#trail .chap-banner').count() === 17, '17 bannières de chapitre');
   await shot(pg, 'v4-home-390');
 
   console.log('Niveau 1');
@@ -54,7 +54,7 @@ async function run() {
   await shot(pg, 'v4-chapter-end-390');
 
   console.log('Toboggan');
-  await pg.evaluate(() => window.__bip.openLevel(60)); await sleep(500); await dismissStory(pg);
+  await pg.evaluate(() => window.__bip.openLevel(65)); await sleep(500); await dismissStory(pg);
   assert(await pg.locator('#game.ball-only').count() === 1, 'mode toboggan : palette de flèches au sol');
   const bb = await pg.locator('#board').boundingBox(); const cell = await pg.evaluate(() => window.__bip.G.cellPx);
   await pg.click('#palette .blk[data-t="d"]'); await sleep(150);

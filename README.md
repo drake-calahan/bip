@@ -17,11 +17,13 @@ complète est dans [docs/GAME-DESIGN-V4.md](docs/GAME-DESIGN-V4.md).
   les ateliers, la nuit). Bip est posé sur le prochain caillou ; les cailloux
   réussis portent leurs étoiles ; les suivants sont pâles, jamais cadenassés.
   Un seul geste (« Jouer ») ouvre le prochain niveau.
-- **L'aventure** : 4 mondes · 16 chapitres · 80 niveaux. Flèches, buissons et
+- **L'aventure** : 4 mondes · 17 chapitres · 83 niveaux d'aventure + 7 défis de Zoé
+  (90 niveaux au total). Flèches, buissons et
   flaques, saut, Répéter, repère relatif, nénuphars qui coulent, Répéter jusqu'à,
   Si… sinon (3 jardins, 1 programme), bloc magique, champignons et barrières,
-  caisses qui deviennent des ponts, pollen doré, toboggans de Ballon (on programme
-  le décor), détective, puis le jardin de nuit jusqu'au grand pique-nique.
+  caisses qui deviennent des ponts, pollen doré, détective, toboggans de Ballon
+  (on programme le décor), puis le jardin de nuit jusqu'au grand pique-nique et
+  au rêve de Bip.
   L'histoire se raconte dans la bulle du niveau, par le personnage qui parle.
 - **Les machines de Grand-Papa** : la balance (glisser les paniers), la lumière
   (tourner les miroirs), les roues (changer leur taille), le rendez-vous (décaler
@@ -71,6 +73,7 @@ branche `main`, dossier racine), Cloudflare Pages, Netlify Drop…
 
 ```
 node tools/check-levels.js    # chaque niveau a une solution valide (ALL OK)
+node tools/check-curve.js     # V5 : courbe de charge, marge batterie, un seul repère (ALL OK)
 node tools/smoke-engine.js    # mécaniques du moteur
 node tools/check-labs.js      # modèles des machines
 node tools/check-sandbox.js   # Mon jardin

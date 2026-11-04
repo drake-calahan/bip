@@ -872,6 +872,16 @@ function coachTarget() {
     if (!G.fn.length) return G.target === 'fn' ? $('#palette .blk[data-t="f"]') : $('#fnSeq .slot');
     return null;
   }
+  // V5 : main guidée sur le premier niveau de chaque chapitre — elle montre le nouveau bloc
+  if (!G.daily && !G.sandbox) {
+    const idx = LEVELS.indexOf(G.lv);
+    if (idx > 0 && LEVELS[idx - 1].ch === G.lv.ch) return null;
+    if (idx >= 0 && !save.stars[G.lv.id]) {
+      const seenBefore = new Set(LEVELS.slice(0, idx).flatMap(l => l.pal || []));
+      const nb = (G.lv.pal || []).find(b => !seenBefore.has(b));
+      if (nb && !G.prog.some(x => x.t === nb)) return $(`#palette .blk[data-t="${nb}"]`) || $('#palette .blk');
+    }
+  }
   return null;
 }
 function placeHand() {
