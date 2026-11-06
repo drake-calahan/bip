@@ -1,4 +1,4 @@
-# Bip le robot — V4 « Le grand jardin »
+# Bip le robot — V9 « Un seul objectif »
 
 Jeu d'initiation à la programmation (puis à quelques idées de physique et de
 mathématiques) pour les 5-7 ans. Tout se joue au doigt, **sans savoir lire** :
@@ -6,10 +6,13 @@ images, visages et voix. Aucun chrono, aucune vie, aucun méchant. Une erreur
 est une information (« Oups ! »), jamais une punition. Fonctionne hors connexion,
 s'installe sur Android comme une application.
 
-La V4 ne change pas le contenu : elle reprend le cœur de V1 (programmer Bip avec
-des blocs), l'histoire et les mécaniques de V2, les ateliers de V3, et les porte
-dans **une seule expérience fluide pensée pour des mains de six ans**. La conception
-complète est dans [docs/GAME-DESIGN-V4.md](docs/GAME-DESIGN-V4.md).
+La V9 reconstruit le parcours éducatif autour d'**un seul objectif — ramasser tous
+les jouets** — et fait finir l'aventure haut : après le grand pique-nique, les
+chapitres 17 à 19 forment un tournoi de nuit où chaque niveau combine au moins deux
+acquis (plus aucun niveau « filler »). Les défis de Zoé et les machines de Grand-Papa
+restent jouables en bonus archivés (feuille « Pour les adultes »). La réflexion
+chiffrée est dans [docs/REFLEXION.MD](docs/REFLEXION.MD), la conception dans
+[docs/GAME-DESIGN-V9.md](docs/GAME-DESIGN-V9.md).
 
 ## Ce qu'on y fait
 
@@ -18,20 +21,22 @@ complète est dans [docs/GAME-DESIGN-V4.md](docs/GAME-DESIGN-V4.md).
   réussis portent leurs étoiles ; les suivants sont pâles, jamais cadenassés.
   Un seul geste (« Jouer ») ouvre le prochain niveau.
 - **L'aventure** : 4 mondes · 19 chapitres · 95 niveaux d'aventure + 7 défis de Zoé
-  (102 niveaux au total). Flèches, buissons et
+  (102 niveaux au total). Un seul but partout : ramasse tous les jouets. Flèches, buissons et
   flaques, saut, Répéter, repère relatif, nénuphars qui coulent, Répéter jusqu'à,
   Si… sinon (3 jardins, 1 programme), bloc magique, champignons et barrières,
   caisses qui deviennent des ponts, pollen doré, détective, toboggans de Ballon
   (on programme le décor), puis le jardin de nuit jusqu'au grand pique-nique,
   au rêve de Bip, aux balises de Noctule (le bloc « balise » y envoie Bip tout seul)
-  et aux yeux de Bip (capteur « jouet devant » sur la molette du bloc Si, « jusqu’à la balise » sur la molette du Jusqu’à, et le bloc « pose une balise »).
+  et aux yeux de Bip (capteur « jouet devant » sur la molette du bloc Si, « jusqu’à la balise » sur la molette du Jusqu’à, et le bloc « pose une balise »), puis un tournoi de nuit en combos (chapitres 17–19) qui finit haut (dernier niveau, par 7).
   L'histoire se raconte dans la bulle du niveau, par le personnage qui parle.
-- **Les machines de Grand-Papa** : la balance (glisser les paniers), la lumière
+- **Bonus archivé (V9, feuille « Pour les adultes »)** — **les machines de Grand-Papa** : la balance (glisser les paniers), la lumière
   (tourner les miroirs), les roues (changer leur taille), le rendez-vous (décaler
   un ami). On construit, on peut deviner en touchant une image, on lâche la
   machine et on regarde. Douze défis, et un mode « inventer » par machine.
-- **Le défi de Zoé** (un niveau par jour de la semaine), **Mon jardin** (crée ton
-  niveau et fais-le résoudre par Bip), **l'album de Zoé** (29 images à gagner).
+- **Sur l'accueil** : **Mon jardin** (crée ton niveau et fais-le résoudre par Bip)
+  et **l'album de Zoé** (29 images à gagner).
+- **Bonus archivé (V9, feuille « Pour les adultes »)** : **le défi de Zoé** (un
+  niveau par jour de la semaine).
 
 ## Contenu du dépôt
 
