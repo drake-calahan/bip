@@ -1,11 +1,11 @@
-# QA checklist — Bip V4 (manual browser pass)
+# QA checklist — Bip V9 (manual browser pass)
 
 Run after every build (`python tools/build.py`), serve with `python -m http.server 8103 --bind 127.0.0.1`.
 `node tools/check-ui.js` covers the automated part; this list is what a human eye adds.
 
 ## La carte
 - [ ] Hero: Bip, « Jouer » (then « Continuer » + current chapter name), one flower per finished chapter.
-- [ ] Four picture buttons (Zoé / fleur / engrenage / étoile) open daily, Mon jardin, machines, album — each speaks its name.
+- [ ] Two picture buttons (Mon jardin, l'album) open their screens — each speaks its name; défi de Zoé and machines live in the adults sheet (« Bonus archivés (V9) »).
 - [ ] Path scrolls; worlds change colour; Bip sits on the next pebble and breathes; done pebbles show stars; future pebbles are pale dots, no padlocks.
 - [ ] Opening the map scrolls to Bip only when Bip is not already visible.
 
@@ -17,7 +17,7 @@ Run after every build (`python tools/build.py`), serve with `python -m http.serv
 - [ ] Chapter end: the mascot appears on the Bravo card with its line; no extra modal. Finale: picnic card.
 
 ## Les machines
-- [ ] Hub shows four real machine drawings, three dots each, a pencil for free play.
+- [ ] Open from « Pour les adultes » → « Les machines de Grand-Papa »: hub shows four real machine drawings, three dots each, a pencil for free play.
 - [ ] Balance: baskets drag and snap to notches; release tilts the beam; pollen dots count each side.
 - [ ] Light: tap rotates a mirror; the ray travels cell by cell; fireflies glow.
 - [ ] Gears: tap cycles 6/12/24 teeth; gears turn with the right direction and speed; Zoé's goal is pictured.
@@ -27,6 +27,6 @@ Run after every build (`python tools/build.py`), serve with `python -m http.serv
 
 ## Meta
 - [ ] Sticker toast; album shows real pictures, missing ones faded; machine stickers after 3 wins in a family.
-- [ ] Adults sheet: toggles work, reset arms on double tap.
+- [ ] Adults sheet: version notes (V9 first), « Bonus archivés (V9) » buttons open daily + machines, toggles work, reset arms on double tap.
 - [ ] Progress persists after reload (key `bip-robot-v2`); V2/V3 saves load.
 - [ ] 360×640 portrait and 1024×600 landscape: no overflow, targets ≥ 44 px; prefers-reduced-motion still playable.

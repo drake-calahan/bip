@@ -1,4 +1,4 @@
-# Bip — agent toolbox (V4 « Le grand jardin »)
+# Bip — agent toolbox (V9 « Un seul objectif »)
 
 Working conventions for any agent (human or AI) contributing to Bip.
 
@@ -10,10 +10,11 @@ Working conventions for any agent (human or AI) contributing to Bip.
   core → home → game → ball → sandbox → lab → main).
 - **Tone is the product**: soft pastel, no timers, no lives, no villains, gentle failures ("oups"), voice reads everything (fr-FR TTS),
   tutoiement, short sentences (≤ 2 per bubble). Never add pressure mechanics.
-- **V4 contract** (see `docs/GAME-DESIGN-V4.md`): zero reading needed to navigate (pictures, faces, voice); one gesture = one thing
+- **Base contract** (V4, see `docs/GAME-DESIGN-V4.md`; V9 delta below): zero reading needed to navigate (pictures, faces, voice); one gesture = one thing
   (tap adds, tap again removes, drag moves) everywhere; play first (home → Jouer → level, story told in the level bubble, one story card
   per world); the map is a path (no padlocks); the level screen is board / program / palette with a 72 px green button;
   the machines are manipulated directly (drag baskets, tap mirrors/gears/friends), the green button releases the machine.
+- **V9 delta** (see `docs/GAME-DESIGN-V9.md`, `docs/REFLEXION.MD`): one goal everywhere — collect all toys (`K` chest and `e` firefly-toy removed from engine, maps and palettes; win = all toys + all flowers painted); chapters 17–19 redesigned in place as a night combo tournament, no filler levels (`tools/check-curve.js` enforces DEAD LEVEL / FIN TROP BASSE / CHUTE); daily challenges and machines archived to the adults sheet (« Bonus archivés (V9) », same ids/handlers/saves).
 - Every level must be validated: `node tools/check-levels.js` → must print `ALL OK`.
 - After any src change: `python tools/build.py`, bump `VERSION` in `sw.js` when shipping, run `node tools/check-ui.js` against a local server.
 
@@ -32,8 +33,8 @@ Working conventions for any agent (human or AI) contributing to Bip.
 
 ## Level DSL quick reference (`src/levels.js`)
 
-Map legend: `.` grass · `#` bush · `o` rock · `~` puddle · `K` chest · `R` robot start · `-` lily pad · `s` switch (mushroom) · `G` gate (closed)
-· `C` crate · `*` flower (paint target) · `F` flag/balise (waypoint) · `S` ball start · `N` nest (ball goal) · toys `b n c t a` (but unique : ramasse tous les jouets — plus de coffre `K`, plus de luciole `e`, V9).
+Map legend: `.` grass · `#` bush · `o` rock · `~` puddle · `R` robot start · `-` lily pad · `s` switch (mushroom) · `G` gate (closed)
+· `C` crate · `*` flower (paint target) · `F` flag/balise (waypoint) · `S` ball start · `N` nest (ball goal) · toys `b n c t a` (the only goal: collect them all — V9 removed `K` chest and `e` firefly-toy).
 Program mini-lang (`sol`, `start`, `fn`): `r l u d` arrows · `f tl tr` relative · `j` jump · `N3(...)` repeat ×3 · `Wo(...)` until obstacle
 · `Wt(...)` until all toys · `Ip/Io/It(a|b)` if puddle/obstacle/toy-ahead · `Wo/Wt/Wg(...)` until obstacle/all-toys/flag · `*` magic block · `g` go to nearest unvisited flag · `p` plant a flag (pathfound at runtime).
 Fields: `ch` chapter idx · `pal` palette · `map`/`variants` · `face` start facing · `max` battery · `sol`/`fn` reference solution
