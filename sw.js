@@ -1,5 +1,5 @@
 /* Bip le robot — fonctionnement hors connexion */
-const VERSION = 'bip-v9-2';
+const VERSION = 'bip-v10-1';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-180.png'];
 
 self.addEventListener('install', e => {

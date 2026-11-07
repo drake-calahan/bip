@@ -1,4 +1,4 @@
-# Bip — agent toolbox (V9 « Un seul objectif »)
+# Bip — agent toolbox (V10 « L'aube »)
 
 Working conventions for any agent (human or AI) contributing to Bip.
 
@@ -15,6 +15,7 @@ Working conventions for any agent (human or AI) contributing to Bip.
   per world); the map is a path (no padlocks); the level screen is board / program / palette with a 72 px green button;
   the machines are manipulated directly (drag baskets, tap mirrors/gears/friends), the green button releases the machine.
 - **V9 delta** (see `docs/GAME-DESIGN-V9.md`, `docs/REFLEXION.MD`): one goal everywhere — collect all toys (`K` chest and `e` firefly-toy removed from engine, maps and palettes; win = all toys + all flowers painted); chapters 17–19 redesigned in place as a night combo tournament, no filler levels (`tools/check-curve.js` enforces DEAD LEVEL / FIN TROP BASSE / CHUTE); daily challenges and machines archived to the adults sheet (« Bonus archivés (V9) », same ids/handlers/saves).
+- **V10 delta** (see `docs/GAME-DESIGN-V10.md`): new world 5 « L'aube » (w=4, peach) with chapters 20–21 appended **before** the daily block (story ids 1–95 and `save.stars` untouched; dailies have no persisted id): block `c` « loupe » (pathfind to nearest uncollected toy, like `g`; bump/`toy` if none reachable) and while-condition `paint` (`Wf(...)`, 4th pill position only when the level has flowers); last level L103 = 3-garden combo final par 6 (check-curve FIN TROP BASSE ≥ 70 % of max load). Sandbox gardens get share codes `BIP1.<base64url>` (validated on load: 5×6 allowed chars, exactly one `R`) and the adults sheet gets run/win/built counters (`save.stats`). Home stays 2 buttons; new stuff lives at the end of the path or in the adults sheet.
 - Every level must be validated: `node tools/check-levels.js` → must print `ALL OK`.
 - After any src change: `python tools/build.py`, bump `VERSION` in `sw.js` when shipping, run `node tools/check-ui.js` against a local server.
 
@@ -36,13 +37,15 @@ Working conventions for any agent (human or AI) contributing to Bip.
 Map legend: `.` grass · `#` bush · `o` rock · `~` puddle · `R` robot start · `-` lily pad · `s` switch (mushroom) · `G` gate (closed)
 · `C` crate · `*` flower (paint target) · `F` flag/balise (waypoint) · `S` ball start · `N` nest (ball goal) · toys `b n c t a` (the only goal: collect them all — V9 removed `K` chest and `e` firefly-toy).
 Program mini-lang (`sol`, `start`, `fn`): `r l u d` arrows · `f tl tr` relative · `j` jump · `N3(...)` repeat ×3 · `Wo(...)` until obstacle
-· `Wt(...)` until all toys · `Ip/Io/It(a|b)` if puddle/obstacle/toy-ahead · `Wo/Wt/Wg(...)` until obstacle/all-toys/flag · `*` magic block · `g` go to nearest unvisited flag · `p` plant a flag (pathfound at runtime).
+· `Wt(...)` until all toys · `Wg(...)` until flag · `Wf(...)` until all flowers painted (V10) · `Ip/Io/It(a|b)` if puddle/obstacle/toy-ahead
+· `*` magic block · `g` go to nearest unvisited flag · `p` plant a flag · `c` go to nearest uncollected toy (V10, pathfound at runtime).
 Fields: `ch` chapter idx · `pal` palette · `map`/`variants` · `face` start facing · `max` battery · `sol`/`fn` reference solution
 · `start`/`startFn` detective pre-program · `mode:'ball'` + `tiles` ref · `daily:true`.
+New adventure levels are appended after ch19 and **before** the `daily:true` block (story ids 1–95 never move; dailies are keyed by weekday, not id).
 
 ## Definition of done (per batch)
 
-- `node tools/check-levels.js` → `ALL OK` et `node tools/check-curve.js` → `ALL OK` (V5 : courbe de charge, marge batterie, un seul repère) ; `node tools/check-labs.js`, `node tools/smoke-engine.js` pass.
+- `node tools/check-levels.js` → `ALL OK` et `node tools/check-curve.js` → `ALL OK` (V5 : courbe de charge, marge batterie, un seul repère) ; `node tools/check-v10.js` → `V10 OK` (V10 : loupe `c`, `Wf`, codec `BIP1`) ; `node tools/check-labs.js`, `node tools/smoke-engine.js`, `node tools/check-sandbox.js`, `node tools/check-session.js` pass.
 - `python tools/build.py` then `node tools/check-ui.js http://127.0.0.1:8103/` → `UI OK`, and a look at the captures in `.artifact/`
   (390×844 and 1280×800).
 - Manual smoke: home → Jouer → 1 level of each mode (classic, pond, paint, crate, ball) → win → sticker toast; one machine by gesture.

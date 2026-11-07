@@ -65,7 +65,7 @@ async function runBall() {
     say('Pose d\'abord des flèches sur l\'herbe : touche une case, puis le bouton vert !');
     return;
   }
-  stopVoice(); G.busy = true; G.abort = false; setRunning(true);
+  stopVoice(); G.busy = true; G.abort = false; setRunning(true); stat('runs');
   const session = ++G.session;
   G.dirty = true;
   resetBoard(); renderTiles();

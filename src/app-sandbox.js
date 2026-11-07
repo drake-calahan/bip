@@ -41,6 +41,7 @@ function persistSb() {
   persist();
   renderSbSlots();
   award('sandbox1');
+  stat('built');
 }
 function renderSbSlots() {
   $('#sbSlots').innerHTML = save.sandbox.map((s, i) =>
@@ -52,12 +53,61 @@ function renderSbSlots() {
 }
 function renderSbTools() {
   $('#sbTray').innerHTML = SB_ITEMS.map(it =>
-    `<button class="sb-item${it.eraser ? ' eraser' : ''}${G.sb.tool === it.ch ? ' on' : ''}" data-ch="${it.ch}" aria-label="${it.label}">${it.icon()}</button>`).join('');
-  $$('#sbTray .sb-item').forEach(b => b.addEventListener('click', () => {
+    `<button class="sb-item${it.eraser ? ' eraser' : ''}${G.sb.tool === it.ch ? ' on' : ''}" data-ch="${it.ch}" aria-label="${it.label}">${it.icon()}</button>`).join('') +
+    `<button class="sb-item sb-code" id="btnSbShare" aria-label="Partager ce jardin avec un code">${I.share}</button>` +
+    `<button class="sb-item sb-code" id="btnSbPaste" aria-label="Charger un jardin depuis un code">${I.paste}</button>`;
+  $$('#sbTray .sb-item[data-ch]').forEach(b => b.addEventListener('click', () => {
     G.sb.tool = b.dataset.ch; SFX.tap();
     sbSay(SB_ITEMS.find(i => i.ch === G.sb.tool).label + ' : touche l\'herbe pour le poser.', true);
     renderSbTools();
   }));
+  const sh = $('#btnSbShare'), pa = $('#btnSbPaste');
+  if (sh) sh.addEventListener('click', () => { audio(); openSbCode('share'); });
+  if (pa) pa.addEventListener('click', () => { audio(); openSbCode('paste'); });
+}
+
+/* ---------- Codes de partage (V10) : un jardin = un petit code à copier/coller ---------- */
+const SB_CHARS = 'R.#o~sGC*Fbncta-';
+function sbEncode(rows) {
+  return 'BIP1.' + btoa(rows.join('/')).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function sbDecode(code) {
+  const m = /^BIP1\.([A-Za-z0-9_-]{8,})$/.exec(String(code || '').trim());
+  if (!m) return null;
+  let bin;
+  try { bin = atob(m[1].replace(/-/g, '+').replace(/_/g, '/')); } catch (e) { return null; }
+  const rows = bin.split('/');
+  const okChars = new RegExp('^[' + SB_CHARS + ']+$');
+  if (rows.length !== SB_H || rows.some(r => r.length !== SB_W || !okChars.test(r))) return null;
+  if (rows.join('').split('R').length !== 2) return null;   // exactement un départ de Bip
+  return rows;
+}
+function openSbCode(mode) {
+  $('#sbCode').hidden = false;
+  const inp = $('#sbCodeInput');
+  if (mode === 'share') { inp.value = sbEncode(G.sb.rows); inp.placeholder = ''; try { inp.select(); } catch (e) { /* */ } }
+  else { inp.value = ''; inp.placeholder = 'Colle le code d’un jardin ici…'; }
+  stopVoice();
+  speak(mode === 'share' ? 'Voici le code de ton jardin. Copie-le pour l’envoyer à un ami.' : 'Colle ici le code d’un jardin reçu, puis « Charger ce code ».');
+  setTimeout(() => { try { inp.focus(); } catch (e) { /* */ } }, 60);
+}
+function copySbCode() {
+  const inp = $('#sbCodeInput');
+  inp.value = sbEncode(G.sb.rows);
+  try { inp.select(); } catch (e) { /* */ }
+  const okMsg = () => sbSay('Code copié ! Envoie-le à un ami pour partager ton jardin.');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(inp.value).then(okMsg, () => sbSay('Copie le code affiché ci-dessus à la main.'));
+  else sbSay('Copie le code affiché ci-dessus à la main.');
+}
+function loadSbCode() {
+  const rows = sbDecode($('#sbCodeInput').value);
+  if (!rows) { SFX.nope(); sbSay('Ce code ne ressemble pas à un jardin Bip. Vérifie-le et réessaie !'); return; }
+  G.sb.rows = rows;
+  persistSb();
+  renderSbBoard();
+  $('#sbCode').hidden = true;
+  SFX.win();
+  sbSay(`Jardin chargé dans le jardin ${G.sb.cur + 1} ! Lance Bip avec le bouton vert.`);
 }
 function renderSbBoard() {
   const P = parseLevel({ map: G.sb.rows });

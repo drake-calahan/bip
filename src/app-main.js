@@ -24,6 +24,9 @@ function wire() {
   $('#btnSbHome').innerHTML = I.home;
   $('#btnSbPlay').innerHTML = I.play;
   $('#sbPill').innerHTML = I.flowerIco;
+  $('#btnSbCodeClose').innerHTML = I.close;
+  $('#icoSbCopy').innerHTML = I.share;
+  $('#icoSbLoad').innerHTML = I.paste;
   setRunning(false);
 
   // Joueur de la première heure : un autocollant souvenir
@@ -94,10 +97,15 @@ function wire() {
   $('#btnSbHome').addEventListener('click', () => show('home'));
   $('#btnSbPlay').addEventListener('click', () => { audio(); playSandbox(); });
   $('#sbBubble').addEventListener('click', () => speak($('#sbMsg').textContent));
+  $('#btnSbCodeClose').addEventListener('click', () => { $('#sbCode').hidden = true; });
+  $('#sbCode').addEventListener('click', e => { if (e.target.id === 'sbCode') $('#sbCode').hidden = true; });
+  $('#btnSbCopy').addEventListener('click', () => { audio(); copySbCode(); });
+  $('#btnSbLoad').addEventListener('click', () => { audio(); loadSbCode(); });
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (!$('#sheet').hidden) closeSheet();
+      else if (!$('#sbCode').hidden) $('#sbCode').hidden = true;
       else if (!$('#album').hidden) $('#album').hidden = true;
       else if (!$('#machines').hidden) $('#machines').hidden = true;
       else if (!$('#story').hidden) $('#storyCard').click();
@@ -118,4 +126,4 @@ function wire() {
 }
 wire();
 // Accès QA/dev (console) : window.__bip.openLevel(i), .run(), .state()
-window.__bip = { G, L, openLevel, openLevelObj, openLab, parseProg, runAll, runLab, LEVELS, CHAPTERS, WORLDS, LAB_LEVELS, simulate, save, persist, show, renderHome };
+window.__bip = { G, L, openLevel, openLevelObj, openLab, parseProg, runAll, runLab, LEVELS, CHAPTERS, WORLDS, LAB_LEVELS, simulate, save, persist, show, renderHome, sbEncode, sbDecode };

@@ -232,17 +232,21 @@ const seqHTML = (list, cid) => list.map(itemHTML).join('') + slotHTML(cid);
 const itemHTML = it => isCtr(it.t) ? ctrHTML(it) : blockHTML(it.t, it.id);
 function pillHTML(it) {
   if (it.t === 'loop') return '×' + it.n;
-  if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : it.c === 'flag' ? symUse('flag') : symUse('bush');
+  if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : it.c === 'flag' ? symUse('flag') : it.c === 'paint' ? symUse('flower') : symUse('bush');
   return it.c === 'puddle' ? symUse('puddle') : it.c === 'obst' ? symUse('gate') : toyUse('b');
 }
 function pillLabel(it) {
   if (it.t === 'loop') return `Répéter ${it.n} fois`;
-  if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : it.c === 'flag' ? 'Jusqu’à une balise' : 'Jusqu’à un obstacle';
+  if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : it.c === 'flag' ? 'Jusqu’à une balise' : it.c === 'paint' ? 'Jusqu’à toutes les fleurs peintes' : 'Jusqu’à un obstacle';
   return it.c === 'puddle' ? 'Si une flaque est devant' : it.c === 'obst' ? 'Si un obstacle est devant' : 'Si un jouet est devant';
 }
 function levelHasFlag() {
   const rows = (G.lv.variants || [G.lv.map || []]).flat();
   return rows.some(r => r.includes('F')) || (G.lv.pal || []).includes('p') || (G.lv.pal || []).includes('g');
+}
+function levelHasFlowers() {
+  const rows = (G.lv.variants || [G.lv.map || []]).flat();
+  return rows.some(r => r.includes('*'));
 }
 function ctrHTML(it) {
   const tThen = G.target === it.id, tElse = G.target === it.id + ':else';
@@ -358,9 +362,11 @@ function cyclePill(id) {
   let msg;
   if (it.t === 'loop') { it.n = LOOP_NS[(LOOP_NS.indexOf(it.n) + 1) % LOOP_NS.length]; msg = `Bip va répéter ${it.n} fois.`; }
   else if (it.t === 'while') {
-    const seq = levelHasFlag() ? ['free', 'toys', 'flag'] : ['free', 'toys'];
+    const seq = ['free', 'toys'];
+    if (levelHasFlag()) seq.push('flag');
+    if (levelHasFlowers()) seq.push('paint');
     it.c = seq[(seq.indexOf(it.c) + 1) % seq.length];
-    msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : it.c === 'flag' ? 'Bip répète jusqu’à être sur une balise.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.';
+    msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : it.c === 'flag' ? 'Bip répète jusqu’à être sur une balise.' : it.c === 'paint' ? 'Bip répète jusqu’à ce que toutes les fleurs soient dorées.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.';
   }
   else { it.c = it.c === 'puddle' ? 'obst' : it.c === 'obst' ? 'toy' : 'puddle'; msg = it.c === 'puddle' ? 'Si une flaque est devant Bip : ligne verte. Sinon : ligne grise.' : it.c === 'obst' ? 'Si un obstacle est devant Bip : ligne verte. Sinon : ligne grise.' : 'Si un jouet est devant Bip : ligne verte. Sinon : ligne grise.'; }
   SFX.tap(); edited();
@@ -532,7 +538,7 @@ async function runAll() {
     if (c) { c.classList.add('bad'); c.scrollIntoView({ block: 'nearest' }); }
     return;
   }
-  stopVoice(); G.step = null; clearMarks(); hideHint();
+  stopVoice(); G.step = null; clearMarks(); hideHint(); stat('runs');
   const session = ++G.session;
   const nv = G.lv.nv;
   G.busy = true; G.abort = false; setRunning(true);
@@ -564,6 +570,8 @@ const CHECK_SAY = {
   'while-free': ok => ok ? 'La route est libre : Bip continue.' : 'Un obstacle devant : la boucle s’arrête.',
   'while-toys': ok => ok ? 'Il manque des jouets : Bip continue.' : 'Tous les jouets sont là : la boucle s’arrête.',
   'while-flag': ok => ok ? 'Pas encore sur la balise : Bip continue.' : 'Bip est sur la balise : la boucle s’arrête.',
+  'while-paint': ok => ok ? 'Il reste des fleurs blanches : Bip continue.' : 'Toutes les fleurs sont dorées : la boucle s’arrête.',
+  'c-goal': ok => ok ? 'Bip a senti un jouet : il y va tout seul !' : 'Aucun jouet à portée de Bip.',
 };
 async function stepOnce() {
   if (G.busy || G.mode === 'ball') return;
@@ -579,7 +587,7 @@ async function stepOnce() {
   G.busy = false; setRunning(false);
   if (G.abort) { G.step = null; resetBoard(); clearMarks(); say('Stop ! Bip revient au départ.'); return; }
   step.i++;
-  if (st.kind === 'check') say(CHECK_SAY[`${st.ins.t}-${st.cond}`](st.ok));
+  if (st.kind === 'check') { const f = CHECK_SAY[`${st.ins.t}-${st.cond}`]; say(f ? f(st.ok) : (st.ok ? 'Oui !' : 'Non.')); }
   if (step.i >= sim.steps.length) { G.step = null; finishStep(sim); }
   else if (st.kind !== 'check') say(`Bloc fait. Touche encore pour la suite.`, true);
 }
@@ -643,7 +651,7 @@ async function doStep(st, keep, session = G.session) {
     const c = $(`#progCard .ctr[data-id="${st.ins.id}"]`);
     if (c) c.classList.add(st.ok ? 'yes' : 'no');
     SFX.look(st.ok);
-    if (st.cond !== 'toys' && st.cond !== 'flag') {
+    if (st.cond !== 'toys' && st.cond !== 'flag' && st.cond !== 'paint' && st.cond !== 'goal') {
       const s = document.createElement('div');
       s.className = 'sense' + (st.ok ? ' yes' : '');
       s.style.cssText = `--x:${st.from[0] + dx};--y:${st.from[1] + dy}`;
@@ -771,7 +779,7 @@ function finish(sim, v) {
   G.fails++;
   let msg = '';
   if (sim.result === 'bump') {
-    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : sim.why === 'flag' ? 'Oups ! La balise est derrière un mur, Bip n’y arrive pas.' : 'Aïe ! Bip s’est cogné dans un buisson.';
+    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : sim.why === 'flag' ? 'Oups ! La balise est derrière un mur, Bip n’y arrive pas.' : sim.why === 'toy' ? 'Oups ! Aucun jouet à portée de la loupe.' : 'Aïe ! Bip s’est cogné dans un buisson.';
     msg += ' Le bloc orange pose problème.';
     badMark(last.ins);
   } else if (sim.result === 'splash') {
@@ -821,6 +829,7 @@ function win() {
     save.stars[G.lv.id] = Math.max(prev, stars); persist();
   }
   checkStickers();
+  stat('wins');
   if (G.sandbox) award('sandboxwin');
   if (G.daily) { save.daily[DAILY_IDX] = true; persist(); award('daily1'); }
   SFX.win(); buzz([30, 60, 30]);
@@ -869,7 +878,7 @@ function afterWinNext() {
   if (G.daily) { show('home'); return; }
   if (G.i >= LAST_STORY) {
     playStory([
-      { who: 'tous', title: 'Le grand pique-nique', line: 'Merci champion ! Tu as retrouvé tous les jouets et préparé le plus beau pique-nique du monde. Bip est très fier de toi !', cta: 'Youpi !' },
+      { who: 'tous', title: 'L’aube', line: 'Toute l’aventure est finie ! Le soleil se lève sur le jardin : Bip a ramassé tous les jouets. Merci, petit programmeur !', cta: 'Bonne journée !' },
     ], () => show('home'));
     return;
   }

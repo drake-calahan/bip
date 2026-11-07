@@ -33,6 +33,7 @@ function harness() {
     document: { createElement() { events.created++; return element(); } },
     save: { stars: {}, daily: {} },
     persist() {},
+    stat() {},
     checkStickers() {},
     buzz() {},
     stopVoice() {},

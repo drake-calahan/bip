@@ -18,6 +18,8 @@ const WORLDS = [
     intro: ['Grand-Papa Engrenage a construit des ateliers plein de machines.', '« Pilou a tout mélangé en rêvant… aide-nous à remettre de l\'ordre ! »'] },
   { name: 'Le jardin de nuit',
     intro: ['Noctule la luciole éclaire le jardin endormi.', '« Les lucioles veulent jouer sous les étoiles ! »'] },
+  { name: 'L’aube',
+    intro: ['Le soleil se lève sur le jardin : c’est le lendemain de la fête !', '« Encore une belle journée pour jouer, » dit Ballon.'] },
 ];
 
 const CHAPTERS = [
@@ -82,6 +84,13 @@ const CHAPTERS = [
   { w: 3, who: 'zoe', tone: 'night', name: 'Les yeux de Bip', hint: 'Bip voit si un jouet est devant lui.', night: true, epilogue: true,
     intro: 'Nouveau capteur ! La molette du bloc Si a une troisième position : Bip voit si un jouet est devant lui.',
     end: [{ who: 'zoe', line: 'Bip a des yeux maintenant : plus besoin de compter les cases !' }] },
+  // Monde 5 — L'aube
+  { w: 4, who: 'ballon', tone: 'dawn', name: 'Le nez de Bip', hint: 'La loupe envoie Bip au jouet le plus proche.',
+    intro: 'Ce matin, Ballon a réveillé Bip : « Essaie le nouveau bloc loupe ! Il va tout seul au jouet le plus proche. »',
+    end: [{ who: 'ballon', line: 'Bip sent où sont les jouets : plus besoin de compter les cases !' }] },
+  { w: 4, who: 'zoe', tone: 'sunrise', name: 'Jusqu’aux fleurs dorées', hint: 'Répète jusqu’à ce que toutes les fleurs soient peintes.', final: true,
+    intro: 'Dernier réveil : le bloc Jusqu’à a un nouveau rond, la fleur. Bip répète jusqu’à ce que tout le jardin soit doré !',
+    end: [{ who: 'zoe', line: 'L’aube se lève sur un jardin parfait. Tu as tout fini, bravo !' }] },
 ];
 
 const LEVELS = [
@@ -388,6 +397,41 @@ const LEVELS = [
     text: 'Jusqu’au drapeau : jouet devant ? avance. Sinon, fonce à la balise !' },
   { ch: 18, face: 'r', pal: [...REL, 'p', 'g', 'if', 'loop'], sol: 'p f g N2(It(f|tr))', map: ['R.b.F..', '..#...', '.n...F'],
     text: 'LE TOURNOI FINAL ! Pose une balise, fonce au drapeau, reviens en ramassant tout. Champion !' },
+
+  /* ============ Monde 5 — L'aube (V10) ============ */
+  // Chapitre 20 — Le nez de Bip (bloc c : va au jouet le plus proche)
+  { ch: 19, face: 'r', pal: [...REL, 'c'], sol: 'c', map: ['R..b..'],
+    text: 'Nouveau bloc : la loupe ! Bip va tout seul au jouet le plus proche. Essaie !' },
+  { ch: 19, face: 'r', pal: [...REL, 'c', 'loop'], sol: 'N2(c)', map: ['R.b..n'],
+    text: 'Deux jouets ! Mets la loupe dans un bloc Répète.' },
+  { ch: 19, face: 'r', pal: [...REL, 'c'], sol: 'c',
+    variants: [
+      ['R.#b..', '......'],
+      ['R..#b.', '......'],
+      ['R.#.b.', '......'],
+    ],
+    text: 'Un buisson sur le chemin : la loupe trouve le détour toute seule. Trois jardins, un seul bloc !' },
+  { ch: 19, face: 'r', pal: [...REL, 'j', 'while', 'c'], sol: 'Wt(c)', map: ['R~b.n'],
+    text: 'Jusqu’à tous les jouets, avec la loupe dedans : Bip ramasse tout, tout seul !' },
+  // Chapitre 21 — Jusqu’aux fleurs dorées (Wf : jusqu’à toutes les fleurs peintes) + final aube
+  { ch: 20, face: 'r', pal: [...REL, 'while'], sol: 'Wf(f)', map: ['R*b*'],
+    text: 'Nouveau rond sur le bloc Jusqu’à : la fleur ! Bip répète jusqu’à ce que toutes les fleurs soient dorées.' },
+  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if'], sol: 'Wf(Ip(j|f))',
+    variants: [
+      ['R.b*~', '.....'],
+      ['R..b*', '.....'],
+      ['R~b*.', '.....'],
+    ],
+    text: 'Peins toutes les fleurs en sautant les flaques : trois jardins, un seul programme !' },
+  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if', 'c'], sol: 'Wf(Ip(j|f)) c', map: ['R.*~b', '.....'],
+    text: 'Peins jusqu’aux fleurs dorées, puis la loupe attrape le dernier jouet !' },
+  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if', 'c', 'g', 'star'], sol: 'Wg(*) c', fn: 'Ip(j|f)',
+    variants: [
+      ['R.*~bF', '.#....', 'n.....'],
+      ['R.~*bF', '.#....', 'n.....'],
+      ['R.*~bF', '.#....', '..n...'],
+    ],
+    text: 'LE GRAND RÉVEIL ! Va à la balise en peignant le chemin, puis la loupe attrape le dernier jouet. Trois jardins, un seul programme. Champion !' },
 
   /* ============ Les défis de Zoé (archivés V9 — accessibles depuis la feuille adultes) ============ */
   { ch: -1, daily: true, pal: ['r', 'loop'], max: 3, sol: 'N6(r)', map: ['R******'],

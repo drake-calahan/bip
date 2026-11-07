@@ -1,6 +1,6 @@
 /* ===== Moteur pur : simulation d'un programme sur un niveau =====
-   Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), g (va à la balise), p (pose une balise), star (bloc magique)
-   Conteneurs : loop {n, body} · while {c:'free'|'toys'|'flag', body} · if {c:'puddle'|'obst'|'toy', body, els}
+   Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), g (va à la balise), p (pose une balise), c (va au jouet le plus proche), star (bloc magique)
+   Conteneurs : loop {n, body} · while {c:'free'|'toys'|'flag'|'paint', body} · if {c:'puddle'|'obst'|'toy', body, els}
    Terrain : . herbe · # buisson · o rocher · ~ flaque
              - nénuphar (s'enfonce quand Bip le quitte) · s champignon (ouvre les barrières)
              G barrière (bloque tant que fermée) · * fleur (à peindre en marchant dessus) · F balise (waypoint)
@@ -184,6 +184,25 @@ function simulate(lv, prog, fn, v) {
     });
     return best;
   }
+  /* Chemin vers le jouet non ramassé le plus proche (V10, bloc 'c' "loupe") : comme pathToFlag,
+     on résout sur un niveau temporaire où SEUL ce jouet existe (les autres jouets, balises,
+     caisses, barrières et fleurs sont vidés ; les vrais jouets seront ramassés au passage). */
+  function pathToToy() {
+    let best = null;
+    P.toys.forEach((t, ti) => {
+      if (got.has(ti)) return;
+      const rows = mapOf(lv, v).map((r, ri) => r.split('').map((ch, ci) => {
+        if (ch === 'R') return '.';
+        if (TOY_CHARS.includes(ch)) return (ri === t.y && ci === t.x) ? 'b' : '.';
+        if (ch === 'C' || ch === 'G' || ch === 'F' || ch === '*') return '.';
+        return ch;
+      }).join(''));
+      rows[y] = rows[y].slice(0, x) + 'R' + rows[y].slice(x + 1);
+      const route = solve({ map: rows, face }, ['f', 'tl', 'tr', 'j'], 0);
+      if (route && (!best || route.length < best.route.length)) best = { route, ti };
+    });
+    return best;
+  }
   function run(list, path, depth) {
     for (const it of list) {
       if (it.t === 'loop') {
@@ -191,7 +210,7 @@ function simulate(lv, prog, fn, v) {
       } else if (it.t === 'while') {
         let k = 0;
         for (;;) {
-          const done = it.c === 'toys' ? test('toys') : it.c === 'flag' ? P.flags.some(f => f[0] === x && f[1] === y) : blockedAt(x + DIRS[face][0], y + DIRS[face][1]);
+          const done = it.c === 'toys' ? test('toys') : it.c === 'flag' ? P.flags.some(f => f[0] === x && f[1] === y) : it.c === 'paint' ? painted.size >= P.flowers.length : blockedAt(x + DIRS[face][0], y + DIRS[face][1]);
           check(it, path, !done);
           if (done || !it.body.length) break;
           k++;
@@ -213,6 +232,14 @@ function simulate(lv, prog, fn, v) {
         run(target.route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'g' }), depth);
         visitedFlags.add(target.fi);
         steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: true, cond: 'flag', from: [x, y], to: [x, y], face });
+      } else if (it.t === 'c') {
+        const target = pathToToy();
+        if (!target) {
+          steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: false, cond: 'goal', from: [x, y], to: [x, y], face });
+          throw stop('bump', { why: 'toy' });
+        }
+        run(target.route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'c' }), depth);
+        steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: true, cond: 'goal', from: [x, y], to: [x, y], face });
       } else if (it.t === 'p') {
         // pose une balise sur la case courante
         P.flags.push([x, y]);
@@ -234,7 +261,7 @@ function solve(lv, palette, v) {
   const P = parseLevel(lv, v);
   const rows = mapOf(lv, v);
   for (const row of rows) if (/[CG]/.test(row)) return null;   // mécanique non résolue : sol explicite requis
-  const moves = palette.filter(m => !CONTAINERS.includes(m) && m !== 'star' && m !== 'g' && m !== 'p');
+  const moves = palette.filter(m => !CONTAINERS.includes(m) && m !== 'star' && m !== 'g' && m !== 'p' && m !== 'c');
   const full = (1 << P.toys.length) - 1;
   const flAll = (1 << P.flowers.length) - 1;
   const flowerIdx = idx => P.flowers.indexOf(idx);
@@ -274,13 +301,13 @@ function solve(lv, palette, v) {
   return null;
 }
 
-/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) It(f|tr) Wg(f) * g p"
-   N3(...) répéter 3 fois · Wo(...) jusqu'à un obstacle · Wt(...) jusqu'à tous les jouets · Wg(...) jusqu'à une balise
-   Ip/Io/It(a|b) si flaque/obstacle/jouet devant · * bloc magique · g va à la balise · p pose une balise */
+/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) It(f|tr) Wg(f) Wf(f) * g p c"
+   N3(...) répéter 3 fois · Wo(...) jusqu'à un obstacle · Wt(...) jusqu'à tous les jouets · Wg(...) jusqu'à une balise · Wf(...) jusqu'à toutes les fleurs peintes
+   Ip/Io/It(a|b) si flaque/obstacle/jouet devant · * bloc magique · g va à la balise · p pose une balise · c va au jouet le plus proche */
 function parseProg(src, mkId) {
   let n = 0;
   mkId = mkId || (() => 'p' + n++);
-  const toks = (src || '').match(/N\d+\(|W[otg]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjgp]/g) || [];
+  const toks = (src || '').match(/N\d+\(|W[otgf]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjgpc]/g) || [];
   let i = 0;
   function seq(stops) {
     const out = [];
@@ -290,7 +317,7 @@ function parseProg(src, mkId) {
   function item() {
     const t = toks[i++];
     if (/^N\d+\($/.test(t)) { const it = { t: 'loop', n: +t.slice(1, -1), id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
-    if (/^W[otg]\($/.test(t)) { const it = { t: 'while', c: t[1] === 'o' ? 'free' : t[1] === 't' ? 'toys' : 'flag', id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
+    if (/^W[otgf]\($/.test(t)) { const it = { t: 'while', c: t[1] === 'o' ? 'free' : t[1] === 't' ? 'toys' : t[1] === 'g' ? 'flag' : 'paint', id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
     if (/^I[pot]\($/.test(t)) {
       const it = { t: 'if', c: t[1] === 'p' ? 'puddle' : t[1] === 'o' ? 'obst' : 'toy', id: mkId(), body: [], els: [] };
       it.body = seq(['|', ')']);

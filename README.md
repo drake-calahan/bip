@@ -1,4 +1,4 @@
-# Bip le robot — V9 « Un seul objectif »
+# Bip le robot — V10 « L'aube »
 
 Jeu d'initiation à la programmation (puis à quelques idées de physique et de
 mathématiques) pour les 5-7 ans. Tout se joue au doigt, **sans savoir lire** :
@@ -6,37 +6,41 @@ images, visages et voix. Aucun chrono, aucune vie, aucun méchant. Une erreur
 est une information (« Oups ! »), jamais une punition. Fonctionne hors connexion,
 s'installe sur Android comme une application.
 
-La V9 reconstruit le parcours éducatif autour d'**un seul objectif — ramasser tous
-les jouets** — et fait finir l'aventure haut : après le grand pique-nique, les
-chapitres 17 à 19 forment un tournoi de nuit où chaque niveau combine au moins deux
-acquis (plus aucun niveau « filler »). Les défis de Zoé et les machines de Grand-Papa
-restent jouables en bonus archivés (feuille « Pour les adultes »). La réflexion
-chiffrée est dans [docs/REFLEXION.MD](docs/REFLEXION.MD), la conception dans
-[docs/GAME-DESIGN-V9.md](docs/GAME-DESIGN-V9.md).
+La V10 ajoute un **cinquième monde, « L'aube »**, après la nuit : deux nouveaux
+pouvoirs pour Bip (chapitres 20-21) — la **loupe** (Bip va tout seul au jouet le
+plus proche) et le rond **fleur** du bloc Jusqu'à (répéter jusqu'à ce que toutes
+les fleurs soient dorées) — plus des **codes de partage** pour échanger ses jardins
+de « Mon jardin », et des **compteurs** dans la feuille « Pour les adultes ».
+L'accueil garde sa simplicité : Jouer, Mon jardin, l'album. La conception est dans
+[docs/GAME-DESIGN-V10.md](docs/GAME-DESIGN-V10.md), la réflexion V9 dans
+[docs/REFLEXION.MD](docs/REFLEXION.MD) et [docs/GAME-DESIGN-V9.md](docs/GAME-DESIGN-V9.md).
 
 ## Ce qu'on y fait
 
-- **La carte** : un chemin qui serpente dans quatre mondes (le jardin, la mare,
-  les ateliers, la nuit). Bip est posé sur le prochain caillou ; les cailloux
+- **La carte** : un chemin qui serpente dans cinq mondes (le jardin, la mare,
+  les ateliers, la nuit, l'aube). Bip est posé sur le prochain caillou ; les cailloux
   réussis portent leurs étoiles ; les suivants sont pâles, jamais cadenassés.
   Un seul geste (« Jouer ») ouvre le prochain niveau.
-- **L'aventure** : 4 mondes · 19 chapitres · 95 niveaux d'aventure + 7 défis de Zoé
-  (102 niveaux au total). Un seul but partout : ramasse tous les jouets. Flèches, buissons et
+- **L'aventure** : 5 mondes · 21 chapitres · 103 niveaux d'aventure + 7 défis de Zoé
+  (110 niveaux au total). Un seul but partout : ramasse tous les jouets. Flèches, buissons et
   flaques, saut, Répéter, repère relatif, nénuphars qui coulent, Répéter jusqu'à,
   Si… sinon (3 jardins, 1 programme), bloc magique, champignons et barrières,
   caisses qui deviennent des ponts, pollen doré, détective, toboggans de Ballon
   (on programme le décor), puis le jardin de nuit jusqu'au grand pique-nique,
   au rêve de Bip, aux balises de Noctule (le bloc « balise » y envoie Bip tout seul)
-  et aux yeux de Bip (capteur « jouet devant » sur la molette du bloc Si, « jusqu’à la balise » sur la molette du Jusqu’à, et le bloc « pose une balise »), puis un tournoi de nuit en combos (chapitres 17–19) qui finit haut (dernier niveau, par 7).
+  et aux yeux de Bip (capteur « jouet devant » sur la molette du bloc Si, « jusqu’à la balise » sur la molette du Jusqu’à, et le bloc « pose une balise »), puis un tournoi de nuit en combos (chapitres 17–19) qui finit haut (dernier niveau, par 7),
+  et enfin **l'aube** (chapitres 20-21) : la loupe qui cherche le jouet le plus proche,
+  et Jusqu'aux fleurs dorées, avec un dernier niveau à 3 jardins qui finit haut (par 6).
   L'histoire se raconte dans la bulle du niveau, par le personnage qui parle.
 - **Bonus archivé (V9, feuille « Pour les adultes »)** — **les machines de Grand-Papa** : la balance (glisser les paniers), la lumière
   (tourner les miroirs), les roues (changer leur taille), le rendez-vous (décaler
   un ami). On construit, on peut deviner en touchant une image, on lâche la
   machine et on regarde. Douze défis, et un mode « inventer » par machine.
-- **Sur l'accueil** : **Mon jardin** (crée ton niveau et fais-le résoudre par Bip)
-  et **l'album de Zoé** (29 images à gagner).
+- **Sur l'accueil** : **Mon jardin** (crée ton niveau, fais-le résoudre par Bip, et
+  **partage-le avec un petit code** `BIP1…` — deux icônes en bout de barre d'outils)
+  et **l'album de Zoé** (35 images à gagner).
 - **Bonus archivé (V9, feuille « Pour les adultes »)** : **le défi de Zoé** (un
-  niveau par jour de la semaine).
+  niveau par jour de la semaine) et les **compteurs de la partie** (V10).
 
 ## Contenu du dépôt
 
@@ -49,9 +53,11 @@ chiffrée est dans [docs/REFLEXION.MD](docs/REFLEXION.MD), la conception dans
 
 ## Bêta-test sur tablette
 
-Le jeu est publié sur `https://drake-calahan.github.io/bip/`. Le déroulé de séance, la
-grille d'observation et les points à vérifier sont dans [docs/BETA-TEST-V4.md](docs/BETA-TEST-V4.md) ;
-les retours se consignent dans [docs/RETOURS-BETA.md](docs/RETOURS-BETA.md).
+Le jeu est publié sur `https://drake-calahan.github.io/bip/`. Le plan de bêta V10
+(mise à jour mobile, loupe, fleurs, codes de partage, compteurs) est dans
+[docs/BETA-TEST-V10.md](docs/BETA-TEST-V10.md) ; l'historique V4 dans
+[docs/BETA-TEST-V4.md](docs/BETA-TEST-V4.md), les retours dans
+[docs/RETOURS-BETA.md](docs/RETOURS-BETA.md).
 
 ## Lancer en local
 
@@ -80,6 +86,7 @@ branche `main`, dossier racine), Cloudflare Pages, Netlify Drop…
 ```
 node tools/check-levels.js    # chaque niveau a une solution valide (ALL OK)
 node tools/check-curve.js     # V5 : courbe de charge, marge batterie, un seul repère (ALL OK)
+node tools/check-v10.js       # V10 : loupe c, rond fleur Wf, 110 niveaux, codec BIP1 (V10 OK)
 node tools/smoke-engine.js    # mécaniques du moteur
 node tools/check-labs.js      # modèles des machines
 node tools/check-sandbox.js   # Mon jardin

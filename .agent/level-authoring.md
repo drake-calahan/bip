@@ -79,3 +79,11 @@
 - **Jamais de niveau filler** : check-curve alerte DEAD LEVEL (aucune nouveauté bloc/symbole/condition + par+profondeur <= 2 + 1 variante, ch1-5 exemptés) et CHUTE (niveau trivial non-nouveau dans le dernier chapitre) ; FIN TROP BASSE si le dernier niveau < 70 % de la charge max.
 - Queue ch17-19 = tournoi de nuit en combos (pars ch17 [5,7,8], ch18 [1,2,4,4], ch19 [4,4,4,4,2,4,4,7]). Règle balise : jamais de jouet AU-DELÀ du drapeau (la route g le ramasse et dépasse la balise).
 - Défis de Zoé + machines = bonus archivés (feuille adultes). Ne pas réintégrer dans le hub home.
+
+## V10 — L'aube (monde 5, chapitres 20-21, niveaux ajoutés AVANT le bloc daily)
+
+- **Bloc `c` « loupe »** : va au jouet non ramassé le plus proche (BFS sur niveau temporaire comme `g` ; saute, ramasse au passage). Niveau avec `c` = `sol` explicite recommandé. Anti-patterns : pas de `C`/`G` sur le chemin visé ; si aucun jouet atteignable → `bump`/`toy` (« Aucun jouet à portée »). Début showcase par 1, puis combos (`N2(c)`, `Wt(c)`).
+- **`Wf(...)`** : répéter jusqu'à ce que toutes les fleurs soient peintes. La 4e position de la molette du Jusqu'à n'apparaît que si le niveau a des `*` (comme le drapeau). Début showcase par 2 (`Wf(f)`), puis variantes ×3 et combos.
+- Dernier niveau L103 = final à 3 variantes (`Wg(*) c` + fn `Ip(j|f)`, par 6, charge ≥ 70 % du max) : check-curve (FIN TROP BASSE / CHUTE / DEAD LEVEL) veille.
+- Ajout de niveaux : toujours en fin d'aventure, **avant** le bloc `daily:true` (les ids 1-95 et `save.stars` ne bougent pas ; `save.daily` est indexé par jour de semaine). Jamais de niveau qui change de place.
+- Partage Mon jardin : codec `BIP1.` + base64url des 5 lignes jointes par `/` ; validation stricte au chargement (5×6, caractères autorisés `R.#o~sGC*Fbncta-`, exactement un `R`).

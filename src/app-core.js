@@ -41,18 +41,21 @@ const I = {
   flowerIco: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 60V88" stroke="#5FAA62" stroke-width="7" stroke-linecap="round"/><path d="M50 78C40 78 32 72 30 64M50 84C60 84 68 78 70 70" stroke="#5FAA62" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="50" cy="26" r="13" fill="#F2A9C4"/><circle cx="31" cy="40" r="13" fill="#F2A9C4"/><circle cx="69" cy="40" r="13" fill="#F2A9C4"/><circle cx="37" cy="58" r="12" fill="#F7B9D0"/><circle cx="63" cy="58" r="12" fill="#F7B9D0"/><circle cx="50" cy="44" r="10" fill="#FFD36B"/></svg>`,
   sticker: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8L62 36L92 38L69 58L77 88L50 72L23 88L31 58L8 38L38 36Z" fill="#FFC94F" stroke="#E9A923" stroke-width="6" stroke-linejoin="round"/><circle cx="42" cy="50" r="4" fill="#2C3A4C"/><circle cx="58" cy="50" r="4" fill="#2C3A4C"/><path d="M43 60Q50 66 57 60" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/></svg>`,
   heart: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 86C30 70 12 56 12 38C12 26 21 18 31 18C39 18 46 23 50 30C54 23 61 18 69 18C79 18 88 26 88 38C88 56 70 70 50 86Z" fill="currentColor"/></svg>`,
+  share: S('M12 54L88 16L60 86L48 60L12 54Z M48 60L88 16', 8),
+  paste: S('M36 12h28v12H36zM28 22h44a6 6 0 0 1 6 6v56a6 6 0 0 1-6 6H28a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6zM38 46h24M38 60h24M38 74h16', 8),
   bonk: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6L58 38L92 30L64 52L86 80L52 64L40 96L36 62L6 70L30 46L10 18L42 34Z" fill="#FFD36B" stroke="#E9A923" stroke-width="5" stroke-linejoin="round"/></svg>`,
   star: on => `<svg viewBox="0 0 100 100" aria-hidden="true" class="${on ? 'on' : ''}"><use href="#star" width="100" height="100" fill="${on ? 'var(--star)' : 'var(--paper-2)'}" stroke="${on ? '#E9A923' : 'var(--line)'}"/></svg>`,
 };
-const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, g: I.flag, p: I.flagPlant, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
-const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', g: 'balise', p: 'pose', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
-const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d: 'descendre', f: 'avancer', tl: 'tourner à gauche', tr: 'tourner à droite', j: 'sauter', g: 'aller à la balise', p: 'poser une balise', loop: 'répéter', while: 'répéter jusqu’à', if: 'si', star: 'bloc magique' };
+const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, g: I.flag, p: I.flagPlant, c: I.lens, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
+const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', g: 'balise', p: 'pose', c: 'cherche', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
+const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d: 'descendre', f: 'avancer', tl: 'tourner à gauche', tr: 'tourner à droite', j: 'sauter', g: 'aller à la balise', p: 'poser une balise', c: 'aller au jouet le plus proche', loop: 'répéter', while: 'répéter jusqu’à', if: 'si', star: 'bloc magique' };
 const CTR = ['loop', 'while', 'if'];
 const isCtr = t => CTR.includes(t);
 const LOOP_NS = [2, 3, 4, 5, 6, 8];
-const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'p', 'loop', 'while', 'if', 'star'];
+const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'p', 'c', 'loop', 'while', 'if', 'star'];
 /* Note de version affichée dans la feuille « Pour les adultes » (bump avec sw.js VERSION) */
 const VERSION_NOTES = [
+  ['V10 — « L’aube »', 'Nouveau monde à l’aube avec deux pouvoirs : le bloc loupe (Bip va tout seul au jouet le plus proche, ch20) et le rond « fleur » du bloc Jusqu’à (répéter jusqu’à ce que toutes les fleurs soient peintes, ch21, final à trois jardins par 6). Mon jardin gagne des codes de partage pour échanger des jardins, et la feuille adultes affiche les compteurs de la partie.'],
   ['V9 — « Un seul objectif »', 'But unique et cohérent : ramasse tous les jouets (plus de coffre-cible ni de luciole-jouet) ; niveaux filler remplacés par un tournoi de nuit en combos (ch17–19, fin à par 7) ; défis de Zoé et machines archivés dans cette feuille (bonus) ; garde-fous anti-niveau-mort dans check-curve.'],
   ['V8 — « Jusqu’à la balise »', 'Balises : blocs « va à la balise », « pose une balise » et « jusqu’à la balise » ; capteur « jouet devant » ; boucles emboîtées plus lisibles (bloc fautif et parents surlignés, conteneur vide expliqué).'],
   ['V7 — « Les yeux de Bip »', 'Capteur « si un jouet est devant » (3e position du bloc Si) ; plusieurs balises par niveau.'],
@@ -89,8 +92,10 @@ const TOY_NAME = { b: 'le ballon', n: 'le nounours', c: 'le canard', t: 'la toup
 /* ---------- Sauvegarde ---------- */
 const KEY = 'bip-robot-v2';
 function loadSave() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-const save = Object.assign({ stars: {}, voice: true, sound: true, all: false, stickers: [], daily: {}, sandbox: [null, null, null], seen: { w: {}, c: {}, ce: {} } }, loadSave());
+const save = Object.assign({ stars: {}, voice: true, sound: true, all: false, stickers: [], daily: {}, sandbox: [null, null, null], seen: { w: {}, c: {}, ce: {} }, stats: { runs: 0, wins: 0, built: 0 } }, loadSave());
 function persist() { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) { /* stockage indisponible */ } }
+/* Compteurs affichés dans la feuille adultes (V10) */
+function stat(k) { if (!save.stats) save.stats = { runs: 0, wins: 0, built: 0 }; save.stats[k] = (save.stats[k] || 0) + 1; persist(); }
 
 /* ---------- Petits sons doux ---------- */
 let ac = null;
@@ -202,7 +207,7 @@ function playStory(lines, done) {
 
 /* ---------- Album de stickers ---------- */
 const STICKERS = [];
-const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag', 'toy-n'];
+const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag', 'toy-n', 'toy-e', 'star-gold'];
 CHAPTERS.forEach((c, i) => {
   const sym = CH_STICKER[i] || 'toy-b';
   STICKERS.push({ id: 'c' + (i + 1), name: c.name, how: 'Chapitre ' + (i + 1) + ' terminé', icon: () => sym === 'star-gold' ? I.star(true) : symUse(sym) });
@@ -211,6 +216,7 @@ CHAPTERS.forEach((c, i) => {
  ['w2', 'Promenade dorée', 'Monde 2 : trois étoiles partout'],
  ['w3', 'Atelier doré', 'Monde 3 : trois étoiles partout'],
  ['w4', 'Nuit dorée', 'Monde 4 : trois étoiles partout'],
+ ['w5', 'Aube dorée', 'Monde 5 : trois étoiles partout'],
 ].forEach(([id, name, how]) => STICKERS.push({ id, name, how, icon: () => I.star(true) }));
 STICKERS.push(
   { id: 'v1', name: 'Ancien ami', how: 'Joueur de la première heure', icon: () => robotSVG() },
@@ -295,6 +301,7 @@ function show(id) {
   $('#win').hidden = true;
   $('#machines').hidden = true;
   $('#album').hidden = true;
+  $('#sbCode').hidden = true;
   if (typeof L !== 'undefined' && id !== 'lab') { L.token++; L.running = false; }
   if (id === 'home') { renderHome(); hideHand(); stopVoice(); }
 }

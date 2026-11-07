@@ -23,7 +23,7 @@
   --fnc: #FFB570; --fnc-edge: #E8924A; --fnc-soft: #FFF0E0;
   --go: #44BC7D; --go-edge: #2E9A60; --stop: #FF9A66; --stop-edge: #E1784A;
   --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F; --pollen: #FFD36B;
-  --w0: #DDF0D2; --w1: #D3EAF4; --w2: #F6E7D2; --w3: #D9DAEF;
+  --w0: #DDF0D2; --w1: #D3EAF4; --w2: #F6E7D2; --w3: #D9DAEF; --w4: #FCE9CF;
   --display: 'Grandstander', 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
   --text: 'Andika', 'Verdana', system-ui, sans-serif;
   --blk: clamp(50px, calc((100vw - 32px - 40px) / 6), 64px);
@@ -107,6 +107,7 @@ svg { display: block; }
 .world[data-w="1"] { --wbg: var(--w1); --wink: #2F6E8E; }
 .world[data-w="2"] { --wbg: var(--w2); --wink: #8C5A2B; }
 .world[data-w="3"] { --wbg: var(--w3); --wink: #4A4D8F; }
+.world[data-w="4"] { --wbg: var(--w4); --wink: #C77B3A; }
 .world-head { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 6px 16px 4px; font-family: var(--display); font-weight: 800; font-size: 20px; color: var(--wink); }
 .world-head .wa { width: 44px; height: 44px; }
 .world-head .wa svg { width: 100%; height: 100%; }
@@ -149,6 +150,8 @@ svg { display: block; }
 [data-tone="slate"] { --tone: #7286A6; --tone-edge: #566A88; }
 [data-tone="indigo"] { --tone: #7C89C9; --tone-edge: #5F6CAB; }
 [data-tone="night"] { --tone: #6A6DAE; --tone-edge: #515491; }
+[data-tone="dawn"] { --tone: #F2A65A; --tone-edge: #D18A3E; }
+[data-tone="sunrise"] { --tone: #F7C948; --tone-edge: #D9A521; }
 .picnic-end { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 4px; color: var(--wink); font-family: var(--display); font-weight: 800; }
 .picnic-end svg { width: min(220px, 60%); height: auto; }
 
@@ -363,6 +366,11 @@ svg { display: block; }
 .sb-item svg { width: 66%; height: 66%; }
 .sb-item.on { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--go); }
 .sb-item.eraser { color: var(--ink-soft); }
+.sb-item.sb-code { color: #B07A2A; background: #FFF6E3; }
+.code-input { width: 100%; box-sizing: border-box; margin: 10px 0 4px; padding: 12px 14px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.3; font-weight: 600; color: var(--ink); background: var(--paper); border: 2px solid var(--line); border-radius: 14px; letter-spacing: 1px; }
+.code-input:focus { outline: none; border-color: var(--go); }
+.sb-code-note { font-size: 14px; color: var(--ink-soft); margin: 8px 0 0; }
+.stats-line { font-size: 14px; color: var(--ink-soft); background: var(--paper); border-radius: 12px; padding: 10px 12px; }
 .sb-go { background: #DDF4E7; color: var(--go-edge); }
 
 /* ---------- Les machines de Grand-Papa ---------- */
@@ -456,6 +464,9 @@ svg { display: block; }
 .tg[aria-checked="true"] .sw { background: var(--go); }
 .tg[aria-checked="true"] .sw::after { transform: translateX(20px); }
 .tg.danger.arm { background: #FFE1DA; }
+.tg > span:first-child { display: inline-flex; align-items: center; min-width: 0; }
+.tg-ico, #icoDaily, #icoMachines { display: inline-flex; flex: none; width: 24px; height: 24px; margin-right: 9px; }
+.tg-ico svg, #icoDaily svg, #icoMachines svg { width: 100%; height: 100%; }
 .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
 .stk { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px 8px; border-radius: 18px; background: var(--paper); text-align: center; }
 .stk .ico { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; background: #fff; }
@@ -751,6 +762,14 @@ svg { display: block; }
       <g transform="translate(118 62) scale(.34)"><use href="#toy-c" width="100" height="100"/></g>
       <circle cx="40" cy="20" r="5" fill="#FFE08A"/><circle cx="160" cy="16" r="4" fill="#FFE08A"/><circle cx="120" cy="10" r="3" fill="#FFE08A"/>
     </symbol>
+    <symbol id="sun" viewBox="0 0 100 100">
+      <g stroke="#F2A65A" stroke-width="7" stroke-linecap="round">
+        <path d="M50 6v13M50 81v13M6 50h13M81 50h13M19 19l9 9M72 72l9 9M81 19l-9 9M28 72l-9 9"/>
+      </g>
+      <circle cx="50" cy="50" r="23" fill="#FFC94F"/>
+      <circle cx="43" cy="46" r="3" fill="#E9A923"/><circle cx="57" cy="46" r="3" fill="#E9A923"/>
+      <path d="M42 56Q50 62 58 56" stroke="#E9A923" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </symbol>
     <symbol id="bip-body" viewBox="0 0 100 100">
       <rect x="18" y="26" width="64" height="58" rx="21" fill="#77AFEA"/>
       <rect x="28" y="36" width="44" height="30" rx="12" fill="#F5FAFF"/>
@@ -897,8 +916,9 @@ svg { display: block; }
       <li><b>L'état des machines</b> : les champignons ouvrent les barrières, les caisses deviennent des ponts. Une action change le monde pour la suite du programme.</li>
       <li><b>Programmer le lieu</b> : aux toboggans de Ballon, on pose des flèches au sol au lieu de donner des ordres au robot.</li>
       <li><b>Des capteurs et des balises</b> : le bloc Si peut voir un jouet devant (3e position de sa molette) ; le bloc « balise » envoie Bip au drapeau, et Bip peut en poser un lui-même.</li>
+      <li><b>Loupe et fleurs</b> (V10, monde de l'aube) : le bloc « loupe » envoie Bip tout seul au jouet le plus proche, et le rond « fleur » du bloc Jusqu'à répète jusqu'à ce que toutes les fleurs soient peintes.</li>
       <li><b>Les machines de Grand-Papa</b> : balance (poids et distance), lumière (miroirs), roues dentées (sens et vitesse), rendez-vous (rythmes et multiples). L'enfant construit, peut prédire en touchant une image, puis lâche la machine et observe (bonus archivé en V9, jouable depuis cette feuille).</li>
-      <li><b>Créer</b> : Mon jardin permet d'inventer ses propres niveaux et de les faire résoudre par Bip.</li>
+      <li><b>Créer et partager</b> : Mon jardin permet d'inventer ses propres niveaux, de les faire résoudre par Bip, et de les échanger avec un ami grâce à un petit code (boutons en bas de l'éditeur, V10).</li>
     </ul>
     <h3>Le parcours</h3>
     <ul>
@@ -906,6 +926,7 @@ svg { display: block; }
       <li><b>La grande promenade</b> (5 à 9) : repère relatif, nénuphars, Jusqu'à, Si… sinon, bloc magique.</li>
       <li><b>Les ateliers de Grand-Papa</b> (10 à 14) : champignons, caisses, pollen, toboggans, détective.</li>
       <li><b>Le jardin de nuit</b> (15 à 19) : tout ce qui précède sous les étoiles, jusqu'au grand pique-nique ; puis un tournoi de nuit (17 à 19) où chaque niveau combine au moins deux acquis, et qui finit haut (dernier niveau, par 7).</li>
+      <li><b>L'aube</b> (20 à 21, V10) : le nez de Bip (la loupe va au jouet le plus proche) puis Jusqu'aux fleurs dorées, qui finit haut (dernier niveau, trois jardins, par 6).</li>
     </ul>
     <h3>Comment l'accompagner</h3>
     <ul>
@@ -926,6 +947,8 @@ svg { display: block; }
     </ul>
     <h3>Installer sur Android</h3>
     <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application ». Bip fonctionne ensuite sans connexion, en plein écran. La progression reste sur l'appareil.</p>
+    <h3>En chiffres</h3>
+    <p class="stats-line" id="statsLine"></p>
     <h3>Version</h3>
     <div id="versionNotes"></div>
     <h3>Bonus archivés (V9)</h3>
@@ -940,6 +963,18 @@ svg { display: block; }
       <button class="tg" id="tgSound" role="switch"><span>Petits sons</span><span class="sw"></span></button>
       <button class="tg" id="tgAll" role="switch"><span>Ouvrir tous les niveaux</span><span class="sw"></span></button>
       <button class="tg danger" id="btnReset"><span id="resetLabel">Effacer la progression</span></button>
+    </div>
+  </div>
+</div>
+<div class="overlay sheet" id="sbCode" hidden>
+  <div class="sheet-card" role="dialog" aria-labelledby="sbCodeTitle">
+    <button class="ibtn close" id="btnSbCodeClose" aria-label="Fermer"></button>
+    <h2 id="sbCodeTitle">Le code de mon jardin</h2>
+    <p class="sb-code-note">Copie ce code et envoie-le à un ami : il pourra recréer ton jardin avec « Charger ce code ». Ou colle ici le code d’un ami.</p>
+    <input id="sbCodeInput" class="code-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Code du jardin">
+    <div class="toggles">
+      <button class="tg" id="btnSbCopy"><span><span id="icoSbCopy" class="tg-ico"></span>Copier mon code</span></button>
+      <button class="tg" id="btnSbLoad"><span><span id="icoSbLoad" class="tg-ico"></span>Charger ce code</span></button>
     </div>
   </div>
 </div>

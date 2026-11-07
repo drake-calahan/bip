@@ -3,7 +3,7 @@ const unlocked = i => save.all || i === 0 || (save.stars[LEVELS[i - 1].id] || 0)
 const nextIndex = () => { const i = LEVELS.findIndex(l => l.ch >= 0 && !(save.stars[l.id] > 0)); return i < 0 ? LAST_STORY : i; };
 const chapterDone = ci => LEVELS.filter(l => l.ch === ci).every(l => (save.stars[l.id] || 0) > 0);
 const worldOf = ci => CHAPTERS[ci].w;
-const WORLD_WHO_MAP = ['zoe', 'lulu', 'papi', 'noctule'];
+const WORLD_WHO_MAP = ['zoe', 'lulu', 'papi', 'noctule', 'ballon'];
 const NODE_STEP = 82, NODE_PAD = 46;
 const nodeX = g => 50 + 33 * Math.sin(g * 0.95);   // le sentier serpente selon l'index global
 
@@ -16,7 +16,8 @@ function worldDeco(w, h) {
     if (w === 0) out += `<path d="M${x} ${y}q2-8 4-14M${x + 4} ${y}q0-9 3-12" stroke="#9CC78D" stroke-width="2" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
     else if (w === 1) out += `<circle cx="${x}" cy="${y}" r="${1.5 + (k % 3)}" fill="#fff" opacity=".7"/>`;
     else if (w === 2) out += `<circle cx="${x}" cy="${y}" r="3" fill="none" stroke="#D9A968" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
-    else out += `<circle cx="${x}" cy="${y}" r="${1 + (k % 2)}" fill="#FFE9A8" opacity=".9"/>`;
+    else if (w === 3) out += `<circle cx="${x}" cy="${y}" r="${1 + (k % 2)}" fill="#FFE9A8" opacity=".9"/>`;
+    else out += `<g stroke="#F2A65A" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"><path d="M${x} ${y}v-7M${x} ${y}v7M${x - 5} ${y}h10M${x + 5} ${y}h-10" transform="rotate(${k * 47} ${x} ${y})"/></g>`;
   }
   return `<svg class="deco" viewBox="0 0 100 ${h}" preserveAspectRatio="none">${out}</svg>`;
 }
@@ -64,8 +65,9 @@ function renderHome() {
         <div class="nodes" style="--h:${H}px"><svg class="path" viewBox="0 0 1000 ${H}" preserveAspectRatio="none"><path d="${d}" vector-effect="non-scaling-stroke"/><path class="dash" d="${d}" vector-effect="non-scaling-stroke"/></svg>${nodes}</div>
       </div>`;
     });
-    const picnic = w === WORLDS.length - 1 ? `<div class="picnic-end">${symUse('picnic')}<span>Le grand pique-nique</span></div>` : '';
-    h += `<section class="world" data-w="${w}">${worldDeco(w, worldH)}<div class="world-head"><span class="wa">${CHARS[WORLD_WHO_MAP[w]].art()}</span><span>${W.name}</span></div>${inner}${picnic}</section>`;
+    const endMark = w === 3 ? `<div class="picnic-end">${symUse('picnic')}<span>Le grand pique-nique</span></div>`
+      : w === WORLDS.length - 1 ? `<div class="picnic-end">${symUse('sun')}<span>L’aube</span></div>` : '';
+    h += `<section class="world" data-w="${w}">${worldDeco(w, worldH)}<div class="world-head"><span class="wa">${CHARS[WORLD_WHO_MAP[w]].art()}</span><span>${W.name}</span></div>${inner}${endMark}</section>`;
   });
   $('#trail').innerHTML = h;
   $$('.node:not(.far)', $('#trail')).forEach(b => b.addEventListener('click', () => { audio(); openLevel(+b.dataset.i); }));
@@ -100,5 +102,14 @@ function syncToggles() {
   $('#tgAll').setAttribute('aria-checked', String(!!save.all));
 }
 let resetArm = 0;
-function openSheet() { syncToggles(); $('#sheet').hidden = false; hideHand(); stopVoice(); }
+function openSheet() {
+  syncToggles();
+  const done = Object.values(save.stars).filter(s => s > 0).length;
+  const stars = Object.values(save.stars).reduce((a, b) => a + b, 0);
+  const daily = Object.values(save.daily || {}).filter(Boolean).length;
+  const st = save.stats || { runs: 0, wins: 0, built: 0 };
+  const sl = $('#statsLine');
+  if (sl) sl.textContent = `${done} niveau${done > 1 ? 'x' : ''} terminé${done > 1 ? 's' : ''} · ${stars} étoile${stars > 1 ? 's' : ''} · ${daily} défi${daily > 1 ? 's' : ''} de Zoé · ${st.runs} programme${st.runs > 1 ? 's' : ''} lancé${st.runs > 1 ? 's' : ''} · ${st.wins} victoire${st.wins > 1 ? 's' : ''} · ${st.built} jardin${st.built > 1 ? 's' : ''} créé${st.built > 1 ? 's' : ''}`;
+  $('#sheet').hidden = false; hideHand(); stopVoice();
+}
 function closeSheet() { $('#sheet').hidden = true; if (!$('#home').hidden) renderHome(); }

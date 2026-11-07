@@ -67,8 +67,8 @@ for (const lv of LEVELS) {
   const pal = new Set([...(lv.pal || []), 'star']);
   const src = [lv.sol || '', lv.fn || ''].join(' ');
   const structural = new Set(['(', ')', '|']);
-  const used = (src.match(/N\d+\(|W[otg]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjgp]/g) || []);
-  const bad = used.filter(t => !structural.has(t) && !/^(N\d+\(|W[otg]\(|I[pot]\()$/.test(t) && !pal.has(t === '*' ? 'star' : t));
+  const used = (src.match(/N\d+\(|W[otgf]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjgpc]/g) || []);
+  const bad = used.filter(t => !structural.has(t) && !/^(N\d+\(|W[otgf]\(|I[pot]\()$/.test(t) && !pal.has(t === '*' ? 'star' : t));
   if (bad.length) { line += ` PAL-MISSING:${bad.join('')}`; ok = false; }
   if (par != null && par > prevPar + 4) line += ' (SPIKE?)';
   if (par != null) prevPar = par;

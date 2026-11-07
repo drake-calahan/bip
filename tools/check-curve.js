@@ -57,7 +57,7 @@ function featOf(lv) {
   for (const r of (lv.variants || [lv.map || []]).flat())
     for (const m of r.match(MAPSYM) || []) if (!seenSym.has(m)) { seenSym.add(m); f.add('sym:' + m); }
   const src = ((lv.sol || '') + ' ' + (lv.fn || ''));
-  for (const m of src.match(/W[otg]\(|I[pot]\(/g) || []) if (!seenCond.has(m)) { seenCond.add(m); f.add('cond:' + m); }
+  for (const m of src.match(/W[otgf]\(|I[pot]\(/g) || []) if (!seenCond.has(m)) { seenCond.add(m); f.add('cond:' + m); }
   return f;
 }
 const rows = LEVELS.map(lv => {

@@ -1,4 +1,4 @@
-# QA checklist — Bip V9 (manual browser pass)
+# QA checklist — Bip V10 (manual browser pass)
 
 Run after every build (`python tools/build.py`), serve with `python -m http.server 8103 --bind 127.0.0.1`.
 `node tools/check-ui.js` covers the automated part; this list is what a human eye adds.
@@ -6,6 +6,7 @@ Run after every build (`python tools/build.py`), serve with `python -m http.serv
 ## La carte
 - [ ] Hero: Bip, « Jouer » (then « Continuer » + current chapter name), one flower per finished chapter.
 - [ ] Two picture buttons (Mon jardin, l'album) open their screens — each speaks its name; défi de Zoé and machines live in the adults sheet (« Bonus archivés (V9) »).
+- [ ] V10: five worlds; the last one is « L'aube » (peach, sun doodles, Ballon), 21 chapter banners, ends with the smiling sun « L'aube »; 2 new chapter stickers + 1 world sticker in the album (35 total).
 - [ ] Path scrolls; worlds change colour; Bip sits on the next pebble and breathes; done pebbles show stars; future pebbles are pale dots, no padlocks.
 - [ ] Opening the map scrolls to Bip only when Bip is not already visible.
 
@@ -14,7 +15,9 @@ Run after every build (`python tools/build.py`), serve with `python -m http.serv
 - [ ] One story card at the start of a world only; tap anywhere closes it.
 - [ ] Board + bubble centred; palette blocks ≥ 50 px; green button 72 px; landscape puts the program on the right.
 - [ ] Pond / paint / crates / switches / night / toboggans behave as in V2 (sink, trail, plank, gate, glow, roll).
-- [ ] Chapter end: the mascot appears on the Bravo card with its line; no extra modal. Finale: picnic card.
+- [ ] V10 dawn: ch20 loupe block (lens icon, « cherche ») goes to the nearest toy by itself, jumps puddles, says « Aucun jouet à portée » when stuck; ch21 while-pill shows the flower only on flowery levels; L103 final wins over 3 gardens and the last win card says « L'aube ».
+- [ ] Chapter end: the mascot appears on the Bravo card with its line; no extra modal. Finale: dawn card.
+- [ ] V10 Mon jardin: the two code buttons (plane / clipboard) at the end of the tray open the code sheet; the current garden's code shows (BIP1.…), copy works, a pasted valid code loads (and persists after reload), an invalid code is refused with a spoken message and changes nothing.
 
 ## Les machines
 - [ ] Open from « Pour les adultes » → « Les machines de Grand-Papa »: hub shows four real machine drawings, three dots each, a pencil for free play.
@@ -27,6 +30,6 @@ Run after every build (`python tools/build.py`), serve with `python -m http.serv
 
 ## Meta
 - [ ] Sticker toast; album shows real pictures, missing ones faded; machine stickers after 3 wins in a family.
-- [ ] Adults sheet: version notes (V9 first), « Bonus archivés (V9) » buttons open daily + machines, toggles work, reset arms on double tap.
+- [ ] Adults sheet: version notes (V10 first), « En chiffres » counters line (levels, stars, dailies, runs, wins, gardens), « Bonus archivés (V9) » buttons open daily + machines, toggles work, reset arms on double tap.
 - [ ] Progress persists after reload (key `bip-robot-v2`); V2/V3 saves load.
 - [ ] 360×640 portrait and 1024×600 landscape: no overflow, targets ≥ 44 px; prefers-reduced-motion still playable.

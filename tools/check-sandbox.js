@@ -20,10 +20,11 @@ const context = vm.createContext({
   symUse: kind => `<svg data-kind="${kind}"></svg>`,
   toyUse: kind => `<svg data-toy="${kind}"></svg>`,
   TOY_NAME: { b: 'ballon', n: 'nounours', c: 'canard', t: 'toupie', a: 'cube', e: 'luciole' },
-  I: { eraser: '' },
+  I: { eraser: '', share: '', paste: '' },
   SFX: { tap() {}, del() {}, nope() {} },
   FULL_PAL: ['r', 'l', 'u', 'd'],
   persist() {},
+  stat() {},
   award() {},
   speak() {},
   openLevelObj: (level, options) => { opened = { level, options }; }

@@ -39,7 +39,7 @@
   --fnc: #FFB570; --fnc-edge: #E8924A; --fnc-soft: #FFF0E0;
   --go: #44BC7D; --go-edge: #2E9A60; --stop: #FF9A66; --stop-edge: #E1784A;
   --warn: #FF7A61; --water: #A6D7F1; --leaf: #69BD7B; --star: #FFC94F; --pollen: #FFD36B;
-  --w0: #DDF0D2; --w1: #D3EAF4; --w2: #F6E7D2; --w3: #D9DAEF;
+  --w0: #DDF0D2; --w1: #D3EAF4; --w2: #F6E7D2; --w3: #D9DAEF; --w4: #FCE9CF;
   --display: 'Grandstander', 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
   --text: 'Andika', 'Verdana', system-ui, sans-serif;
   --blk: clamp(50px, calc((100vw - 32px - 40px) / 6), 64px);
@@ -123,6 +123,7 @@ svg { display: block; }
 .world[data-w="1"] { --wbg: var(--w1); --wink: #2F6E8E; }
 .world[data-w="2"] { --wbg: var(--w2); --wink: #8C5A2B; }
 .world[data-w="3"] { --wbg: var(--w3); --wink: #4A4D8F; }
+.world[data-w="4"] { --wbg: var(--w4); --wink: #C77B3A; }
 .world-head { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 6px 16px 4px; font-family: var(--display); font-weight: 800; font-size: 20px; color: var(--wink); }
 .world-head .wa { width: 44px; height: 44px; }
 .world-head .wa svg { width: 100%; height: 100%; }
@@ -165,6 +166,8 @@ svg { display: block; }
 [data-tone="slate"] { --tone: #7286A6; --tone-edge: #566A88; }
 [data-tone="indigo"] { --tone: #7C89C9; --tone-edge: #5F6CAB; }
 [data-tone="night"] { --tone: #6A6DAE; --tone-edge: #515491; }
+[data-tone="dawn"] { --tone: #F2A65A; --tone-edge: #D18A3E; }
+[data-tone="sunrise"] { --tone: #F7C948; --tone-edge: #D9A521; }
 .picnic-end { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 4px; color: var(--wink); font-family: var(--display); font-weight: 800; }
 .picnic-end svg { width: min(220px, 60%); height: auto; }
 
@@ -379,6 +382,11 @@ svg { display: block; }
 .sb-item svg { width: 66%; height: 66%; }
 .sb-item.on { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--go); }
 .sb-item.eraser { color: var(--ink-soft); }
+.sb-item.sb-code { color: #B07A2A; background: #FFF6E3; }
+.code-input { width: 100%; box-sizing: border-box; margin: 10px 0 4px; padding: 12px 14px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.3; font-weight: 600; color: var(--ink); background: var(--paper); border: 2px solid var(--line); border-radius: 14px; letter-spacing: 1px; }
+.code-input:focus { outline: none; border-color: var(--go); }
+.sb-code-note { font-size: 14px; color: var(--ink-soft); margin: 8px 0 0; }
+.stats-line { font-size: 14px; color: var(--ink-soft); background: var(--paper); border-radius: 12px; padding: 10px 12px; }
 .sb-go { background: #DDF4E7; color: var(--go-edge); }
 
 /* ---------- Les machines de Grand-Papa ---------- */
@@ -472,6 +480,9 @@ svg { display: block; }
 .tg[aria-checked="true"] .sw { background: var(--go); }
 .tg[aria-checked="true"] .sw::after { transform: translateX(20px); }
 .tg.danger.arm { background: #FFE1DA; }
+.tg > span:first-child { display: inline-flex; align-items: center; min-width: 0; }
+.tg-ico, #icoDaily, #icoMachines { display: inline-flex; flex: none; width: 24px; height: 24px; margin-right: 9px; }
+.tg-ico svg, #icoDaily svg, #icoMachines svg { width: 100%; height: 100%; }
 .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
 .stk { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px 8px; border-radius: 18px; background: var(--paper); text-align: center; }
 .stk .ico { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; background: #fff; }
@@ -767,6 +778,14 @@ svg { display: block; }
       <g transform="translate(118 62) scale(.34)"><use href="#toy-c" width="100" height="100"/></g>
       <circle cx="40" cy="20" r="5" fill="#FFE08A"/><circle cx="160" cy="16" r="4" fill="#FFE08A"/><circle cx="120" cy="10" r="3" fill="#FFE08A"/>
     </symbol>
+    <symbol id="sun" viewBox="0 0 100 100">
+      <g stroke="#F2A65A" stroke-width="7" stroke-linecap="round">
+        <path d="M50 6v13M50 81v13M6 50h13M81 50h13M19 19l9 9M72 72l9 9M81 19l-9 9M28 72l-9 9"/>
+      </g>
+      <circle cx="50" cy="50" r="23" fill="#FFC94F"/>
+      <circle cx="43" cy="46" r="3" fill="#E9A923"/><circle cx="57" cy="46" r="3" fill="#E9A923"/>
+      <path d="M42 56Q50 62 58 56" stroke="#E9A923" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </symbol>
     <symbol id="bip-body" viewBox="0 0 100 100">
       <rect x="18" y="26" width="64" height="58" rx="21" fill="#77AFEA"/>
       <rect x="28" y="36" width="44" height="30" rx="12" fill="#F5FAFF"/>
@@ -913,8 +932,9 @@ svg { display: block; }
       <li><b>L'état des machines</b> : les champignons ouvrent les barrières, les caisses deviennent des ponts. Une action change le monde pour la suite du programme.</li>
       <li><b>Programmer le lieu</b> : aux toboggans de Ballon, on pose des flèches au sol au lieu de donner des ordres au robot.</li>
       <li><b>Des capteurs et des balises</b> : le bloc Si peut voir un jouet devant (3e position de sa molette) ; le bloc « balise » envoie Bip au drapeau, et Bip peut en poser un lui-même.</li>
+      <li><b>Loupe et fleurs</b> (V10, monde de l'aube) : le bloc « loupe » envoie Bip tout seul au jouet le plus proche, et le rond « fleur » du bloc Jusqu'à répète jusqu'à ce que toutes les fleurs soient peintes.</li>
       <li><b>Les machines de Grand-Papa</b> : balance (poids et distance), lumière (miroirs), roues dentées (sens et vitesse), rendez-vous (rythmes et multiples). L'enfant construit, peut prédire en touchant une image, puis lâche la machine et observe (bonus archivé en V9, jouable depuis cette feuille).</li>
-      <li><b>Créer</b> : Mon jardin permet d'inventer ses propres niveaux et de les faire résoudre par Bip.</li>
+      <li><b>Créer et partager</b> : Mon jardin permet d'inventer ses propres niveaux, de les faire résoudre par Bip, et de les échanger avec un ami grâce à un petit code (boutons en bas de l'éditeur, V10).</li>
     </ul>
     <h3>Le parcours</h3>
     <ul>
@@ -922,6 +942,7 @@ svg { display: block; }
       <li><b>La grande promenade</b> (5 à 9) : repère relatif, nénuphars, Jusqu'à, Si… sinon, bloc magique.</li>
       <li><b>Les ateliers de Grand-Papa</b> (10 à 14) : champignons, caisses, pollen, toboggans, détective.</li>
       <li><b>Le jardin de nuit</b> (15 à 19) : tout ce qui précède sous les étoiles, jusqu'au grand pique-nique ; puis un tournoi de nuit (17 à 19) où chaque niveau combine au moins deux acquis, et qui finit haut (dernier niveau, par 7).</li>
+      <li><b>L'aube</b> (20 à 21, V10) : le nez de Bip (la loupe va au jouet le plus proche) puis Jusqu'aux fleurs dorées, qui finit haut (dernier niveau, trois jardins, par 6).</li>
     </ul>
     <h3>Comment l'accompagner</h3>
     <ul>
@@ -942,6 +963,8 @@ svg { display: block; }
     </ul>
     <h3>Installer sur Android</h3>
     <p>Ouvrez la version installable dans Chrome, puis menu ⋮ et « Installer l'application ». Bip fonctionne ensuite sans connexion, en plein écran. La progression reste sur l'appareil.</p>
+    <h3>En chiffres</h3>
+    <p class="stats-line" id="statsLine"></p>
     <h3>Version</h3>
     <div id="versionNotes"></div>
     <h3>Bonus archivés (V9)</h3>
@@ -959,12 +982,24 @@ svg { display: block; }
     </div>
   </div>
 </div>
+<div class="overlay sheet" id="sbCode" hidden>
+  <div class="sheet-card" role="dialog" aria-labelledby="sbCodeTitle">
+    <button class="ibtn close" id="btnSbCodeClose" aria-label="Fermer"></button>
+    <h2 id="sbCodeTitle">Le code de mon jardin</h2>
+    <p class="sb-code-note">Copie ce code et envoie-le à un ami : il pourra recréer ton jardin avec « Charger ce code ». Ou colle ici le code d’un ami.</p>
+    <input id="sbCodeInput" class="code-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Code du jardin">
+    <div class="toggles">
+      <button class="tg" id="btnSbCopy"><span><span id="icoSbCopy" class="tg-ico"></span>Copier mon code</span></button>
+      <button class="tg" id="btnSbLoad"><span><span id="icoSbLoad" class="tg-ico"></span>Charger ce code</span></button>
+    </div>
+  </div>
+</div>
 <canvas id="confetti" hidden></canvas>
 
 <script>
 /* ===== Moteur pur : simulation d'un programme sur un niveau =====
-   Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), g (va à la balise), p (pose une balise), star (bloc magique)
-   Conteneurs : loop {n, body} · while {c:'free'|'toys'|'flag', body} · if {c:'puddle'|'obst'|'toy', body, els}
+   Blocs simples : r l u d (flèches absolues), f (avancer), tl tr (tourner), j (sauter), g (va à la balise), p (pose une balise), c (va au jouet le plus proche), star (bloc magique)
+   Conteneurs : loop {n, body} · while {c:'free'|'toys'|'flag'|'paint', body} · if {c:'puddle'|'obst'|'toy', body, els}
    Terrain : . herbe · # buisson · o rocher · ~ flaque
              - nénuphar (s'enfonce quand Bip le quitte) · s champignon (ouvre les barrières)
              G barrière (bloque tant que fermée) · * fleur (à peindre en marchant dessus) · F balise (waypoint)
@@ -1148,6 +1183,25 @@ function simulate(lv, prog, fn, v) {
     });
     return best;
   }
+  /* Chemin vers le jouet non ramassé le plus proche (V10, bloc 'c' "loupe") : comme pathToFlag,
+     on résout sur un niveau temporaire où SEUL ce jouet existe (les autres jouets, balises,
+     caisses, barrières et fleurs sont vidés ; les vrais jouets seront ramassés au passage). */
+  function pathToToy() {
+    let best = null;
+    P.toys.forEach((t, ti) => {
+      if (got.has(ti)) return;
+      const rows = mapOf(lv, v).map((r, ri) => r.split('').map((ch, ci) => {
+        if (ch === 'R') return '.';
+        if (TOY_CHARS.includes(ch)) return (ri === t.y && ci === t.x) ? 'b' : '.';
+        if (ch === 'C' || ch === 'G' || ch === 'F' || ch === '*') return '.';
+        return ch;
+      }).join(''));
+      rows[y] = rows[y].slice(0, x) + 'R' + rows[y].slice(x + 1);
+      const route = solve({ map: rows, face }, ['f', 'tl', 'tr', 'j'], 0);
+      if (route && (!best || route.length < best.route.length)) best = { route, ti };
+    });
+    return best;
+  }
   function run(list, path, depth) {
     for (const it of list) {
       if (it.t === 'loop') {
@@ -1155,7 +1209,7 @@ function simulate(lv, prog, fn, v) {
       } else if (it.t === 'while') {
         let k = 0;
         for (;;) {
-          const done = it.c === 'toys' ? test('toys') : it.c === 'flag' ? P.flags.some(f => f[0] === x && f[1] === y) : blockedAt(x + DIRS[face][0], y + DIRS[face][1]);
+          const done = it.c === 'toys' ? test('toys') : it.c === 'flag' ? P.flags.some(f => f[0] === x && f[1] === y) : it.c === 'paint' ? painted.size >= P.flowers.length : blockedAt(x + DIRS[face][0], y + DIRS[face][1]);
           check(it, path, !done);
           if (done || !it.body.length) break;
           k++;
@@ -1177,6 +1231,14 @@ function simulate(lv, prog, fn, v) {
         run(target.route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'g' }), depth);
         visitedFlags.add(target.fi);
         steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: true, cond: 'flag', from: [x, y], to: [x, y], face });
+      } else if (it.t === 'c') {
+        const target = pathToToy();
+        if (!target) {
+          steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: false, cond: 'goal', from: [x, y], to: [x, y], face });
+          throw stop('bump', { why: 'toy' });
+        }
+        run(target.route.map((t, k) => ({ t, id: it.id + '.' + k })), path.concat({ id: it.id, call: 'c' }), depth);
+        steps.push({ ins: { id: it.id, t: it.t, path }, kind: 'check', ok: true, cond: 'goal', from: [x, y], to: [x, y], face });
       } else if (it.t === 'p') {
         // pose une balise sur la case courante
         P.flags.push([x, y]);
@@ -1198,7 +1260,7 @@ function solve(lv, palette, v) {
   const P = parseLevel(lv, v);
   const rows = mapOf(lv, v);
   for (const row of rows) if (/[CG]/.test(row)) return null;   // mécanique non résolue : sol explicite requis
-  const moves = palette.filter(m => !CONTAINERS.includes(m) && m !== 'star' && m !== 'g' && m !== 'p');
+  const moves = palette.filter(m => !CONTAINERS.includes(m) && m !== 'star' && m !== 'g' && m !== 'p' && m !== 'c');
   const full = (1 << P.toys.length) - 1;
   const flAll = (1 << P.flowers.length) - 1;
   const flowerIdx = idx => P.flowers.indexOf(idx);
@@ -1238,13 +1300,13 @@ function solve(lv, palette, v) {
   return null;
 }
 
-/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) It(f|tr) Wg(f) * g p"
-   N3(...) répéter 3 fois · Wo(...) jusqu'à un obstacle · Wt(...) jusqu'à tous les jouets · Wg(...) jusqu'à une balise
-   Ip/Io/It(a|b) si flaque/obstacle/jouet devant · * bloc magique · g va à la balise · p pose une balise */
+/* Petit langage pour écrire des programmes : "N3(f tr) Wo(Ip(j|f)) It(f|tr) Wg(f) Wf(f) * g p c"
+   N3(...) répéter 3 fois · Wo(...) jusqu'à un obstacle · Wt(...) jusqu'à tous les jouets · Wg(...) jusqu'à une balise · Wf(...) jusqu'à toutes les fleurs peintes
+   Ip/Io/It(a|b) si flaque/obstacle/jouet devant · * bloc magique · g va à la balise · p pose une balise · c va au jouet le plus proche */
 function parseProg(src, mkId) {
   let n = 0;
   mkId = mkId || (() => 'p' + n++);
-  const toks = (src || '').match(/N\d+\(|W[otg]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjgp]/g) || [];
+  const toks = (src || '').match(/N\d+\(|W[otgf]\(|I[pot]\(|\(|\)|\||tl|tr|\*|[rludfjgpc]/g) || [];
   let i = 0;
   function seq(stops) {
     const out = [];
@@ -1254,7 +1316,7 @@ function parseProg(src, mkId) {
   function item() {
     const t = toks[i++];
     if (/^N\d+\($/.test(t)) { const it = { t: 'loop', n: +t.slice(1, -1), id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
-    if (/^W[otg]\($/.test(t)) { const it = { t: 'while', c: t[1] === 'o' ? 'free' : t[1] === 't' ? 'toys' : 'flag', id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
+    if (/^W[otgf]\($/.test(t)) { const it = { t: 'while', c: t[1] === 'o' ? 'free' : t[1] === 't' ? 'toys' : t[1] === 'g' ? 'flag' : 'paint', id: mkId(), body: [] }; it.body = seq([')']); i++; return it; }
     if (/^I[pot]\($/.test(t)) {
       const it = { t: 'if', c: t[1] === 'p' ? 'puddle' : t[1] === 'o' ? 'obst' : 'toy', id: mkId(), body: [], els: [] };
       it.body = seq(['|', ')']);
@@ -1358,6 +1420,8 @@ const WORLDS = [
     intro: ['Grand-Papa Engrenage a construit des ateliers plein de machines.', '« Pilou a tout mélangé en rêvant… aide-nous à remettre de l\'ordre ! »'] },
   { name: 'Le jardin de nuit',
     intro: ['Noctule la luciole éclaire le jardin endormi.', '« Les lucioles veulent jouer sous les étoiles ! »'] },
+  { name: 'L’aube',
+    intro: ['Le soleil se lève sur le jardin : c’est le lendemain de la fête !', '« Encore une belle journée pour jouer, » dit Ballon.'] },
 ];
 
 const CHAPTERS = [
@@ -1422,6 +1486,13 @@ const CHAPTERS = [
   { w: 3, who: 'zoe', tone: 'night', name: 'Les yeux de Bip', hint: 'Bip voit si un jouet est devant lui.', night: true, epilogue: true,
     intro: 'Nouveau capteur ! La molette du bloc Si a une troisième position : Bip voit si un jouet est devant lui.',
     end: [{ who: 'zoe', line: 'Bip a des yeux maintenant : plus besoin de compter les cases !' }] },
+  // Monde 5 — L'aube
+  { w: 4, who: 'ballon', tone: 'dawn', name: 'Le nez de Bip', hint: 'La loupe envoie Bip au jouet le plus proche.',
+    intro: 'Ce matin, Ballon a réveillé Bip : « Essaie le nouveau bloc loupe ! Il va tout seul au jouet le plus proche. »',
+    end: [{ who: 'ballon', line: 'Bip sent où sont les jouets : plus besoin de compter les cases !' }] },
+  { w: 4, who: 'zoe', tone: 'sunrise', name: 'Jusqu’aux fleurs dorées', hint: 'Répète jusqu’à ce que toutes les fleurs soient peintes.', final: true,
+    intro: 'Dernier réveil : le bloc Jusqu’à a un nouveau rond, la fleur. Bip répète jusqu’à ce que tout le jardin soit doré !',
+    end: [{ who: 'zoe', line: 'L’aube se lève sur un jardin parfait. Tu as tout fini, bravo !' }] },
 ];
 
 const LEVELS = [
@@ -1728,6 +1799,41 @@ const LEVELS = [
     text: 'Jusqu’au drapeau : jouet devant ? avance. Sinon, fonce à la balise !' },
   { ch: 18, face: 'r', pal: [...REL, 'p', 'g', 'if', 'loop'], sol: 'p f g N2(It(f|tr))', map: ['R.b.F..', '..#...', '.n...F'],
     text: 'LE TOURNOI FINAL ! Pose une balise, fonce au drapeau, reviens en ramassant tout. Champion !' },
+
+  /* ============ Monde 5 — L'aube (V10) ============ */
+  // Chapitre 20 — Le nez de Bip (bloc c : va au jouet le plus proche)
+  { ch: 19, face: 'r', pal: [...REL, 'c'], sol: 'c', map: ['R..b..'],
+    text: 'Nouveau bloc : la loupe ! Bip va tout seul au jouet le plus proche. Essaie !' },
+  { ch: 19, face: 'r', pal: [...REL, 'c', 'loop'], sol: 'N2(c)', map: ['R.b..n'],
+    text: 'Deux jouets ! Mets la loupe dans un bloc Répète.' },
+  { ch: 19, face: 'r', pal: [...REL, 'c'], sol: 'c',
+    variants: [
+      ['R.#b..', '......'],
+      ['R..#b.', '......'],
+      ['R.#.b.', '......'],
+    ],
+    text: 'Un buisson sur le chemin : la loupe trouve le détour toute seule. Trois jardins, un seul bloc !' },
+  { ch: 19, face: 'r', pal: [...REL, 'j', 'while', 'c'], sol: 'Wt(c)', map: ['R~b.n'],
+    text: 'Jusqu’à tous les jouets, avec la loupe dedans : Bip ramasse tout, tout seul !' },
+  // Chapitre 21 — Jusqu’aux fleurs dorées (Wf : jusqu’à toutes les fleurs peintes) + final aube
+  { ch: 20, face: 'r', pal: [...REL, 'while'], sol: 'Wf(f)', map: ['R*b*'],
+    text: 'Nouveau rond sur le bloc Jusqu’à : la fleur ! Bip répète jusqu’à ce que toutes les fleurs soient dorées.' },
+  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if'], sol: 'Wf(Ip(j|f))',
+    variants: [
+      ['R.b*~', '.....'],
+      ['R..b*', '.....'],
+      ['R~b*.', '.....'],
+    ],
+    text: 'Peins toutes les fleurs en sautant les flaques : trois jardins, un seul programme !' },
+  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if', 'c'], sol: 'Wf(Ip(j|f)) c', map: ['R.*~b', '.....'],
+    text: 'Peins jusqu’aux fleurs dorées, puis la loupe attrape le dernier jouet !' },
+  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if', 'c', 'g', 'star'], sol: 'Wg(*) c', fn: 'Ip(j|f)',
+    variants: [
+      ['R.*~bF', '.#....', 'n.....'],
+      ['R.~*bF', '.#....', 'n.....'],
+      ['R.*~bF', '.#....', '..n...'],
+    ],
+    text: 'LE GRAND RÉVEIL ! Va à la balise en peignant le chemin, puis la loupe attrape le dernier jouet. Trois jardins, un seul programme. Champion !' },
 
   /* ============ Les défis de Zoé (archivés V9 — accessibles depuis la feuille adultes) ============ */
   { ch: -1, daily: true, pal: ['r', 'loop'], max: 3, sol: 'N6(r)', map: ['R******'],
@@ -2124,18 +2230,21 @@ const I = {
   flowerIco: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 60V88" stroke="#5FAA62" stroke-width="7" stroke-linecap="round"/><path d="M50 78C40 78 32 72 30 64M50 84C60 84 68 78 70 70" stroke="#5FAA62" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="50" cy="26" r="13" fill="#F2A9C4"/><circle cx="31" cy="40" r="13" fill="#F2A9C4"/><circle cx="69" cy="40" r="13" fill="#F2A9C4"/><circle cx="37" cy="58" r="12" fill="#F7B9D0"/><circle cx="63" cy="58" r="12" fill="#F7B9D0"/><circle cx="50" cy="44" r="10" fill="#FFD36B"/></svg>`,
   sticker: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8L62 36L92 38L69 58L77 88L50 72L23 88L31 58L8 38L38 36Z" fill="#FFC94F" stroke="#E9A923" stroke-width="6" stroke-linejoin="round"/><circle cx="42" cy="50" r="4" fill="#2C3A4C"/><circle cx="58" cy="50" r="4" fill="#2C3A4C"/><path d="M43 60Q50 66 57 60" fill="none" stroke="#2C3A4C" stroke-width="3.4" stroke-linecap="round"/></svg>`,
   heart: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 86C30 70 12 56 12 38C12 26 21 18 31 18C39 18 46 23 50 30C54 23 61 18 69 18C79 18 88 26 88 38C88 56 70 70 50 86Z" fill="currentColor"/></svg>`,
+  share: S('M12 54L88 16L60 86L48 60L12 54Z M48 60L88 16', 8),
+  paste: S('M36 12h28v12H36zM28 22h44a6 6 0 0 1 6 6v56a6 6 0 0 1-6 6H28a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6zM38 46h24M38 60h24M38 74h16', 8),
   bonk: `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6L58 38L92 30L64 52L86 80L52 64L40 96L36 62L6 70L30 46L10 18L42 34Z" fill="#FFD36B" stroke="#E9A923" stroke-width="5" stroke-linejoin="round"/></svg>`,
   star: on => `<svg viewBox="0 0 100 100" aria-hidden="true" class="${on ? 'on' : ''}"><use href="#star" width="100" height="100" fill="${on ? 'var(--star)' : 'var(--paper-2)'}" stroke="${on ? '#E9A923' : 'var(--line)'}"/></svg>`,
 };
-const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, g: I.flag, p: I.flagPlant, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
-const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', g: 'balise', p: 'pose', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
-const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d: 'descendre', f: 'avancer', tl: 'tourner à gauche', tr: 'tourner à droite', j: 'sauter', g: 'aller à la balise', p: 'poser une balise', loop: 'répéter', while: 'répéter jusqu’à', if: 'si', star: 'bloc magique' };
+const BLOCK_ICON = { r: I.arrow, l: I.arrow, u: I.arrow, d: I.arrow, f: I.fwd, tl: I.tl, tr: I.tr, j: I.jump, g: I.flag, p: I.flagPlant, c: I.lens, loop: I.loop, while: I.until, if: I.fork, star: I.magic };
+const BLOCK_LABEL = { f: 'avance', tl: 'gauche', tr: 'droite', j: 'saute', g: 'balise', p: 'pose', c: 'cherche', loop: 'répète', while: 'jusqu’à', if: 'si', star: 'magique' };
+const BLOCK_NAME = { r: 'aller à droite', l: 'aller à gauche', u: 'monter', d: 'descendre', f: 'avancer', tl: 'tourner à gauche', tr: 'tourner à droite', j: 'sauter', g: 'aller à la balise', p: 'poser une balise', c: 'aller au jouet le plus proche', loop: 'répéter', while: 'répéter jusqu’à', if: 'si', star: 'bloc magique' };
 const CTR = ['loop', 'while', 'if'];
 const isCtr = t => CTR.includes(t);
 const LOOP_NS = [2, 3, 4, 5, 6, 8];
-const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'p', 'loop', 'while', 'if', 'star'];
+const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'p', 'c', 'loop', 'while', 'if', 'star'];
 /* Note de version affichée dans la feuille « Pour les adultes » (bump avec sw.js VERSION) */
 const VERSION_NOTES = [
+  ['V10 — « L’aube »', 'Nouveau monde à l’aube avec deux pouvoirs : le bloc loupe (Bip va tout seul au jouet le plus proche, ch20) et le rond « fleur » du bloc Jusqu’à (répéter jusqu’à ce que toutes les fleurs soient peintes, ch21, final à trois jardins par 6). Mon jardin gagne des codes de partage pour échanger des jardins, et la feuille adultes affiche les compteurs de la partie.'],
   ['V9 — « Un seul objectif »', 'But unique et cohérent : ramasse tous les jouets (plus de coffre-cible ni de luciole-jouet) ; niveaux filler remplacés par un tournoi de nuit en combos (ch17–19, fin à par 7) ; défis de Zoé et machines archivés dans cette feuille (bonus) ; garde-fous anti-niveau-mort dans check-curve.'],
   ['V8 — « Jusqu’à la balise »', 'Balises : blocs « va à la balise », « pose une balise » et « jusqu’à la balise » ; capteur « jouet devant » ; boucles emboîtées plus lisibles (bloc fautif et parents surlignés, conteneur vide expliqué).'],
   ['V7 — « Les yeux de Bip »', 'Capteur « si un jouet est devant » (3e position du bloc Si) ; plusieurs balises par niveau.'],
@@ -2172,8 +2281,10 @@ const TOY_NAME = { b: 'le ballon', n: 'le nounours', c: 'le canard', t: 'la toup
 /* ---------- Sauvegarde ---------- */
 const KEY = 'bip-robot-v2';
 function loadSave() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-const save = Object.assign({ stars: {}, voice: true, sound: true, all: false, stickers: [], daily: {}, sandbox: [null, null, null], seen: { w: {}, c: {}, ce: {} } }, loadSave());
+const save = Object.assign({ stars: {}, voice: true, sound: true, all: false, stickers: [], daily: {}, sandbox: [null, null, null], seen: { w: {}, c: {}, ce: {} }, stats: { runs: 0, wins: 0, built: 0 } }, loadSave());
 function persist() { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) { /* stockage indisponible */ } }
+/* Compteurs affichés dans la feuille adultes (V10) */
+function stat(k) { if (!save.stats) save.stats = { runs: 0, wins: 0, built: 0 }; save.stats[k] = (save.stats[k] || 0) + 1; persist(); }
 
 /* ---------- Petits sons doux ---------- */
 let ac = null;
@@ -2285,7 +2396,7 @@ function playStory(lines, done) {
 
 /* ---------- Album de stickers ---------- */
 const STICKERS = [];
-const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag', 'toy-n'];
+const CH_STICKER = ['toy-b', 'bush', 'toy-n', 'avatar-toupie', 'avatar-zoe', 'avatar-lulu', 'toy-c', 'toy-t', 'star-gold', 'switchc', 'crate', 'flower', 'avatar-pilou', 'avatar-ballon', 'avatar-noctule', 'box', 'avatar-noctule', 'flag', 'toy-n', 'toy-e', 'star-gold'];
 CHAPTERS.forEach((c, i) => {
   const sym = CH_STICKER[i] || 'toy-b';
   STICKERS.push({ id: 'c' + (i + 1), name: c.name, how: 'Chapitre ' + (i + 1) + ' terminé', icon: () => sym === 'star-gold' ? I.star(true) : symUse(sym) });
@@ -2294,6 +2405,7 @@ CHAPTERS.forEach((c, i) => {
  ['w2', 'Promenade dorée', 'Monde 2 : trois étoiles partout'],
  ['w3', 'Atelier doré', 'Monde 3 : trois étoiles partout'],
  ['w4', 'Nuit dorée', 'Monde 4 : trois étoiles partout'],
+ ['w5', 'Aube dorée', 'Monde 5 : trois étoiles partout'],
 ].forEach(([id, name, how]) => STICKERS.push({ id, name, how, icon: () => I.star(true) }));
 STICKERS.push(
   { id: 'v1', name: 'Ancien ami', how: 'Joueur de la première heure', icon: () => robotSVG() },
@@ -2378,6 +2490,7 @@ function show(id) {
   $('#win').hidden = true;
   $('#machines').hidden = true;
   $('#album').hidden = true;
+  $('#sbCode').hidden = true;
   if (typeof L !== 'undefined' && id !== 'lab') { L.token++; L.running = false; }
   if (id === 'home') { renderHome(); hideHand(); stopVoice(); }
 }
@@ -2387,7 +2500,7 @@ const unlocked = i => save.all || i === 0 || (save.stars[LEVELS[i - 1].id] || 0)
 const nextIndex = () => { const i = LEVELS.findIndex(l => l.ch >= 0 && !(save.stars[l.id] > 0)); return i < 0 ? LAST_STORY : i; };
 const chapterDone = ci => LEVELS.filter(l => l.ch === ci).every(l => (save.stars[l.id] || 0) > 0);
 const worldOf = ci => CHAPTERS[ci].w;
-const WORLD_WHO_MAP = ['zoe', 'lulu', 'papi', 'noctule'];
+const WORLD_WHO_MAP = ['zoe', 'lulu', 'papi', 'noctule', 'ballon'];
 const NODE_STEP = 82, NODE_PAD = 46;
 const nodeX = g => 50 + 33 * Math.sin(g * 0.95);   // le sentier serpente selon l'index global
 
@@ -2400,7 +2513,8 @@ function worldDeco(w, h) {
     if (w === 0) out += `<path d="M${x} ${y}q2-8 4-14M${x + 4} ${y}q0-9 3-12" stroke="#9CC78D" stroke-width="2" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
     else if (w === 1) out += `<circle cx="${x}" cy="${y}" r="${1.5 + (k % 3)}" fill="#fff" opacity=".7"/>`;
     else if (w === 2) out += `<circle cx="${x}" cy="${y}" r="3" fill="none" stroke="#D9A968" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
-    else out += `<circle cx="${x}" cy="${y}" r="${1 + (k % 2)}" fill="#FFE9A8" opacity=".9"/>`;
+    else if (w === 3) out += `<circle cx="${x}" cy="${y}" r="${1 + (k % 2)}" fill="#FFE9A8" opacity=".9"/>`;
+    else out += `<g stroke="#F2A65A" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"><path d="M${x} ${y}v-7M${x} ${y}v7M${x - 5} ${y}h10M${x + 5} ${y}h-10" transform="rotate(${k * 47} ${x} ${y})"/></g>`;
   }
   return `<svg class="deco" viewBox="0 0 100 ${h}" preserveAspectRatio="none">${out}</svg>`;
 }
@@ -2448,8 +2562,9 @@ function renderHome() {
         <div class="nodes" style="--h:${H}px"><svg class="path" viewBox="0 0 1000 ${H}" preserveAspectRatio="none"><path d="${d}" vector-effect="non-scaling-stroke"/><path class="dash" d="${d}" vector-effect="non-scaling-stroke"/></svg>${nodes}</div>
       </div>`;
     });
-    const picnic = w === WORLDS.length - 1 ? `<div class="picnic-end">${symUse('picnic')}<span>Le grand pique-nique</span></div>` : '';
-    h += `<section class="world" data-w="${w}">${worldDeco(w, worldH)}<div class="world-head"><span class="wa">${CHARS[WORLD_WHO_MAP[w]].art()}</span><span>${W.name}</span></div>${inner}${picnic}</section>`;
+    const endMark = w === 3 ? `<div class="picnic-end">${symUse('picnic')}<span>Le grand pique-nique</span></div>`
+      : w === WORLDS.length - 1 ? `<div class="picnic-end">${symUse('sun')}<span>L’aube</span></div>` : '';
+    h += `<section class="world" data-w="${w}">${worldDeco(w, worldH)}<div class="world-head"><span class="wa">${CHARS[WORLD_WHO_MAP[w]].art()}</span><span>${W.name}</span></div>${inner}${endMark}</section>`;
   });
   $('#trail').innerHTML = h;
   $$('.node:not(.far)', $('#trail')).forEach(b => b.addEventListener('click', () => { audio(); openLevel(+b.dataset.i); }));
@@ -2484,7 +2599,16 @@ function syncToggles() {
   $('#tgAll').setAttribute('aria-checked', String(!!save.all));
 }
 let resetArm = 0;
-function openSheet() { syncToggles(); $('#sheet').hidden = false; hideHand(); stopVoice(); }
+function openSheet() {
+  syncToggles();
+  const done = Object.values(save.stars).filter(s => s > 0).length;
+  const stars = Object.values(save.stars).reduce((a, b) => a + b, 0);
+  const daily = Object.values(save.daily || {}).filter(Boolean).length;
+  const st = save.stats || { runs: 0, wins: 0, built: 0 };
+  const sl = $('#statsLine');
+  if (sl) sl.textContent = `${done} niveau${done > 1 ? 'x' : ''} terminé${done > 1 ? 's' : ''} · ${stars} étoile${stars > 1 ? 's' : ''} · ${daily} défi${daily > 1 ? 's' : ''} de Zoé · ${st.runs} programme${st.runs > 1 ? 's' : ''} lancé${st.runs > 1 ? 's' : ''} · ${st.wins} victoire${st.wins > 1 ? 's' : ''} · ${st.built} jardin${st.built > 1 ? 's' : ''} créé${st.built > 1 ? 's' : ''}`;
+  $('#sheet').hidden = false; hideHand(); stopVoice();
+}
 function closeSheet() { $('#sheet').hidden = true; if (!$('#home').hidden) renderHome(); }
 
 /* ---------- État du jeu ---------- */
@@ -2721,17 +2845,21 @@ const seqHTML = (list, cid) => list.map(itemHTML).join('') + slotHTML(cid);
 const itemHTML = it => isCtr(it.t) ? ctrHTML(it) : blockHTML(it.t, it.id);
 function pillHTML(it) {
   if (it.t === 'loop') return '×' + it.n;
-  if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : it.c === 'flag' ? symUse('flag') : symUse('bush');
+  if (it.t === 'while') return it.c === 'toys' ? toyUse('b') : it.c === 'flag' ? symUse('flag') : it.c === 'paint' ? symUse('flower') : symUse('bush');
   return it.c === 'puddle' ? symUse('puddle') : it.c === 'obst' ? symUse('gate') : toyUse('b');
 }
 function pillLabel(it) {
   if (it.t === 'loop') return `Répéter ${it.n} fois`;
-  if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : it.c === 'flag' ? 'Jusqu’à une balise' : 'Jusqu’à un obstacle';
+  if (it.t === 'while') return it.c === 'toys' ? 'Jusqu’à avoir tous les jouets' : it.c === 'flag' ? 'Jusqu’à une balise' : it.c === 'paint' ? 'Jusqu’à toutes les fleurs peintes' : 'Jusqu’à un obstacle';
   return it.c === 'puddle' ? 'Si une flaque est devant' : it.c === 'obst' ? 'Si un obstacle est devant' : 'Si un jouet est devant';
 }
 function levelHasFlag() {
   const rows = (G.lv.variants || [G.lv.map || []]).flat();
   return rows.some(r => r.includes('F')) || (G.lv.pal || []).includes('p') || (G.lv.pal || []).includes('g');
+}
+function levelHasFlowers() {
+  const rows = (G.lv.variants || [G.lv.map || []]).flat();
+  return rows.some(r => r.includes('*'));
 }
 function ctrHTML(it) {
   const tThen = G.target === it.id, tElse = G.target === it.id + ':else';
@@ -2847,9 +2975,11 @@ function cyclePill(id) {
   let msg;
   if (it.t === 'loop') { it.n = LOOP_NS[(LOOP_NS.indexOf(it.n) + 1) % LOOP_NS.length]; msg = `Bip va répéter ${it.n} fois.`; }
   else if (it.t === 'while') {
-    const seq = levelHasFlag() ? ['free', 'toys', 'flag'] : ['free', 'toys'];
+    const seq = ['free', 'toys'];
+    if (levelHasFlag()) seq.push('flag');
+    if (levelHasFlowers()) seq.push('paint');
     it.c = seq[(seq.indexOf(it.c) + 1) % seq.length];
-    msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : it.c === 'flag' ? 'Bip répète jusqu’à être sur une balise.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.';
+    msg = it.c === 'toys' ? 'Bip répète jusqu’à avoir tous les jouets.' : it.c === 'flag' ? 'Bip répète jusqu’à être sur une balise.' : it.c === 'paint' ? 'Bip répète jusqu’à ce que toutes les fleurs soient dorées.' : 'Bip répète jusqu’à ce qu’un obstacle soit devant lui.';
   }
   else { it.c = it.c === 'puddle' ? 'obst' : it.c === 'obst' ? 'toy' : 'puddle'; msg = it.c === 'puddle' ? 'Si une flaque est devant Bip : ligne verte. Sinon : ligne grise.' : it.c === 'obst' ? 'Si un obstacle est devant Bip : ligne verte. Sinon : ligne grise.' : 'Si un jouet est devant Bip : ligne verte. Sinon : ligne grise.'; }
   SFX.tap(); edited();
@@ -3021,7 +3151,7 @@ async function runAll() {
     if (c) { c.classList.add('bad'); c.scrollIntoView({ block: 'nearest' }); }
     return;
   }
-  stopVoice(); G.step = null; clearMarks(); hideHint();
+  stopVoice(); G.step = null; clearMarks(); hideHint(); stat('runs');
   const session = ++G.session;
   const nv = G.lv.nv;
   G.busy = true; G.abort = false; setRunning(true);
@@ -3053,6 +3183,8 @@ const CHECK_SAY = {
   'while-free': ok => ok ? 'La route est libre : Bip continue.' : 'Un obstacle devant : la boucle s’arrête.',
   'while-toys': ok => ok ? 'Il manque des jouets : Bip continue.' : 'Tous les jouets sont là : la boucle s’arrête.',
   'while-flag': ok => ok ? 'Pas encore sur la balise : Bip continue.' : 'Bip est sur la balise : la boucle s’arrête.',
+  'while-paint': ok => ok ? 'Il reste des fleurs blanches : Bip continue.' : 'Toutes les fleurs sont dorées : la boucle s’arrête.',
+  'c-goal': ok => ok ? 'Bip a senti un jouet : il y va tout seul !' : 'Aucun jouet à portée de Bip.',
 };
 async function stepOnce() {
   if (G.busy || G.mode === 'ball') return;
@@ -3068,7 +3200,7 @@ async function stepOnce() {
   G.busy = false; setRunning(false);
   if (G.abort) { G.step = null; resetBoard(); clearMarks(); say('Stop ! Bip revient au départ.'); return; }
   step.i++;
-  if (st.kind === 'check') say(CHECK_SAY[`${st.ins.t}-${st.cond}`](st.ok));
+  if (st.kind === 'check') { const f = CHECK_SAY[`${st.ins.t}-${st.cond}`]; say(f ? f(st.ok) : (st.ok ? 'Oui !' : 'Non.')); }
   if (step.i >= sim.steps.length) { G.step = null; finishStep(sim); }
   else if (st.kind !== 'check') say(`Bloc fait. Touche encore pour la suite.`, true);
 }
@@ -3132,7 +3264,7 @@ async function doStep(st, keep, session = G.session) {
     const c = $(`#progCard .ctr[data-id="${st.ins.id}"]`);
     if (c) c.classList.add(st.ok ? 'yes' : 'no');
     SFX.look(st.ok);
-    if (st.cond !== 'toys' && st.cond !== 'flag') {
+    if (st.cond !== 'toys' && st.cond !== 'flag' && st.cond !== 'paint' && st.cond !== 'goal') {
       const s = document.createElement('div');
       s.className = 'sense' + (st.ok ? ' yes' : '');
       s.style.cssText = `--x:${st.from[0] + dx};--y:${st.from[1] + dy}`;
@@ -3260,7 +3392,7 @@ function finish(sim, v) {
   G.fails++;
   let msg = '';
   if (sim.result === 'bump') {
-    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : sim.why === 'flag' ? 'Oups ! La balise est derrière un mur, Bip n’y arrive pas.' : 'Aïe ! Bip s’est cogné dans un buisson.';
+    msg = sim.why === 'out' ? 'Oups ! Bip ne peut pas sortir du jardin.' : sim.why === 'rock' ? 'Aïe ! Un rocher bloque le chemin.' : sim.why === 'crate' ? 'Aïe ! La caisse bloque le chemin. Pousse-la en marchant dedans !' : sim.why === 'gate' ? 'La barrière est fermée. Un champignon peut l’ouvrir !' : sim.why === 'flag' ? 'Oups ! La balise est derrière un mur, Bip n’y arrive pas.' : sim.why === 'toy' ? 'Oups ! Aucun jouet à portée de la loupe.' : 'Aïe ! Bip s’est cogné dans un buisson.';
     msg += ' Le bloc orange pose problème.';
     badMark(last.ins);
   } else if (sim.result === 'splash') {
@@ -3310,6 +3442,7 @@ function win() {
     save.stars[G.lv.id] = Math.max(prev, stars); persist();
   }
   checkStickers();
+  stat('wins');
   if (G.sandbox) award('sandboxwin');
   if (G.daily) { save.daily[DAILY_IDX] = true; persist(); award('daily1'); }
   SFX.win(); buzz([30, 60, 30]);
@@ -3358,7 +3491,7 @@ function afterWinNext() {
   if (G.daily) { show('home'); return; }
   if (G.i >= LAST_STORY) {
     playStory([
-      { who: 'tous', title: 'Le grand pique-nique', line: 'Merci champion ! Tu as retrouvé tous les jouets et préparé le plus beau pique-nique du monde. Bip est très fier de toi !', cta: 'Youpi !' },
+      { who: 'tous', title: 'L’aube', line: 'Toute l’aventure est finie ! Le soleil se lève sur le jardin : Bip a ramassé tous les jouets. Merci, petit programmeur !', cta: 'Bonne journée !' },
     ], () => show('home'));
     return;
   }
@@ -3524,7 +3657,7 @@ async function runBall() {
     say('Pose d\'abord des flèches sur l\'herbe : touche une case, puis le bouton vert !');
     return;
   }
-  stopVoice(); G.busy = true; G.abort = false; setRunning(true);
+  stopVoice(); G.busy = true; G.abort = false; setRunning(true); stat('runs');
   const session = ++G.session;
   G.dirty = true;
   resetBoard(); renderTiles();
@@ -3624,6 +3757,7 @@ function persistSb() {
   persist();
   renderSbSlots();
   award('sandbox1');
+  stat('built');
 }
 function renderSbSlots() {
   $('#sbSlots').innerHTML = save.sandbox.map((s, i) =>
@@ -3635,12 +3769,61 @@ function renderSbSlots() {
 }
 function renderSbTools() {
   $('#sbTray').innerHTML = SB_ITEMS.map(it =>
-    `<button class="sb-item${it.eraser ? ' eraser' : ''}${G.sb.tool === it.ch ? ' on' : ''}" data-ch="${it.ch}" aria-label="${it.label}">${it.icon()}</button>`).join('');
-  $$('#sbTray .sb-item').forEach(b => b.addEventListener('click', () => {
+    `<button class="sb-item${it.eraser ? ' eraser' : ''}${G.sb.tool === it.ch ? ' on' : ''}" data-ch="${it.ch}" aria-label="${it.label}">${it.icon()}</button>`).join('') +
+    `<button class="sb-item sb-code" id="btnSbShare" aria-label="Partager ce jardin avec un code">${I.share}</button>` +
+    `<button class="sb-item sb-code" id="btnSbPaste" aria-label="Charger un jardin depuis un code">${I.paste}</button>`;
+  $$('#sbTray .sb-item[data-ch]').forEach(b => b.addEventListener('click', () => {
     G.sb.tool = b.dataset.ch; SFX.tap();
     sbSay(SB_ITEMS.find(i => i.ch === G.sb.tool).label + ' : touche l\'herbe pour le poser.', true);
     renderSbTools();
   }));
+  const sh = $('#btnSbShare'), pa = $('#btnSbPaste');
+  if (sh) sh.addEventListener('click', () => { audio(); openSbCode('share'); });
+  if (pa) pa.addEventListener('click', () => { audio(); openSbCode('paste'); });
+}
+
+/* ---------- Codes de partage (V10) : un jardin = un petit code à copier/coller ---------- */
+const SB_CHARS = 'R.#o~sGC*Fbncta-';
+function sbEncode(rows) {
+  return 'BIP1.' + btoa(rows.join('/')).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function sbDecode(code) {
+  const m = /^BIP1\.([A-Za-z0-9_-]{8,})$/.exec(String(code || '').trim());
+  if (!m) return null;
+  let bin;
+  try { bin = atob(m[1].replace(/-/g, '+').replace(/_/g, '/')); } catch (e) { return null; }
+  const rows = bin.split('/');
+  const okChars = new RegExp('^[' + SB_CHARS + ']+$');
+  if (rows.length !== SB_H || rows.some(r => r.length !== SB_W || !okChars.test(r))) return null;
+  if (rows.join('').split('R').length !== 2) return null;   // exactement un départ de Bip
+  return rows;
+}
+function openSbCode(mode) {
+  $('#sbCode').hidden = false;
+  const inp = $('#sbCodeInput');
+  if (mode === 'share') { inp.value = sbEncode(G.sb.rows); inp.placeholder = ''; try { inp.select(); } catch (e) { /* */ } }
+  else { inp.value = ''; inp.placeholder = 'Colle le code d’un jardin ici…'; }
+  stopVoice();
+  speak(mode === 'share' ? 'Voici le code de ton jardin. Copie-le pour l’envoyer à un ami.' : 'Colle ici le code d’un jardin reçu, puis « Charger ce code ».');
+  setTimeout(() => { try { inp.focus(); } catch (e) { /* */ } }, 60);
+}
+function copySbCode() {
+  const inp = $('#sbCodeInput');
+  inp.value = sbEncode(G.sb.rows);
+  try { inp.select(); } catch (e) { /* */ }
+  const okMsg = () => sbSay('Code copié ! Envoie-le à un ami pour partager ton jardin.');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(inp.value).then(okMsg, () => sbSay('Copie le code affiché ci-dessus à la main.'));
+  else sbSay('Copie le code affiché ci-dessus à la main.');
+}
+function loadSbCode() {
+  const rows = sbDecode($('#sbCodeInput').value);
+  if (!rows) { SFX.nope(); sbSay('Ce code ne ressemble pas à un jardin Bip. Vérifie-le et réessaie !'); return; }
+  G.sb.rows = rows;
+  persistSb();
+  renderSbBoard();
+  $('#sbCode').hidden = true;
+  SFX.win();
+  sbSay(`Jardin chargé dans le jardin ${G.sb.cur + 1} ! Lance Bip avec le bouton vert.`);
 }
 function renderSbBoard() {
   const P = parseLevel({ map: G.sb.rows });
@@ -4237,6 +4420,9 @@ function wire() {
   $('#btnSbHome').innerHTML = I.home;
   $('#btnSbPlay').innerHTML = I.play;
   $('#sbPill').innerHTML = I.flowerIco;
+  $('#btnSbCodeClose').innerHTML = I.close;
+  $('#icoSbCopy').innerHTML = I.share;
+  $('#icoSbLoad').innerHTML = I.paste;
   setRunning(false);
 
   // Joueur de la première heure : un autocollant souvenir
@@ -4307,10 +4493,15 @@ function wire() {
   $('#btnSbHome').addEventListener('click', () => show('home'));
   $('#btnSbPlay').addEventListener('click', () => { audio(); playSandbox(); });
   $('#sbBubble').addEventListener('click', () => speak($('#sbMsg').textContent));
+  $('#btnSbCodeClose').addEventListener('click', () => { $('#sbCode').hidden = true; });
+  $('#sbCode').addEventListener('click', e => { if (e.target.id === 'sbCode') $('#sbCode').hidden = true; });
+  $('#btnSbCopy').addEventListener('click', () => { audio(); copySbCode(); });
+  $('#btnSbLoad').addEventListener('click', () => { audio(); loadSbCode(); });
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (!$('#sheet').hidden) closeSheet();
+      else if (!$('#sbCode').hidden) $('#sbCode').hidden = true;
       else if (!$('#album').hidden) $('#album').hidden = true;
       else if (!$('#machines').hidden) $('#machines').hidden = true;
       else if (!$('#story').hidden) $('#storyCard').click();
@@ -4331,7 +4522,7 @@ function wire() {
 }
 wire();
 // Accès QA/dev (console) : window.__bip.openLevel(i), .run(), .state()
-window.__bip = { G, L, openLevel, openLevelObj, openLab, parseProg, runAll, runLab, LEVELS, CHAPTERS, WORLDS, LAB_LEVELS, simulate, save, persist, show, renderHome };
+window.__bip = { G, L, openLevel, openLevelObj, openLab, parseProg, runAll, runLab, LEVELS, CHAPTERS, WORLDS, LAB_LEVELS, simulate, save, persist, show, renderHome, sbEncode, sbDecode };
 
 })();
 </script>
