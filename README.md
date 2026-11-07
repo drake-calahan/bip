@@ -36,8 +36,9 @@ L'accueil garde sa simplicité : Jouer, Mon jardin, l'album. La conception est d
   (tourner les miroirs), les roues (changer leur taille), le rendez-vous (décaler
   un ami). On construit, on peut deviner en touchant une image, on lâche la
   machine et on regarde. Douze défis, et un mode « inventer » par machine.
-- **Sur l'accueil** : **Mon jardin** (crée ton niveau, fais-le résoudre par Bip, et
-  **partage-le avec un petit code** `BIP1…` — deux icônes en bout de barre d'outils)
+- **Sur l'accueil** : **Mon jardin** (crée ton niveau en **8×6**, fais-le résoudre par Bip, et
+  **partage-le avec un petit code** `BIP2…` — deux icônes en bout de barre d'outils ; les
+  anciens codes `BIP1…` 6×5 sont relus)
   et **l'album de Zoé** (35 images à gagner).
 - **Bonus archivé (V9, feuille « Pour les adultes »)** : **le défi de Zoé** (un
   niveau par jour de la semaine) et les **compteurs de la partie** (V10).

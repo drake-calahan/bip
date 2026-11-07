@@ -64,6 +64,16 @@ const { LEVELS, CHAPTERS, WORLDS } = require('../src/levels.js');
   const r = E.simulate(lv, E.parseProg(lv.sol), E.parseProg(lv.fn), 0);
   assert.equal(r.result, 'win', 'L102 Wf(Ip(j|f)) c gagne');
 }
+// Équilibrage V10 : le rond fleur ne résout PAS seul les puzzles de ch21
+{
+  const naive = (lv, v) => E.simulate(lv, E.parseProg('Wf(f)'), [], v || 0).result;
+  const wfOnly = (lv, v) => E.simulate(lv, E.parseProg('Wf(Ip(j|f))'), [], v || 0).result;
+  assert.notEqual(naive(LEVELS[99]), 'win', 'L100 : Wf(f) naïf ne gagne pas (jouet à attraper à la loupe)');
+  for (let v = 0; v < 3; v++) assert.notEqual(naive(LEVELS[100], v), 'win', `L101 v${v + 1} : Wf(f) naïf rate (flaque)`);
+  assert.notEqual(wfOnly(LEVELS[101]), 'win', 'L102 : Wf(Ip(j|f)) seul ne gagne pas (jouet à côté)');
+  assert.notEqual(E.simulate(LEVELS[101], E.parseProg('c'), [], 0).result, 'win', 'L102 : la loupe seule ne gagne pas (fleur non peinte)');
+  assert.equal(E.simulate(LEVELS[101], E.parseProg('Wf(Ip(j|f)) c'), [], 0).result, 'win', 'L102 : le combo boucle+saut+loupe gagne');
+}
 // solveur BFS ignore 'c' (pas un mouvement simple)
 {
   const s = E.solve({ pal: ['f', 'c'], map: ['R.b'], face: 'r' }, ['f', 'c']);
@@ -116,16 +126,24 @@ const sandboxCtx = vm.createContext({
 });
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../src/app-sandbox.js'), 'utf8'), sandboxCtx);
 
-const rows = ['R.#..b', '.~.*..', '..sG..', '.C....', '..F.n.'];
+const rows = ['R.#..b..', '.~.*....', '..sG....', '.C......', '..F.n...', '........'];
 const code = sandboxCtx.sbEncode(rows);
-assert.ok(/^BIP1\.[A-Za-z0-9_-]+$/.test(code), 'code bien formé: ' + code);
-assert.equal(JSON.stringify(sandboxCtx.sbDecode(code)), JSON.stringify(rows), 'aller-retour encode/decode');
-assert.equal(sandboxCtx.sbDecode('BIP1.' + code.slice(5).slice(0, 4)), null, 'code tronqué rejeté');
+assert.ok(/^BIP2\.[A-Za-z0-9_-]+$/.test(code), 'code bien formé (BIP2, jardin 8×6): ' + code);
+assert.equal(JSON.stringify(sandboxCtx.sbDecode(code)), JSON.stringify(rows), 'aller-retour encode/decode 8×6');
+// ancien code BIP1 (6×5) : relu et complété à 8×6
+const oldRows = ['R.#..b', '.~.*..', '..sG..', '.C....', '..F.n.'];
+const oldCode = 'BIP1.' + btoa(oldRows.join('/')).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const migrated = sandboxCtx.sbDecode(oldCode);
+assert.ok(Array.isArray(migrated) && migrated.length === 6 && migrated.every(r => r.length === 8), 'BIP1 décodé en 8×6');
+assert.equal(migrated[0].slice(0, 6), 'R.#..b', 'BIP1 : contenu conservé (complété à droite)');
+assert.equal(migrated.join('').split('R').length - 1, 1, 'BIP1 : un seul départ après migration');
+assert.equal(sandboxCtx.sbDecode('BIP2.' + code.slice(5).slice(0, 4)), null, 'code tronqué rejeté');
 assert.equal(sandboxCtx.sbDecode('HACK.xxxxxxxxxx'), null, 'mauvais préfixe rejeté');
-assert.equal(sandboxCtx.sbDecode('BIP1.' + sandboxCtx.sbEncode(['RR...b', '......', '......', '......', '......']).slice(5)), null, 'deux départs rejetés');
-assert.equal(sandboxCtx.sbDecode('BIP1.' + sandboxCtx.sbEncode(['......', '......', '......', '......', '......']).slice(5)), null, 'zéro départ rejeté');
-assert.equal(sandboxCtx.sbDecode('BIP1.' + sandboxCtx.sbEncode(['R...!b', '......', '......', '......', '......']).slice(5)), null, 'caractère interdit rejeté');
+assert.equal(sandboxCtx.sbDecode('BIP3.' + code.slice(5)), null, 'mauvaise version rejetée');
+assert.equal(sandboxCtx.sbDecode('BIP2.' + sandboxCtx.sbEncode(['RR...b..', '........', '........', '........', '........', '........']).slice(5)), null, 'deux départs rejetés');
+assert.equal(sandboxCtx.sbDecode('BIP2.' + sandboxCtx.sbEncode(['........', '........', '........', '........', '........', '........']).slice(5)), null, 'zéro départ rejeté');
+assert.equal(sandboxCtx.sbDecode('BIP2.' + sandboxCtx.sbEncode(['R...!b..', '........', '........', '........', '........', '........']).slice(5)), null, 'caractère interdit rejeté');
 assert.equal(sandboxCtx.sbDecode(''), null, 'vide rejeté');
-assert.equal(sandboxCtx.sbDecode('BIP1.abc'), null, 'trop court rejeté');
-console.log('codec V10 OK (partage de jardins BIP1.*) — ex. ' + code);
+assert.equal(sandboxCtx.sbDecode('BIP2.abc'), null, 'trop court rejeté');
+console.log('codec V10 OK (BIP2 8×6 + BIP1 rétrocompatible) — ex. ' + code);
 console.log('\nV10 OK');

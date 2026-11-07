@@ -414,17 +414,19 @@ const LEVELS = [
   { ch: 19, face: 'r', pal: [...REL, 'j', 'while', 'c'], sol: 'Wt(c)', map: ['R~b.n'],
     text: 'Jusqu’à tous les jouets, avec la loupe dedans : Bip ramasse tout, tout seul !' },
   // Chapitre 21 — Jusqu’aux fleurs dorées (Wf : jusqu’à toutes les fleurs peintes) + final aube
-  { ch: 20, face: 'r', pal: [...REL, 'while'], sol: 'Wf(f)', map: ['R*b*'],
-    text: 'Nouveau rond sur le bloc Jusqu’à : la fleur ! Bip répète jusqu’à ce que toutes les fleurs soient dorées.' },
+  // Équilibrage : Wf ne résout JAMAIS le puzzle seul (jouet hors du chemin de peinture,
+  // fleur derrière une flaque) — il faut toujours le combiner (saut + loupe).
+  { ch: 20, face: 'r', pal: [...REL, 'while', 'c'], sol: 'Wf(f) c', map: ['R*b*.n'],
+    text: 'Nouveau rond sur le bloc Jusqu’à : la fleur ! Peins toutes les fleurs… puis la loupe attrape le jouet !' },
   { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if'], sol: 'Wf(Ip(j|f))',
     variants: [
-      ['R.b*~', '.....'],
-      ['R..b*', '.....'],
-      ['R~b*.', '.....'],
+      ['R.b~*', '.....'],
+      ['R..~b*', '......'],
+      ['R~b.*', '.....'],
     ],
-    text: 'Peins toutes les fleurs en sautant les flaques : trois jardins, un seul programme !' },
-  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if', 'c'], sol: 'Wf(Ip(j|f)) c', map: ['R.*~b', '.....'],
-    text: 'Peins jusqu’aux fleurs dorées, puis la loupe attrape le dernier jouet !' },
+    text: 'La dernière fleur est derrière une flaque : saute pour la peindre. Trois jardins, un seul programme !' },
+  { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if', 'c'], sol: 'Wf(Ip(j|f)) c', map: ['R.~*.', '.b...'],
+    text: 'La fleur est derrière la flaque, le jouet à côté : la boucle peint, la loupe attrape !' },
   { ch: 20, face: 'r', pal: [...REL, 'j', 'while', 'if', 'c', 'g', 'star'], sol: 'Wg(*) c', fn: 'Ip(j|f)',
     variants: [
       ['R.*~bF', '.#....', 'n.....'],

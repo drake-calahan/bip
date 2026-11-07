@@ -12,7 +12,7 @@ const elements = { '#sbBoard': board, '#sbBoardWrap': board, '#sbMsg': message, 
 let opened = null;
 const context = vm.createContext({
   parseLevel,
-  G: { sb: { rows: ['......', '......', 'R.....', '......', '......'], tool: '.', cur: 0 }, sbCellPx: 64 },
+  G: { sb: { rows: ['........', '........', 'R.......', '........', '........', '........'], tool: '.', cur: 0 }, sbCellPx: 64 },
   save: { sandbox: [null, null, null] },
   $: selector => elements[selector],
   $$: () => [],

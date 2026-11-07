@@ -83,7 +83,8 @@
 ## V10 — L'aube (monde 5, chapitres 20-21, niveaux ajoutés AVANT le bloc daily)
 
 - **Bloc `c` « loupe »** : va au jouet non ramassé le plus proche (BFS sur niveau temporaire comme `g` ; saute, ramasse au passage). Niveau avec `c` = `sol` explicite recommandé. Anti-patterns : pas de `C`/`G` sur le chemin visé ; si aucun jouet atteignable → `bump`/`toy` (« Aucun jouet à portée »). Début showcase par 1, puis combos (`N2(c)`, `Wt(c)`).
-- **`Wf(...)`** : répéter jusqu'à ce que toutes les fleurs soient peintes. La 4e position de la molette du Jusqu'à n'apparaît que si le niveau a des `*` (comme le drapeau). Début showcase par 2 (`Wf(f)`), puis variantes ×3 et combos.
+- **`Wf(...)`** : répéter jusqu'à ce que toutes les fleurs soient peintes. La 4e position de la molette du Jusqu'à n'apparaît que si le niveau a des `*` (comme le drapeau). Début showcase (`Wf(f) c`), puis variantes ×3 et combos.
+- **Règle d'équilibrage V10** : `Wf` ne doit JAMAIS résoudre seul un niveau — sinon l'outil puissant trivialise le puzzle. Placer le jouet hors du chemin de peinture et/ou une fleur derrière une flaque (vérifié dans `check-v10.js` : `Wf(f)` naïf et `Wf` seul doivent échouer, seul le combo gagne).
 - Dernier niveau L103 = final à 3 variantes (`Wg(*) c` + fn `Ip(j|f)`, par 6, charge ≥ 70 % du max) : check-curve (FIN TROP BASSE / CHUTE / DEAD LEVEL) veille.
 - Ajout de niveaux : toujours en fin d'aventure, **avant** le bloc `daily:true` (les ids 1-95 et `save.stars` ne bougent pas ; `save.daily` est indexé par jour de semaine). Jamais de niveau qui change de place.
-- Partage Mon jardin : codec `BIP1.` + base64url des 5 lignes jointes par `/` ; validation stricte au chargement (5×6, caractères autorisés `R.#o~sGC*Fbncta-`, exactement un `R`).
+- Mon jardin = **8×6** (`SB_W/SB_H`). Partage : codec `BIP2.` + base64url des 6 lignes de 8 jointes par `/` ; `BIP1.` (6×5) est relu et complété en 8×6. Validation au chargement : dimensions, caractères autorisés `R.#o~sGC*Fbncta-`, exactement un `R`.

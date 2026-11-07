@@ -1,5 +1,5 @@
 /* ---------- Mon jardin : le mode création ---------- */
-const SB_W = 6, SB_H = 5;
+const SB_W = 8, SB_H = 6;
 const SB_DEFAULT = () => {
   const rows = Array.from({ length: SB_H }, () => '.'.repeat(SB_W));
   rows[2] = 'R' + '.'.repeat(SB_W - 1);
@@ -66,21 +66,25 @@ function renderSbTools() {
   if (pa) pa.addEventListener('click', () => { audio(); openSbCode('paste'); });
 }
 
-/* ---------- Codes de partage (V10) : un jardin = un petit code à copier/coller ---------- */
+/* ---------- Codes de partage (V10) : un jardin = un petit code à copier/coller ----------
+   BIP2 = jardin 8×6 (taille courante) ; BIP1 = ancien jardin 6×5, relu et complété à 8×6. */
 const SB_CHARS = 'R.#o~sGC*Fbncta-';
 function sbEncode(rows) {
-  return 'BIP1.' + btoa(rows.join('/')).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return 'BIP2.' + btoa(rows.join('/')).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 function sbDecode(code) {
-  const m = /^BIP1\.([A-Za-z0-9_-]{8,})$/.exec(String(code || '').trim());
+  const m = /^BIP([12])\.([A-Za-z0-9_-]{8,})$/.exec(String(code || '').trim());
   if (!m) return null;
   let bin;
-  try { bin = atob(m[1].replace(/-/g, '+').replace(/_/g, '/')); } catch (e) { return null; }
+  try { bin = atob(m[2].replace(/-/g, '+').replace(/_/g, '/')); } catch (e) { return null; }
+  const legacy = m[1] === '1';
+  const w = legacy ? 6 : SB_W, h = legacy ? 5 : SB_H;
   const rows = bin.split('/');
   const okChars = new RegExp('^[' + SB_CHARS + ']+$');
-  if (rows.length !== SB_H || rows.some(r => r.length !== SB_W || !okChars.test(r))) return null;
+  if (rows.length !== h || rows.some(r => r.length !== w || !okChars.test(r))) return null;
   if (rows.join('').split('R').length !== 2) return null;   // exactement un départ de Bip
-  return rows;
+  if (!legacy) return rows;
+  return rows.map(r => r.padEnd(SB_W, '.')).concat(Array.from({ length: SB_H - h }, () => '.'.repeat(SB_W)));
 }
 function openSbCode(mode) {
   $('#sbCode').hidden = false;

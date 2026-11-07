@@ -51,3 +51,23 @@ tout ce qui est nouveau vit à la fin du chemin ou dans la feuille adultes).
 - Correctif en passant : le mode pas-à-pas ne plantait plus sur les étapes `g`/`c`
   (`CHECK_SAY` avait une garde manquante).
 - sw `bip-v10-1`, publié sur GitHub Pages.
+
+## 5. Retouches après annonce de la bêta (mêmes objectifs : richesse + simplicité)
+
+Retour attendu du bêta : *« le mode fleur résout tout seul le puzzle du jardin : si on offre
+un outil puissant, il faut un problème puissant pour équilibrer »*.
+
+- **Équilibrage de `Wf` (ch21 redessiné)** : `Wf` ne gagne plus jamais seul.
+  - L100 (par 3) : `Wf(f)` naïf laisse le jouet de côté → il faut la loupe (`Wf(f) c`) ;
+  - L101 (×3 jardins, par 4) : la dernière fleur est **derrière une flaque** → `Wf(f)` naïf
+    fait « plouf », il faut `Wf(Ip(j|f))` ;
+  - L102 (par 5) : fleur derrière la flaque **et** jouet à côté derrière un buisson →
+    seul le combo `Wf(Ip(j|f)) c` gagne (`Wf` seul → jouet manquant, loupe seule → fleur
+    non peinte). Vérifié moteur + `check-v10.js` (asserts de non-victoire naïve).
+  - L103 inchangé (balise + loupe + magique, 3 jardins).
+  Courbe toujours ALL OK : pars ch21 = [3, 4, 5, 6], rampe +3, delta moyen +3.0 (limite).
+- **Mon jardin passe en 8×6** (au lieu de 6×5) : plus de place pour créer. Les codes de
+  partage passent en `BIP2.…` (8×6) ; les anciens `BIP1.…` (6×5) sont **relus et complétés**
+  à droite/en bas en 8×6 (un seul départ `R` requis, caractères validés comme avant).
+- Grille de retours bêta prête à remplir : `docs/RETOURS-BETA.md` (section « Grille V10 »).
+- sw `bip-v10-2`.

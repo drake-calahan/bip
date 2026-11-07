@@ -15,9 +15,9 @@ Run after every build (`python tools/build.py`), serve with `python -m http.serv
 - [ ] One story card at the start of a world only; tap anywhere closes it.
 - [ ] Board + bubble centred; palette blocks ≥ 50 px; green button 72 px; landscape puts the program on the right.
 - [ ] Pond / paint / crates / switches / night / toboggans behave as in V2 (sink, trail, plank, gate, glow, roll).
-- [ ] V10 dawn: ch20 loupe block (lens icon, « cherche ») goes to the nearest toy by itself, jumps puddles, says « Aucun jouet à portée » when stuck; ch21 while-pill shows the flower only on flowery levels; L103 final wins over 3 gardens and the last win card says « L'aube ».
+- [ ] V10 dawn: ch20 loupe block (lens icon, « cherche ») goes to the nearest toy by itself, jumps puddles, says « Aucun jouet à portée » when stuck; ch21 while-pill shows the flower only on flowery levels, and Wf never wins alone (L100 needs the loupe, L101 the jump, L102 both); L103 final wins over 3 gardens and the last win card says « L'aube ».
 - [ ] Chapter end: the mascot appears on the Bravo card with its line; no extra modal. Finale: dawn card.
-- [ ] V10 Mon jardin: the two code buttons (plane / clipboard) at the end of the tray open the code sheet; the current garden's code shows (BIP1.…), copy works, a pasted valid code loads (and persists after reload), an invalid code is refused with a spoken message and changes nothing.
+- [ ] V10 Mon jardin: the board is 8×6 and fits the screen; the two code buttons (plane / clipboard) at the end of the tray open the code sheet; the current garden's code shows (BIP2.…), copy works, a pasted valid code loads (and persists after reload), an old BIP1 (6×5) code loads padded to 8×6, an invalid code is refused with a spoken message and changes nothing.
 
 ## Les machines
 - [ ] Open from « Pour les adultes » → « Les machines de Grand-Papa »: hub shows four real machine drawings, three dots each, a pencil for free play.
