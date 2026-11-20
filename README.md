@@ -1,10 +1,12 @@
-# Bip le robot — V10 « L'aube »
+# Bip le robot — V11 « Nouvelle robe »
 
 Jeu d'initiation à la programmation (puis à quelques idées de physique et de
 mathématiques) pour les 5-7 ans. Tout se joue au doigt, **sans savoir lire** :
 images, visages et voix. Aucun chrono, aucune vie, aucun méchant. Une erreur
 est une information (« Oups ! »), jamais une punition. Fonctionne hors connexion,
 s'installe sur Android comme une application.
+
+La V11 « Nouvelle robe » ne change aucun niveau : c'est une refonte visuelle complète (effet « whouaou » doux) qui garde l'esprit de Bip — pastel, sans chrono, sans punition, jouable sans lire. La conception est dans [docs/GAME-DESIGN-V11.md](docs/GAME-DESIGN-V11.md).
 
 La V10 ajoute un **cinquième monde, « L'aube »**, après la nuit : deux nouveaux
 pouvoirs pour Bip (chapitres 20-21) — la **loupe** (Bip va tout seul au jouet le

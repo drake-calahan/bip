@@ -1,4 +1,4 @@
-# QA checklist — Bip V10 (manual browser pass)
+# QA checklist — Bip V11 (manual browser pass)
 
 Run after every build (`python tools/build.py`), serve with `python -m http.server 8103 --bind 127.0.0.1`.
 `node tools/check-ui.js` covers the automated part; this list is what a human eye adds.

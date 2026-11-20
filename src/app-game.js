@@ -951,28 +951,44 @@ function placeHand() {
 }
 function hideHand() { $('#hand').hidden = true; }
 
-/* ---------- Confettis ---------- */
+/* ---------- Confettis (V11 : salves d'étoiles) ---------- */
 function confetti() {
   if (RM) return;
   const c = $('#confetti'), ctx = c.getContext('2d');
   c.hidden = false;
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.scale(dpr, dpr);
-  const cols = ['#6CABEF', '#FFC94F', '#A993EE', '#FF8878', '#44BC7D', '#6ACBB0'];
-  const ps = Array.from({ length: 70 }, () => ({
-    x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .45,
-    vx: (Math.random() - .5) * 9, vy: -Math.random() * 10 - 4, s: 6 + Math.random() * 7,
-    r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[(Math.random() * cols.length) | 0],
+  const cols = ['#6CABEF', '#FFC94F', '#A993EE', '#FF8878', '#44BC7D', '#6ACBB0', '#F2A9C4'];
+  const burst = (ox, oy, n, pow) => Array.from({ length: n }, () => ({
+    x: ox, y: oy,
+    vx: (Math.random() - .5) * pow, vy: -Math.random() * 11 - 3, s: 5 + Math.random() * 8,
+    r: Math.random() * 6, vr: (Math.random() - .5) * .35, c: cols[(Math.random() * cols.length) | 0],
+    star: Math.random() < .35,
   }));
+  const ps = [
+    ...burst(innerWidth / 2, innerHeight * .42, 90, 10),
+    ...burst(innerWidth * .1, innerHeight * .62, 30, 7),
+    ...burst(innerWidth * .9, innerHeight * .62, 30, 7),
+  ];
   const t0 = performance.now();
   (function frame(t) {
     const el = t - t0;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     ps.forEach(p => {
-      p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.max(0, 1 - el / 1800);
-      ctx.fillStyle = p.c; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-p.s / 2, -p.s / 4, p.s, p.s / 2, 2) : ctx.rect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.fill(); ctx.restore();
+      p.vy += .3; p.vx *= .992; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.max(0, 1 - el / 2400);
+      ctx.fillStyle = p.c; ctx.beginPath();
+      if (p.star) {
+        for (let k = 0; k < 10; k++) {
+          const a = k * Math.PI / 5 - Math.PI / 2, rr = k % 2 ? p.s * .45 : p.s;
+          ctx[k ? 'lineTo' : 'moveTo'](Math.cos(a) * rr, Math.sin(a) * rr);
+        }
+        ctx.closePath();
+      } else {
+        ctx.roundRect ? ctx.roundRect(-p.s / 2, -p.s / 4, p.s, p.s / 2, 2) : ctx.rect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      }
+      ctx.fill(); ctx.restore();
     });
-    if (el < 1800) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); c.hidden = true; }
+    if (el < 2400) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); c.hidden = true; }
   })(t0);
 }

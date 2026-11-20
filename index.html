@@ -25,6 +25,7 @@
    Paysage large : plateau à gauche, bulle + programme + blocs à droite.
    ====================================================================== */
 @property --cell { syntax: '<length>'; inherits: true; initial-value: 64px; }
+@property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 :root {
   --paper: #EAF3F3; --paper-2: #DCEAEA; --card: #FFFFFF; --line: #CCDEDD;
   --ink: #2C3A4C; --ink-soft: #5F7086;
@@ -44,12 +45,20 @@
   --text: 'Andika', 'Verdana', system-ui, sans-serif;
   --blk: clamp(50px, calc((100vw - 32px - 40px) / 6), 64px);
   --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px);
+  /* V11 « Nouvelle robe » — nouveaux tokens du langage visuel (toujours ici, dans :root) */
+  --sky: radial-gradient(90% 55% at 88% -8%, #FFF6DE 0%, rgba(255, 246, 222, 0) 58%), radial-gradient(65% 45% at -8% 22%, #DDEEFB 0%, rgba(221, 238, 251, 0) 55%), linear-gradient(180deg, #F3F9F6 0%, var(--paper) 46%, #E7F1EE 100%);
+  --card-grad: linear-gradient(180deg, #FFFFFF 0%, #F1F8F7 100%);
+  --gloss: linear-gradient(180deg, rgba(255,255,255,.38) 0%, rgba(255,255,255,.06) 42%, rgba(0,0,0,.07) 100%);
+  --sh-card: 0 8px 22px rgba(44, 58, 76, .10);
+  --sh-pop: 0 18px 44px rgba(44, 58, 76, .20);
+  --rainbow: conic-gradient(from var(--ang, 0deg), #FFC94F, #FF8878, #E585B4, #A993EE, #6CABEF, #44BC7D, #6ACBB0, #FFC94F);
+  --sun: radial-gradient(circle, #FFF3C4 0%, rgba(255, 243, 196, 0) 65%);
   color-scheme: light;
 }
-html { box-sizing: border-box; height: 100%; background: var(--paper); }
+html { box-sizing: border-box; height: 100%; background: var(--sky); }
 *, *::before, *::after { box-sizing: inherit; }
 body {
-  height: 100%; margin: 0; background: var(--paper); color: var(--ink);
+  height: 100%; margin: 0; background: none; color: var(--ink);
   font-family: var(--text); font-size: 17px; line-height: 1.35;
   overscroll-behavior: none; overflow: hidden;
   -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
@@ -523,7 +532,7 @@ svg { display: block; }
 @keyframes glow { 50% { transform: translateY(-5%) scale(1.08); filter: drop-shadow(0 0 10px #FFE08A); } }
 @keyframes collect { 30% { transform: translateY(-20%) scale(1.3); } 100% { transform: translateY(-60%) scale(0); opacity: 0; } }
 @keyframes pop { 0% { transform: scale(.5); } 100% { transform: scale(1); } }
-@keyframes ring { 0% { box-shadow: 0 5px 0 var(--tone-edge), 0 0 0 4px rgba(255,255,255,.75), 0 0 0 4px rgba(68, 188, 125, .55); } 80%, 100% { box-shadow: 0 5px 0 var(--tone-edge), 0 0 0 4px rgba(255,255,255,.75), 0 0 0 18px rgba(68, 188, 125, 0); } }
+@keyframes ring { 0% { box-shadow: 0 5px 0 var(--tone-edge), 0 0 0 4px rgba(255,255,255,.75), 0 12px 20px rgba(44,58,76,.16), 0 0 0 4px rgba(68, 188, 125, .55); } 80%, 100% { box-shadow: 0 5px 0 var(--tone-edge), 0 0 0 4px rgba(255,255,255,.75), 0 12px 20px rgba(44,58,76,.16), 0 0 0 18px rgba(68, 188, 125, 0); } }
 @keyframes breathe { 50% { transform: scale(.92); opacity: .7; } }
 @keyframes shake { 20%, 60% { translate: -5px 0; } 40%, 80% { translate: 5px 0; } }
 @keyframes wiggle { 0%, 100% { rotate: 0deg; } 25% { rotate: -8deg; } 75% { rotate: 8deg; } }
@@ -539,6 +548,101 @@ svg { display: block; }
 @keyframes rise { 0% { transform: translateY(30px) scale(.96); opacity: 0; } }
 @keyframes rollball { 0% { rotate: 0deg; } 100% { rotate: 90deg; } }
 @keyframes sense { 0% { transform: scale(.4); opacity: 0; } 40% { opacity: 1; } 100% { transform: scale(1); opacity: .9; } }
+/* ======================================================================
+   V11 « Nouvelle robe » — refonte visuelle complète, même esprit de Bip :
+   pastel doux, gros boutons ronds, zéro pression. Un seul langage visuel
+   (tous les tokens sont dans le :root ci-dessus), aucune feuille de style
+   ajoutée, cibles tactiles toujours >= 44 px, aucun texte à lire en plus,
+   prefers-reduced-motion respecté par le bloc ci-dessous.
+   ====================================================================== */
+#app { position: relative; z-index: 1; }
+body::before { /* pollen doré qui dérive très doucement derrière l'app */
+  content: ''; position: fixed; inset: -35%; z-index: 0; pointer-events: none; opacity: .5;
+  background-image:
+    radial-gradient(circle 5px at 8% 18%, var(--pollen) 98%, transparent 100%),
+    radial-gradient(circle 4px at 24% 66%, #FFFFFF 98%, transparent 100%),
+    radial-gradient(circle 6px at 38% 30%, var(--pollen) 98%, transparent 100%),
+    radial-gradient(circle 4px at 55% 82%, #FFFFFF 98%, transparent 100%),
+    radial-gradient(circle 5px at 68% 22%, var(--pollen) 98%, transparent 100%),
+    radial-gradient(circle 4px at 80% 56%, #FFFFFF 98%, transparent 100%),
+    radial-gradient(circle 6px at 92% 36%, var(--pollen) 98%, transparent 100%),
+    radial-gradient(circle 4px at 46% 8%, #FFFFFF 98%, transparent 100%);
+  animation: drift 26s ease-in-out infinite alternate;
+}
+#app > section:not([hidden]) { animation: screenin .3s ease-out; }
+
+/* ---------- Accueil : auréole arc-en-ciel derrière le héros, titre en dégradé ---------- */
+.hero { border: 3px solid rgba(255, 255, 255, .9); box-shadow: var(--sh-pop); }
+.hero::before { content: ''; position: absolute; inset: -45%; background: var(--rainbow); filter: blur(48px); opacity: .38; animation: spin 16s linear infinite; }
+.hero > * { position: relative; z-index: 1; }
+.hero-art::before { content: ''; position: absolute; inset: -20%; border-radius: 50%; background: var(--sun); animation: breathe 3s ease-in-out infinite; }
+.hero-art .bipsvg, .hero-art .float { position: relative; z-index: 1; }
+.hero h1 { background: linear-gradient(92deg, var(--bip-dark) 8%, var(--rel) 48%, var(--loop-edge) 88%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.big-go { position: relative; overflow: hidden; background-image: linear-gradient(180deg, #5FD698 0%, var(--go) 55%, #37A468 100%); box-shadow: 0 6px 0 var(--go-edge), 0 14px 28px rgba(46, 154, 96, .42); animation: gopulse 2.4s ease-in-out infinite; }
+.big-go::after { content: ''; position: absolute; top: -60%; bottom: -60%; left: -70%; width: 38%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.8), transparent); transform: skewX(-18deg); animation: shine 2.8s ease-in-out infinite; }
+.big-go:active { animation: none; }
+.hub button { background-image: var(--card-grad); box-shadow: var(--sh-card), 0 4px 0 var(--line); }
+.hub .ico { box-shadow: inset 0 0 0 3px rgba(255,255,255,.9), 0 4px 10px rgba(44,58,76,.14); }
+.adults { background-image: var(--card-grad); box-shadow: var(--sh-card); }
+
+/* ---------- La carte : cailloux vernis, chemin ombré, mondes séparés ---------- */
+.world { box-shadow: inset 0 16px 26px -20px rgba(44, 58, 76, .28); }
+.world + .world { border-top: 3px dashed rgba(255, 255, 255, .85); }
+.world-head { text-shadow: 0 2px 0 rgba(255, 255, 255, .65); }
+.world-head .wa { background: rgba(255, 255, 255, .8); border-radius: 50%; box-shadow: 0 3px 0 rgba(44, 58, 76, .08); }
+.chap-banner { background-image: var(--card-grad); box-shadow: var(--sh-card), 0 3px 0 rgba(44, 58, 76, .08); }
+.chap-banner .cn { box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 2px 0 rgba(44, 58, 76, .15); }
+.nodes svg.path { filter: drop-shadow(0 3px 0 rgba(44, 58, 76, .08)); }
+.node .n { background-image: linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.10) 40%, rgba(0,0,0,.08) 100%); box-shadow: 0 5px 0 var(--tone-edge), 0 0 0 4px rgba(255,255,255,.75), 0 12px 20px rgba(44, 58, 76, .16); transition: transform .15s, box-shadow .2s; }
+.node.next .n { filter: drop-shadow(0 0 10px rgba(68, 188, 125, .8)); }
+.node.done .st svg { filter: drop-shadow(0 0 4px rgba(255, 201, 79, .95)); }
+
+/* ---------- Niveau : plateau, bulle, programme, blocs vernis, gros bouton vert ---------- */
+.board { box-shadow: 0 14px 30px rgba(44, 58, 76, .16), inset 0 0 0 3px rgba(255, 255, 255, .35); }
+.robot .sprite { filter: drop-shadow(0 6px 6px rgba(44, 58, 76, .22)); }
+.bubble { position: relative; background-image: var(--card-grad); border: 3px solid #FFFFFF; box-shadow: var(--sh-card); }
+.bubble::after { content: ''; position: absolute; left: 38px; bottom: -13px; width: 22px; height: 13px; background: #FFFFFF; clip-path: polygon(0 0, 100% 0, 32% 100%); }
+.bubble .mini { box-shadow: inset 0 0 0 3px #FFFFFF, 0 3px 8px rgba(44, 58, 76, .16); }
+.prog { background-image: var(--card-grad); box-shadow: var(--sh-card), 0 3px 0 var(--line); }
+.ibtn { background-image: var(--card-grad); box-shadow: var(--sh-card), 0 3px 0 var(--line); }
+.ibtn.glow { box-shadow: var(--sh-card), 0 3px 0 var(--loop-edge), 0 0 20px rgba(255, 201, 79, .85); }
+.lvl-pill { background-image: var(--card-grad); box-shadow: var(--sh-card); }
+.vars button, .sb-slots button { background-image: var(--card-grad); }
+.tray .tt.got { filter: drop-shadow(0 0 5px rgba(255, 201, 79, .9)); }
+.blk, .blk[data-t], .ctr, .ctr.while, .ctr.if { background-image: var(--gloss); }
+.blk { border-radius: 18px; }
+.blk.now, .ctr.now { animation: nowpulse .9s ease-in-out infinite; }
+.play { position: relative; background-image: linear-gradient(180deg, #63D69A 0%, var(--go) 55%, #37A468 100%); box-shadow: 0 6px 0 var(--go-edge), 0 14px 28px rgba(46, 154, 96, .4); animation: playpulse 2.2s ease-in-out infinite; }
+.play::after { content: ''; position: absolute; inset: -3px; border-radius: inherit; border: 3px solid rgba(68, 188, 125, .5); animation: playring 2.2s ease-out infinite; pointer-events: none; }
+.play:active { animation: none; }
+.running .play { animation: none; background-image: linear-gradient(180deg, #FFB184 0%, var(--stop) 55%, #E1784A 100%); box-shadow: 0 6px 0 var(--stop-edge), 0 14px 28px rgba(225, 120, 74, .4); }
+.running .play::after { animation: none; opacity: 0; }
+.sb-item, .guess button { background-image: var(--card-grad); box-shadow: var(--sh-card), 0 4px 0 var(--line); }
+.scene { box-shadow: inset 0 0 0 7px var(--mtint, var(--paper-2)), var(--sh-card); }
+
+/* ---------- Superpositions : flou d'arrière-plan, liseré arc-en-ciel animé ---------- */
+.overlay { background: rgba(44, 58, 76, .42); -webkit-backdrop-filter: blur(7px) saturate(1.15); backdrop-filter: blur(7px) saturate(1.15); }
+.win-card, .story-card { border: 4px solid transparent; background: linear-gradient(180deg, #FFFFFF, #F3FAF8) padding-box, var(--rainbow) border-box; box-shadow: var(--sh-pop); animation: rise .5s cubic-bezier(.3, 1.4, .5, 1), spin 9s linear infinite; }
+.sheet-card { background-image: var(--card-grad); border: 3px solid #FFFFFF; box-shadow: var(--sh-pop); }
+.win-card .bipwrap, .story-art { position: relative; z-index: 0; }
+.win-card .bipwrap::before, .story-art::before { content: ''; position: absolute; inset: -24%; border-radius: 50%; background: var(--sun); z-index: -1; animation: breathe 2.6s ease-in-out infinite; }
+.stars svg { width: 56px; height: 56px; }
+.stars .on { filter: drop-shadow(0 4px 10px rgba(255, 201, 79, .7)); }
+.btn.go { background-image: linear-gradient(180deg, #5FD698 0%, var(--go) 55%, #37A468 100%); box-shadow: 0 5px 0 var(--go-edge), 0 12px 24px rgba(46, 154, 96, .4); }
+.btn.soft { background-image: var(--card-grad); box-shadow: 0 5px 0 var(--line), var(--sh-card); }
+.sticker-toast { border: 3px solid #FFFFFF; background-image: var(--card-grad); box-shadow: var(--sh-pop); }
+.mcard { background-image: var(--card-grad); box-shadow: var(--sh-card), 0 4px 0 var(--line); }
+.stk, .tg { background-image: var(--card-grad); }
+
+@keyframes drift { from { transform: translate3d(-2%, -1.5%, 0); } to { transform: translate3d(2%, 2%, 0); } }
+@keyframes screenin { 0% { opacity: 0; transform: translateY(10px) scale(.99); } }
+@keyframes spin { to { --ang: 360deg; } }
+@keyframes shine { 0%, 55% { left: -70%; } 85%, 100% { left: 135%; } }
+@keyframes gopulse { 0%, 100% { box-shadow: 0 6px 0 var(--go-edge), 0 14px 28px rgba(46,154,96,.42), 0 0 0 0 rgba(68,188,125,.45); } 50% { box-shadow: 0 6px 0 var(--go-edge), 0 14px 28px rgba(46,154,96,.42), 0 0 0 16px rgba(68,188,125,0); } }
+@keyframes playpulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes playring { 0% { transform: scale(1); opacity: .7; } 80%, 100% { transform: scale(1.3); opacity: 0; } }
+@keyframes nowpulse { 0%, 100% { transform: scale(1.08); box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--go), 0 8px 20px rgba(68,188,125,.5); } 50% { transform: scale(1.13); box-shadow: 0 0 0 5px #fff, 0 0 0 12px rgba(68,188,125,.5), 0 8px 20px rgba(68,188,125,.5); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .05s !important; }
 }
@@ -2246,6 +2350,7 @@ const LOOP_NS = [2, 3, 4, 5, 6, 8];
 const FULL_PAL = ['l', 'u', 'd', 'r', 'f', 'tl', 'tr', 'j', 'g', 'p', 'c', 'loop', 'while', 'if', 'star'];
 /* Note de version affichée dans la feuille « Pour les adultes » (bump avec sw.js VERSION) */
 const VERSION_NOTES = [
+  ['V11 — « Nouvelle robe »', 'Aucun niveau ne change : c’est une refonte visuelle complète qui garde l’esprit de Bip (pastel, doux, sans pression). Ciel en dégradé avec un pollen doré qui dérive, auréole arc-en-ciel qui tourne doucement derrière le héros et derrière les cartes Bravo / histoire, bouton « Jouer » en dégradé avec reflet animé et halo, cailloux et blocs vernis, grosses ombres douces, bouton vert qui pulse, flou d’arrière-plan sur les superpositions, confettis en étoiles. Aucun nouveau texte à lire pour l’enfant, cibles toujours ≥ 44 px, prefers-reduced-motion toujours respecté.'],
   ['V10 — « L’aube »', 'Nouveau monde à l’aube avec deux pouvoirs : le bloc loupe (Bip va tout seul au jouet le plus proche, ch20) et le rond « fleur » du bloc Jusqu’à (répéter jusqu’à ce que toutes les fleurs soient peintes, ch21 — jamais seul : il faut toujours le combiner, ex. saut + loupe). Mon jardin passe en 8×6 et gagne des codes de partage BIP2 (les anciens BIP1 6×5 sont relus) pour échanger des jardins ; la feuille adultes affiche les compteurs de la partie (niveaux, étoiles, programmes, victoires, jardins).'],
   ['V9 — « Un seul objectif »', 'But unique et cohérent : ramasse tous les jouets (plus de coffre-cible ni de luciole-jouet) ; niveaux filler remplacés par un tournoi de nuit en combos (ch17–19, fin à par 7) ; défis de Zoé et machines archivés dans cette feuille (bonus) ; garde-fous anti-niveau-mort dans check-curve.'],
   ['V8 — « Jusqu’à la balise »', 'Balises : blocs « va à la balise », « pose une balise » et « jusqu’à la balise » ; capteur « jouet devant » ; boucles emboîtées plus lisibles (bloc fautif et parents surlignés, conteneur vide expliqué).'],
@@ -3566,29 +3671,45 @@ function placeHand() {
 }
 function hideHand() { $('#hand').hidden = true; }
 
-/* ---------- Confettis ---------- */
+/* ---------- Confettis (V11 : salves d'étoiles) ---------- */
 function confetti() {
   if (RM) return;
   const c = $('#confetti'), ctx = c.getContext('2d');
   c.hidden = false;
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.scale(dpr, dpr);
-  const cols = ['#6CABEF', '#FFC94F', '#A993EE', '#FF8878', '#44BC7D', '#6ACBB0'];
-  const ps = Array.from({ length: 70 }, () => ({
-    x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .45,
-    vx: (Math.random() - .5) * 9, vy: -Math.random() * 10 - 4, s: 6 + Math.random() * 7,
-    r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[(Math.random() * cols.length) | 0],
+  const cols = ['#6CABEF', '#FFC94F', '#A993EE', '#FF8878', '#44BC7D', '#6ACBB0', '#F2A9C4'];
+  const burst = (ox, oy, n, pow) => Array.from({ length: n }, () => ({
+    x: ox, y: oy,
+    vx: (Math.random() - .5) * pow, vy: -Math.random() * 11 - 3, s: 5 + Math.random() * 8,
+    r: Math.random() * 6, vr: (Math.random() - .5) * .35, c: cols[(Math.random() * cols.length) | 0],
+    star: Math.random() < .35,
   }));
+  const ps = [
+    ...burst(innerWidth / 2, innerHeight * .42, 90, 10),
+    ...burst(innerWidth * .1, innerHeight * .62, 30, 7),
+    ...burst(innerWidth * .9, innerHeight * .62, 30, 7),
+  ];
   const t0 = performance.now();
   (function frame(t) {
     const el = t - t0;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     ps.forEach(p => {
-      p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.max(0, 1 - el / 1800);
-      ctx.fillStyle = p.c; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-p.s / 2, -p.s / 4, p.s, p.s / 2, 2) : ctx.rect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.fill(); ctx.restore();
+      p.vy += .3; p.vx *= .992; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.max(0, 1 - el / 2400);
+      ctx.fillStyle = p.c; ctx.beginPath();
+      if (p.star) {
+        for (let k = 0; k < 10; k++) {
+          const a = k * Math.PI / 5 - Math.PI / 2, rr = k % 2 ? p.s * .45 : p.s;
+          ctx[k ? 'lineTo' : 'moveTo'](Math.cos(a) * rr, Math.sin(a) * rr);
+        }
+        ctx.closePath();
+      } else {
+        ctx.roundRect ? ctx.roundRect(-p.s / 2, -p.s / 4, p.s, p.s / 2, 2) : ctx.rect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      }
+      ctx.fill(); ctx.restore();
     });
-    if (el < 1800) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); c.hidden = true; }
+    if (el < 2400) requestAnimationFrame(frame); else { ctx.clearRect(0, 0, innerWidth, innerHeight); c.hidden = true; }
   })(t0);
 }
 
