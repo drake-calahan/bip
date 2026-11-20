@@ -89,6 +89,7 @@ branche `main`, dossier racine), Cloudflare Pages, Netlify Drop…
 ```
 node tools/check-levels.js    # chaque niveau a une solution valide (ALL OK)
 node tools/check-curve.js     # V5 : courbe de charge, marge batterie, un seul repère (ALL OK)
+node tools/check-design.js    # audit design : maps 8x6, lignes égales, pas de saut impossible (DESIGN OK)
 node tools/check-v10.js       # V10 : loupe c, rond fleur Wf, 110 niveaux, codec BIP1 (V10 OK)
 node tools/smoke-engine.js    # mécaniques du moteur
 node tools/check-labs.js      # modèles des machines

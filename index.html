@@ -1628,8 +1628,8 @@ const LEVELS = [
     text: 'Bip sait sauter ! Il saute par-dessus une case, tout droit devant lui.' },
   { ch: 2, pal: [...ARROWS, 'j'], map: ['R.~..', '..~.n', '.....'],
     text: 'Une flaque sur le chemin. Avance, puis saute !' },
-  { ch: 2, pal: [...ARROWS, 'j'], map: ['R~~..b', '......'],
-    text: 'Deux flaques collées : saute par-dessus, Bip sait faire.' },
+  { ch: 2, pal: [...ARROWS, 'j'], map: ['R~.~b.', '......'],
+    text: 'Deux flaques : deux petits sauts !' },
   { ch: 2, pal: [...ARROWS, 'j'], map: ['R.~.n', '.###.', '.....'],
     text: 'Saute vers le nounours !' },
   { ch: 2, pal: [...ARROWS, 'j'], sol: 'd u r j j', map: ['R.~b~.', 'a.....'],
@@ -1641,7 +1641,7 @@ const LEVELS = [
     text: 'Un escalier ! Mets deux flèches dans le bloc Répéter.' },
   { ch: 3, pal: [...ARROWS, 'loop'], max: 5, sol: 'N4(r) N4(d)', map: ['R...b', '.~~~.', '.~#~.', '.~~~.', '....n'],
     text: 'Deux blocs Répéter, l\'un après l\'autre.' },
-  { ch: 3, pal: [...ARROWS, 'loop'], max: 4, sol: 'r N6(d)', map: ['R..', '...', '.b.', '...', '.n.', '...', '.c.'],
+  { ch: 3, pal: [...ARROWS, 'loop'], max: 4, sol: 'r N5(d)', map: ['R..', '...', '.b.', '...', '.n.', '.c.'],
     text: 'L\'allée aux jouets : tout droit, en ligne droite !' },
   { ch: 3, pal: [...ARROWS, 'j', 'loop'], sol: 'N2(r j) d', map: ['##o####', 'R.~b.~n', '######.'],
     text: 'Le grand défi ! Saute et ramasse tous les jouets.' },
@@ -1878,7 +1878,7 @@ const LEVELS = [
     text: 'Deux balises ! Répète le bloc balise : Bip visite les deux drapeaux et ramasse tout.' },
   { ch: 17, face: 'r', pal: [...REL, 'g'], sol: 'g tr f f', map: ['R.F..', '.###.', '..b..'],
     text: 'Va à la balise… puis continue à la main jusqu’au jouet !' },
-  { ch: 17, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'g tr N2(f)', map: ['R.bF..', '.....', '..#..'],
+  { ch: 17, face: 'r', pal: [...REL, 'g', 'loop'], sol: 'g tr N2(f)', map: ['R.bF..', '......', '..#...'],
     text: 'Balise puis Répéter : Bip revient par le bas et attrape le nounours !' },
 
   /* ============ Chapitre 19 — Les yeux de Bip (tournoi de nuit 3 : capteurs + balises en combo) ============ */
@@ -1901,7 +1901,7 @@ const LEVELS = [
     text: 'Jusqu’au drapeau en sautant la flaque : la molette du Jusqu’à a une troisième position !' },
   { ch: 18, face: 'r', pal: [...REL, 'j', 'while', 'if', 'g'], sol: 'Wg(It(f|g))', map: ['R~.bF'],
     text: 'Jusqu’au drapeau : jouet devant ? avance. Sinon, fonce à la balise !' },
-  { ch: 18, face: 'r', pal: [...REL, 'p', 'g', 'if', 'loop'], sol: 'p f g N2(It(f|tr))', map: ['R.b.F..', '..#...', '.n...F'],
+  { ch: 18, face: 'r', pal: [...REL, 'p', 'g', 'if', 'loop'], sol: 'p f g N2(It(f|tr))', map: ['R.b.F..', '..#....', '.n...F.'],
     text: 'LE TOURNOI FINAL ! Pose une balise, fonce au drapeau, reviens en ramassant tout. Champion !' },
 
   /* ============ Monde 5 — L'aube (V10) ============ */
